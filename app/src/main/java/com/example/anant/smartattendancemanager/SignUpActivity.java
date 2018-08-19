@@ -13,7 +13,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -181,7 +180,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             cancel = true;
         }
 
-        if(TextUtils.isEmpty(name)){
+        if (TextUtils.isEmpty(name)) {
             mNameView.setError(getString(R.string.error_field_required));
             focusView = mNameView;
             cancel = true;
@@ -208,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(SignUpActivity.this, "Can't Create Account, please try again!"
-                                , Toast.LENGTH_SHORT).show();
+                                        , Toast.LENGTH_SHORT).show();
                             }
 
                             // ...
@@ -218,8 +217,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private void writeNewUser(String userId, String email, String name) {
-        User user = new User(email, name);
-
+        User user = new User(email, name, "");
         mDatabase.child("users").child(userId).setValue(user);
         finish();
     }

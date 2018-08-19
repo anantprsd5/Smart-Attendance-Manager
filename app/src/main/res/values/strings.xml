@@ -17,4 +17,5 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="prompt_name">Full Name</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="edit_text_hint">Enter Subject</string>
 </resources>
