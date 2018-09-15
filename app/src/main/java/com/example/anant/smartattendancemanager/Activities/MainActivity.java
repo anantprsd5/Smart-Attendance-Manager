@@ -1,5 +1,6 @@
-package com.example.anant.smartattendancemanager;
+package com.example.anant.smartattendancemanager.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveData();
+                Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
+                startActivity(intent);
             }
         });
         toolbar = findViewById(R.id.toolbar);
