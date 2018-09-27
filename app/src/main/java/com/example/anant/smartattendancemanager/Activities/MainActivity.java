@@ -11,15 +11,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         toolbar = findViewById(R.id.toolbar);
+        final ProgressBar progressBar = findViewById(R.id.indeterminateBar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.subject_linear_layout);
         createTextView();
@@ -54,7 +61,24 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-        Toast.makeText(this, UID, Toast.LENGTH_SHORT).show();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                if (map!=null) {
+                    Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
+                    startActivity(intent);
+                }
+                else progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
     private void saveData() {
@@ -63,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
             EditText editText = (EditText) findViewById(i);
             try {
                 String subject = editText.getText().toString();
-                if(subject!=null && subject.length()>0)
+                if (subject != null && subject.length() > 0)
                     subjects.put(subject, subject);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + UID + "/subjects" , subjects);
+        childUpdates.put("/users/" + UID + "/subjects", subjects);
         mDatabase.updateChildren(childUpdates);
 
     }

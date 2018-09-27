@@ -10,19 +10,18 @@
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
+        android:id="@+id/subject_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/subject_linear_layout">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Add your Subjects here. Press add button to add more"
             android:padding="8dp"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+            android:text="Add your Subjects here. Press add button to add more"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
     </LinearLayout>
-
 
 </ScrollView>
