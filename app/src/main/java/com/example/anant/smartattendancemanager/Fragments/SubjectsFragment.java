@@ -1,5 +1,6 @@
 package com.example.anant.smartattendancemanager.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.Activities.DetailActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.R;
@@ -86,7 +88,8 @@ public class SubjectsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                startActivity(intent);
             }
         });
 
