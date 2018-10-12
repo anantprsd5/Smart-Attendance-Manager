@@ -61,17 +61,23 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
         // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                if (map!=null) {
-                    Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
-                    startActivity(intent);
+                try {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map!=null) {
+                        Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
+                        ref.removeEventListener(this);
+                        startActivity(intent);
+                    }
+                    else progressBar.setVisibility(View.GONE);
+                }catch (ClassCastException e){
+                    e.printStackTrace();
+                    progressBar.setVisibility(View.GONE);
                 }
-                else progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -88,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String subject = editText.getText().toString();
                 if (subject != null && subject.length() > 0)
-                    subjects.put(subject, subject);
+                    subjects.put(subject, "0/0");
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }

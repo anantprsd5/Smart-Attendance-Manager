@@ -77,22 +77,25 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.subject_textView.setText(subjectDataset.get(position));
-        int attended = Integer.parseInt(attendanceMap.get(subjectDataset.get(position)).toString());
-        int noOfClasses = Integer.parseInt(attendanceMap.get(subjectDataset.get(position)).toString());
-        int percentage;
+        String subject = subjectDataset.get(position);
+        holder.subject_textView.setText(subject.substring(0, 1).toUpperCase()
+                + subject.substring(1).toLowerCase());
+        String classes = attendanceMap.get(subjectDataset.get(position)).toString();
+        int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
+        int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+        float percentage;
         if (noOfClasses != 0)
-            percentage = (attended / noOfClasses) * 100;
+            percentage = ((float) attended) / noOfClasses * 100;
         else percentage = 0;
-        holder.percentageTextView.setText(Integer.toString(percentage));
+        holder.percentageTextView.setText(Integer.toString(Math.round(percentage)));
         holder.attendanceTextView.setText("Attended " + attended + "/" + noOfClasses);
         int i = 0;
-        while (percentage > 75) {
+        while (percentage >= 75) {
             noOfClasses++;
-            percentage = (attended / noOfClasses) * 100;
+            percentage = ((float) attended) / noOfClasses * 100;
             i++;
         }
-        holder.bunkTextView.setText("You can bunk next " + i + " classes");
+        holder.bunkTextView.setText("You can bunk next " + ((i == 0) ? 0 : --i) + " classes");
     }
 
     // Return the size of your dataset (invoked by the layout manager)

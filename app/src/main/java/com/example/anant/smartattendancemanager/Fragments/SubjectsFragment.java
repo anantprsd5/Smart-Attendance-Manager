@@ -2,6 +2,7 @@ package com.example.anant.smartattendancemanager.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +45,8 @@ public class SubjectsFragment extends Fragment {
     private int page;
     private DatabaseReference mDatabase;
     private HashMap<String, String> subjects;
+    private DatabaseReference ref;
+    private ValueEventListener valueEventListener;
 
     public void SubjectsFragment() {
     }
@@ -96,35 +99,38 @@ public class SubjectsFragment extends Fragment {
 
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("/users/" + UID + "/subjects");
+        ref = database.getReference("/users/" + UID + "/subjects");
         // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                final List<String> subjectDataset = new ArrayList<>(map.keySet());
-                // specify an adapter (see also next example)
-                mAdapter = new SubjectAdapter(subjectDataset, new SubjectAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position, boolean isChecked) {
-                        if (isChecked) {
-                            subjects.put(Integer.toString(position), subjectDataset.get(position));
-                            saveData(page-1);
-                        } else {
-                            subjects.remove(Integer.toString(position));
-                            saveData(page-1);
+                if (map != null) {
+                    final List<String> subjectDataset = new ArrayList<>(map.keySet());
+                    // specify an adapter (see also next example)
+                    mAdapter = new SubjectAdapter(subjectDataset, new SubjectAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position, boolean isChecked) {
+                            if (isChecked) {
+                                subjects.put(Integer.toString(position), subjectDataset.get(position));
+                                saveData(page - 1);
+                            } else {
+                                subjects.remove(Integer.toString(position));
+                                saveData(page - 1);
+                            }
                         }
-                    }
-                });
-                mRecyclerView.setAdapter(mAdapter);
+                    });
+                    mRecyclerView.setAdapter(mAdapter);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
 
+        ref.addValueEventListener(valueEventListener);
         return view;
     }
 
@@ -132,5 +138,11 @@ public class SubjectsFragment extends Fragment {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + UID + "/table" + "/" + Days.values()[position], subjects);
         mDatabase.updateChildren(childUpdates);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ref.removeEventListener(valueEventListener);
     }
 }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
@@ -57,7 +59,7 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
 
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("/users/" + UID + "/subjects");
+        final DatabaseReference ref = database.getReference("/users/" + UID + "/subjects");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -69,6 +71,8 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
                         @Override
                         public void onItemClick(String key) {
                             DialogFragment newFragment = new AttendanceDialogFragment();
+                            ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
+                            Toast.makeText(getApplicationContext(), key, Toast.LENGTH_SHORT).show();
                             newFragment.show(getSupportFragmentManager(), "attendance");
 
                         }
@@ -89,4 +93,27 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
     public void onDialogPositiveClick(int classAttended, int totalClasses) {
         Toast.makeText(this, Integer.toString(classAttended), Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.details_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.settings) {
+            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

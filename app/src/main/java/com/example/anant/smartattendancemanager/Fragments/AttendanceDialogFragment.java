@@ -11,11 +11,22 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.anant.smartattendancemanager.R;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
 
 public class AttendanceDialogFragment extends DialogFragment {
 
+    DatabaseReference reference;
+    String key;
+
     public interface NoticeDialogListener {
         public void onDialogPositiveClick(int classAttended, int totalClasses);
+    }
+
+    public void setArguments(DatabaseReference reference, String key){
+        this.reference = reference;
+        this.key = key;
     }
 
     NoticeDialogListener mListener;
@@ -51,12 +62,17 @@ public class AttendanceDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if (attendedEditText.getText().toString().length() > 0
-                                && conductedEditText.getText().toString().length() > 0) {
-                            int classAtteded = Integer.parseInt(attendedEditText.getText().toString());
-                            int totalClasses = Integer.parseInt(conductedEditText.getText().toString());
+                        String classAttended = attendedEditText.getText().toString();
+                        String classConducted = conductedEditText.getText().toString();
+                        if (classAttended.length() > 0
+                                && classConducted.length() > 0) {
+                            int classAtteded = Integer.parseInt(classAttended);
+                            int totalClasses = Integer.parseInt(classConducted);
                             // Send the positive button event back to the host activity
                             mListener.onDialogPositiveClick(classAtteded, totalClasses);
+                            HashMap<String, Object> result = new HashMap<>();
+                            result.put(key, classAtteded+"/"+classConducted);
+                            reference.updateChildren(result);
                         }
                     }
                 })

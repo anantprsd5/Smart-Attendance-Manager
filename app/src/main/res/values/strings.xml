@@ -25,4 +25,5 @@
     <string name="numberOfClasses">Total Classes Conducted</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
+    <string name="settings">Settings</string>
 </resources>
