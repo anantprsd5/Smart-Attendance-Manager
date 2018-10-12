@@ -1,5 +1,6 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -110,7 +111,8 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.settings) {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
