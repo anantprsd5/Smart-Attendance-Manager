@@ -1,9 +1,9 @@
 package com.example.anant.smartattendancemanager.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity implements AttendanceDialogFragment.NoticeDialogListener {
@@ -31,7 +29,6 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private DatabaseReference mDatabase;
     private String UID;
     private FirebaseAuth mAuth;
 
@@ -53,7 +50,6 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
@@ -66,8 +62,7 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                final List<String> subjectDataset = new ArrayList<>(map.keySet());
-                if (map != null && subjectDataset != null || subjectDataset.size() != 0) {
+                if (map != null) {
                     DetailsAdapter detailsAdapter = new DetailsAdapter(map, new DetailsAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(String key) {
@@ -117,5 +112,4 @@ public class DetailActivity extends AppCompatActivity implements AttendanceDialo
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

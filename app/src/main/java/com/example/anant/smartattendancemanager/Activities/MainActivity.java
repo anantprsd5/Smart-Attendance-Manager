@@ -1,5 +1,6 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,13 +66,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map!=null) {
+                    if (map != null) {
                         Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
                         ref.removeEventListener(this);
                         startActivity(intent);
-                    }
-                    else progressBar.setVisibility(View.GONE);
-                }catch (ClassCastException e){
+                    } else progressBar.setVisibility(View.GONE);
+                } catch (ClassCastException e) {
                     e.printStackTrace();
                     progressBar.setVisibility(View.GONE);
                 }
@@ -85,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
     }
+
 
     private void saveData() {
         HashMap<String, String> subjects = new HashMap();

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Location">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/enable_geofencing"
+            android:summary="@string/summary_geofencing"
+            android:title="@string/title_geofencing" />
+
+        <Preference
+            android:enabled="false"
+            android:key="@string/college_address"
+            android:summary="@string/summary_college"
+            android:title="@string/title_college" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_alarms">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/alarm_attendance_low"
+            android:title="@string/title_alarm" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/alarm_attendance_low"
+            android:key="@string/alarm_auto_enable"
+            android:summary="@string/enable_attendance_based"
+            android:title="@string/auto_enable_alarm" />
+
+        <Preference
+            android:dependency="@string/alarm_attendance_low"
+            android:key="@string/college_time"
+            android:summary="@string/summary_time"
+            android:title="@string/time_college" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

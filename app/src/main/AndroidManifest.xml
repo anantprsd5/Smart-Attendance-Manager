@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -37,11 +38,36 @@
         <activity
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.Settings"></activity>
+            android:theme="@style/AppTheme.Settings" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCcl5LCMe55jvaQbiSRIl8Y3MVmDmMvv1c" />
+
+        <service
+            android:name=".Services.GeoFenceJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".Reciever.GeoFenceBroadcastReciever" />
+        <receiver android:name=".Reciever.AlarmReceiver" />
+
+        <activity
+            android:name=".Activities.StopAlarmActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:showOnLockScreen="true" />
+
+        <service
+            android:name=".Services.AlarmRingtonePlayingService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

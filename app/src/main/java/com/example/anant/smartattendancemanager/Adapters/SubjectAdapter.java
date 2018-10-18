@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.R;
 
+import java.util.Hashtable;
 import java.util.List;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHolder> {
@@ -86,6 +87,8 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         {
             holder.subject_textView.setBackgroundColor(Color.WHITE);
         }
+
+        Hashtable<Integer, Integer> t;
 
     }
 

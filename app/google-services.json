@@ -23,13 +23,21 @@
           }
         },
         {
+          "client_id": "412557877883-bodm0tsjhc37v7rv5lqe9qfns1kteptf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.anant.smartattendancemanager",
+            "certificate_hash": "70413eefbea47115be33f7481058ef2f487b6c00"
+          }
+        },
+        {
           "client_id": "412557877883-mp00mh80frk447ldpp3lifkar7q12j34.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6zCTAU1gZ4Q0K-kjxmCnr4uzRxeqE56U"
+          "current_key": "AIzaSyABhR7bg97avlrVzhruxIUvyLfv53u6dDs"
         }
       ],
       "services": {

@@ -10,14 +10,11 @@ import android.widget.TextView;
 import com.example.anant.smartattendancemanager.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
     private final ArrayList<String> subjectDataset;
-    private List<String> mDataset;
-    private TextView textView;
     private Map<String, Object> attendanceMap;
 
     private OnItemClickListener onItemClickListener;

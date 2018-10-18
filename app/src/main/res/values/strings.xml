@@ -109,4 +109,14 @@
     <string name="college_address">college_address</string>
     <string name="summary_college">Select Your College</string>
     <string name="title_college">College Location</string>
+    <string name="title_activity_settings2">Settings</string>
+    <string name="geofence_disabled">Geofencing Disabled</string>
+    <string name="geofence_enabled">Geofencing Enabled</string>
+    <string name="attendance_required">Attendance Criteria</string>
+    <string name="college_time">college_time</string>
+    <string name="summary_time">No Time Set</string>
+    <string name="time_college">Select Time</string>
+    <string name="alarm_auto_enable">alarm_auto_enable</string>
+    <string name="auto_enable_alarm">Auto Enable</string>
+    <string name="enable_attendance_based">Enable Alarm based on Attendance</string>
 </resources>
