@@ -200,7 +200,6 @@ public class SignUpActivity extends AppCompatActivity {
     private void writeNewUser(String userId, String email, String name) {
         User user = new User(email, name, "");
         mDatabase.child("users").child(userId).setValue(user);
-        finish();
     }
 
     private boolean isEmailValid(String email) {

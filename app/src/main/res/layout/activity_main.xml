@@ -57,6 +57,6 @@
         app:fabSize="normal"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_arrow_forward_white_24dp" />
+        app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

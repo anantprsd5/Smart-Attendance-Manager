@@ -1,6 +1,5 @@
 package com.example.anant.smartattendancemanager.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,25 +13,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.example.anant.smartattendancemanager.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements DatabaseHelper.OnDataFetchedListener {
 
     private LinearLayout linearLayout;
     private static int editTextID = 1;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String UID;
+    @BindView(R.id.indeterminateBar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ButterKnife.bind(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         toolbar = findViewById(R.id.toolbar);
-        final ProgressBar progressBar = findViewById(R.id.indeterminateBar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.subject_linear_layout);
         createTextView();
@@ -59,32 +62,19 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
-        // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map != null) {
-                        Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
-                        ref.removeEventListener(this);
-                        startActivity(intent);
-                    } else progressBar.setVisibility(View.GONE);
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
-
+        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
+        databaseHelper.getSubjects();
     }
 
+    @Override
+    public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
+        if (isSuccessful) {
+            if (map != null) {
+                Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
+                startActivity(intent);
+            } else progressBar.setVisibility(View.GONE);
+        } else progressBar.setVisibility(View.GONE);
+    }
 
     private void saveData() {
         HashMap<String, String> subjects = new HashMap();
@@ -123,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             createTextView();
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
