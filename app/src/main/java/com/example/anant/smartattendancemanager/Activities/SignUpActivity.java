@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,8 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mPasswordView;
     @BindView(R.id.link_signin)
     TextView mSingInTextView;
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
 
     private FirebaseAuth mAuth;
 
@@ -87,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isInternetConnected())
                         attemptLogin();
                     else
-                        Toast.makeText(SignUpActivity.this, "Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, R.string.check_internet, Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -97,10 +100,12 @@ public class SignUpActivity extends AppCompatActivity {
         mSignUpView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isInternetConnected())
+                if (isInternetConnected()) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mSignUpView.setVisibility(View.GONE);
                     attemptLogin();
-                else
-                    Toast.makeText(SignUpActivity.this, "Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(SignUpActivity.this, R.string.check_internet, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -164,6 +169,8 @@ public class SignUpActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            mProgressBar.setVisibility(View.GONE);
+            mSignUpView.setVisibility(View.VISIBLE);
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -178,7 +185,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(SignUpActivity.this, "Can't Create Account, please try again!"
+                                mProgressBar.setVisibility(View.GONE);
+                                mSignUpView.setVisibility(View.VISIBLE);
+                                Toast.makeText(SignUpActivity.this, R.string.account_creation_error
                                         , Toast.LENGTH_SHORT).show();
                             }
 

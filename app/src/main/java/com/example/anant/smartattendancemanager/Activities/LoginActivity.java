@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
     AppCompatButton mEmailSignInButton;
     @BindView(R.id.logo_image_view)
     ImageView mImageView;
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
 
     private FirebaseAuth mAuth;
 
@@ -92,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (isInternetConnected())
                         attemptLogin();
                     else
-                        Toast.makeText(LoginActivity.this, "Check Your Internet Connection",
+                        Toast.makeText(LoginActivity.this, R.string.check_internet,
                                 Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -108,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(), "Mail sent", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.password_reset_mail_sent, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -118,10 +121,12 @@ public class LoginActivity extends AppCompatActivity {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isInternetConnected())
+                if (isInternetConnected()) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mEmailSignInButton.setVisibility(View.GONE);
                     attemptLogin();
-                else
-                    Toast.makeText(LoginActivity.this, "Check your Internet Connection", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(LoginActivity.this, R.string.check_internet, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -192,6 +197,8 @@ public class LoginActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            mProgressBar.setVisibility(View.GONE);
+            mEmailSignInButton.setVisibility(View.VISIBLE);
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -200,14 +207,12 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(LoginActivity.this, "Authentication Success.",
-                                        Toast.LENGTH_SHORT).show();
                                 startApplication();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(LoginActivity.this, "Authentication failed, Password or email is incorrect",
+                                mProgressBar.setVisibility(View.GONE);
+                                mEmailSignInButton.setVisibility(View.VISIBLE);
+                                Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

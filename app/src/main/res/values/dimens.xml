@@ -15,4 +15,5 @@
     <dimen name="button_padding">12dp</dimen>
     <dimen name="text_view_margin_bottom">24dp</dimen>
     <dimen name="text_size">16sp</dimen>
+    <dimen name="progress_bar_elevation">2dp</dimen>
 </resources>

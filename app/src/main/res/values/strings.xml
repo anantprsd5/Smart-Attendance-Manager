@@ -128,4 +128,8 @@
     <string name="full_name">Full Name</string>
     <string name="sign_up">Sign Up</string>
     <string name="login_account">Have an Account? Log In</string>
+    <string name="check_internet">Check your Internet Connection</string>
+    <string name="password_reset_mail_sent">Mail has been sent with reset link to the above Email Address</string>
+    <string name="auth_failed">Authentication failed, Password or email is incorrect</string>
+    <string name="account_creation_error">Can\'t Create Account, please try again!</string>
 </resources>

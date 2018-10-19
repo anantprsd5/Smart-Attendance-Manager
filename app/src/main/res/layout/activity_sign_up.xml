@@ -138,6 +138,16 @@
                 android:text="@string/sign_up"
                 android:textColor="@color/button_text_color" />
 
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="@dimen/progress_bar_elevation"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/link_signin"
                 android:layout_width="match_parent"
