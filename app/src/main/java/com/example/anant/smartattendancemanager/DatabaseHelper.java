@@ -1,7 +1,5 @@
 package com.example.anant.smartattendancemanager;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,9 +28,7 @@ public class DatabaseHelper {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.wtf("checkRef", "successful");
                 try {
-                    Log.wtf("checkRef", "successful1");
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     mOnDataFetchedListener.onDataFetched(map, true);
                     ref.removeEventListener(this);

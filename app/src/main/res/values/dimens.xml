@@ -16,4 +16,11 @@
     <dimen name="text_view_margin_bottom">24dp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="progress_bar_elevation">2dp</dimen>
+    <dimen name="card_view_height">80dp</dimen>
+    <dimen name="text_padding_left_card">16dp</dimen>
+    <dimen name="tick_image_width">50dp</dimen>
+    <dimen name="tick_image_height">40dp</dimen>
+    <dimen name="image_padding_right">8dp</dimen>
+    <dimen name="card_layout_margin">8dp</dimen>
+    <dimen name="card_elevation">8dp</dimen>
 </resources>

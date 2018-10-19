@@ -1,16 +1,16 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
-import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.R;
 
-import java.util.Hashtable;
 import java.util.List;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHolder> {
@@ -29,28 +29,30 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView subject_textView;
+        public ImageView mImageView;
+        public CardView cardView;
 
         public MyViewHolder(View view) {
             super(view);
             subject_textView = view.findViewById(R.id.subject_text);
-            subject_textView.setOnClickListener(this);
+            mImageView = view.findViewById(R.id.tick_image_view);
+            cardView = view.findViewById(R.id.subject_card_view);
+            cardView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            if (!sparseBooleanArray.get(position))
-            {
-                sparseBooleanArray.put(position,true);
+            if (!sparseBooleanArray.get(position)) {
+                sparseBooleanArray.put(position, true);
                 listener.onItemClick(position, true);
                 // calling the method in main activity Because: in our case mainActivity our created interface for clicklisteners
                 notifyItemChanged(position);
-            }
-            else // if clicked item is already selected
+            } else // if clicked item is already selected
             {
-                sparseBooleanArray.put(position,false);
+                sparseBooleanArray.put(position, false);
                 listener.onItemClick(position, false);
-                 // calling the method in main activity Because: in our case mainActivity our created interface for clicklisteners
+                // calling the method in main activity Because: in our case mainActivity our created interface for clicklisteners
                 notifyItemChanged(position);
             }
         }
@@ -79,17 +81,11 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.subject_textView.setText(mDataset.get(position));
-        if (sparseBooleanArray.get(position))
-        {
-            holder.subject_textView.setBackgroundColor(Color.BLUE);
+        if (sparseBooleanArray.get(position)) {
+            holder.mImageView.setVisibility(View.VISIBLE);
+        } else {
+            holder.mImageView.setVisibility(View.GONE);
         }
-        else
-        {
-            holder.subject_textView.setBackgroundColor(Color.WHITE);
-        }
-
-        Hashtable<Integer, Integer> t;
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

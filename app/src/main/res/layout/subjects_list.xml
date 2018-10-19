@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/subject_text"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/subject_card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-    android:text="Text size">
+    android:layout_height="@dimen/card_view_height"
+    android:layout_margin="@dimen/card_layout_margin"
+    app:cardElevation="@dimen/card_elevation">
 
-</TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/subject_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:paddingLeft="@dimen/text_padding_left_card"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/tick_image_view"
+            android:layout_width="@dimen/tick_image_width"
+            android:layout_height="@dimen/tick_image_height"
+            android:layout_gravity="center|end"
+            android:paddingRight="@dimen/image_padding_right"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

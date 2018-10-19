@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
     private void saveData() {
         HashMap<String, String> subjects = new HashMap();
         for (int i = 1; i <= editTextID; i++) {
-            EditText editText = (EditText) findViewById(i);
+            EditText editText = findViewById(i);
             try {
                 String subject = editText.getText().toString();
                 if (subject != null && subject.length() > 0)
