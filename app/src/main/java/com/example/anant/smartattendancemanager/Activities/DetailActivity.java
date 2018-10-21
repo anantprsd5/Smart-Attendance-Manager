@@ -132,6 +132,12 @@ public class DetailActivity extends AppCompatActivity implements
             startActivity(intent);
             return true;
         }
+
+        if (id == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            startLoginActivity();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
