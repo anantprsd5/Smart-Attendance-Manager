@@ -89,7 +89,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         String subject = subjectDataset.get(position);
         holder.subject_textView.setText(subject.substring(0, 1).toUpperCase()
                 + subject.substring(1).toLowerCase());
-        String classes = attendanceMap.get(subjectDataset.get(position)).toString();
+        String classes = attendanceMap.get(subject).toString();
         int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
         int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
         if (noOfClasses != 0)

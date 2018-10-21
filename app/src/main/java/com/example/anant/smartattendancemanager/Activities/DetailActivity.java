@@ -1,6 +1,9 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -49,9 +52,6 @@ public class DetailActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
-        swipeRefreshLayout.setRefreshing(true);
-
-
         mAuth = FirebaseAuth.getInstance();
         if (mAuth != null) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -81,13 +81,20 @@ public class DetailActivity extends AppCompatActivity implements
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference("/users/" + UID + "/subjects");
 
-        helper = new DatabaseHelper(UID, this);
-        helper.getSubjects();
+        helper = new DatabaseHelper(this, UID, this);
+        if (isInternetConnected()) {
+            swipeRefreshLayout.setRefreshing(true);
+            helper.getSubjects();
+        } else {
+            setUpAdapter(helper.getSubjectFromSharedPreference());
+        }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                helper.getSubjects();
+                if (isInternetConnected())
+                    helper.getSubjects();
+                else swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -132,16 +139,30 @@ public class DetailActivity extends AppCompatActivity implements
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
         swipeRefreshLayout.setRefreshing(false);
         if (map != null) {
-            DetailsAdapter detailsAdapter = new DetailsAdapter(map, new DetailsAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(String key) {
-                    DialogFragment newFragment = new AttendanceDialogFragment();
-                    ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
-                    newFragment.show(getSupportFragmentManager(), "attendance");
-
-                }
-            });
-            mRecyclerView.setAdapter(detailsAdapter);
+            helper.addSubjectsToSharedPreference(map);
+            setUpAdapter(map);
         }
+    }
+
+    private void setUpAdapter(Map<String, Object> map) {
+        DetailsAdapter detailsAdapter = new DetailsAdapter(map, new DetailsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String key) {
+                DialogFragment newFragment = new AttendanceDialogFragment();
+                ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
+                newFragment.show(getSupportFragmentManager(), "attendance");
+            }
+        });
+        mRecyclerView.setAdapter(detailsAdapter);
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 }

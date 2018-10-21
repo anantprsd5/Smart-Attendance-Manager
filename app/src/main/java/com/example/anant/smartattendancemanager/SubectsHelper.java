@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,8 +12,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SubectsHelper {
 
@@ -50,4 +54,6 @@ public class SubectsHelper {
         });
         return map;
     }
+
+
 }

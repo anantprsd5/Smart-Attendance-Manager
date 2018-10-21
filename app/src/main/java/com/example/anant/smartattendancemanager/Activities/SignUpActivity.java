@@ -182,6 +182,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 writeNewUser(user.getUid(), email, name);
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                startActivity(intent);
 
                             } else {
                                 // If sign in fails, display a message to the user.

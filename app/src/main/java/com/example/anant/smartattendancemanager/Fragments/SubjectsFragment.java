@@ -98,7 +98,7 @@ public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataF
             }
         });
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), UID, this);
         databaseHelper.getSubjects();
 
         return view;
