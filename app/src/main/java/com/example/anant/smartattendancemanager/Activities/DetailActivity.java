@@ -3,13 +3,13 @@ package com.example.anant.smartattendancemanager.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.DatabaseHelper;
@@ -22,6 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity implements
         AttendanceDialogFragment.NoticeDialogListener, DatabaseHelper.OnDataFetchedListener {
 
@@ -32,6 +35,8 @@ public class DetailActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private DatabaseReference ref;
     private DatabaseHelper helper;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,11 @@ public class DetailActivity extends AppCompatActivity implements
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Details");
         setSupportActionBar(toolbar);
+
+        ButterKnife.bind(this);
+
+        swipeRefreshLayout.setRefreshing(true);
+
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth != null) {
@@ -73,6 +83,13 @@ public class DetailActivity extends AppCompatActivity implements
 
         helper = new DatabaseHelper(UID, this);
         helper.getSubjects();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                helper.getSubjects();
+            }
+        });
     }
 
     private void startLoginActivity() {
@@ -85,6 +102,7 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     public void onDialogPositiveClick(int classAttended, int totalClasses) {
         helper.getSubjects();
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -112,13 +130,13 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
+        swipeRefreshLayout.setRefreshing(false);
         if (map != null) {
             DetailsAdapter detailsAdapter = new DetailsAdapter(map, new DetailsAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(String key) {
                     DialogFragment newFragment = new AttendanceDialogFragment();
                     ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
-                    Toast.makeText(getApplicationContext(), key, Toast.LENGTH_SHORT).show();
                     newFragment.show(getSupportFragmentManager(), "attendance");
 
                 }

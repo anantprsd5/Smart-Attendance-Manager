@@ -132,4 +132,5 @@
     <string name="password_reset_mail_sent">Mail has been sent with reset link to the above Email Address</string>
     <string name="auth_failed">Authentication failed, Password or email is incorrect</string>
     <string name="account_creation_error">Can\'t Create Account, please try again!</string>
+    <string name="leave_class">You may leave next %d classes</string>
 </resources>

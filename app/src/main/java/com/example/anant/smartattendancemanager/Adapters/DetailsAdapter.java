@@ -1,5 +1,9 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +22,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     private Map<String, Object> attendanceMap;
 
     private OnItemClickListener onItemClickListener;
+
+    private int[] drawables = {R.drawable.textview_design_green,
+            R.drawable.textview_design_blue, R.drawable.textview_design_orange,
+            R.drawable.textview_design_red};
+    private float percentage;
+    private Context context;
 
     public interface OnItemClickListener {
         void onItemClick(String key);
@@ -38,7 +48,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             super(view);
             subject_textView = view.findViewById(R.id.subject_text_view);
             attendanceTextView = view.findViewById(R.id.attendance_text_view);
-            bunkTextView = view.findViewById(R.id.bunk_text_view);
+            bunkTextView = view.findViewById(R.id.leave_text_view);
             percentageTextView = view.findViewById(R.id.percentage_text_view);
             detailsCardView = view.findViewById(R.id.details_card_view);
             detailsCardView.setOnClickListener(this);
@@ -66,10 +76,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.attendance_card, parent, false);
 
+        context = parent.getContext();
+
         return new MyViewHolder(itemView);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
@@ -80,19 +92,34 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         String classes = attendanceMap.get(subjectDataset.get(position)).toString();
         int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
         int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-        float percentage;
         if (noOfClasses != 0)
             percentage = ((float) attended) / noOfClasses * 100;
         else percentage = 0;
         holder.percentageTextView.setText(Integer.toString(Math.round(percentage)));
-        holder.attendanceTextView.setText("Attended " + attended + "/" + noOfClasses);
+        holder.percentageTextView.setBackgroundResource(getDrawable());
+        holder.attendanceTextView.setText("Attendance: " + attended + "/" + noOfClasses);
         int i = 0;
         while (percentage >= 75) {
             noOfClasses++;
             percentage = ((float) attended) / noOfClasses * 100;
             i++;
         }
-        holder.bunkTextView.setText("You can bunk next " + ((i == 0) ? 0 : --i) + " classes");
+        holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
+    }
+
+    private int getDrawable() {
+        int percentageInt = Math.round(percentage);
+        int drawable = 0;
+        if (percentageInt >= 90) {
+            drawable = drawables[0];
+        } else if (percentageInt >= 75 && percentageInt < 90) {
+            drawable = drawables[1];
+        } else if (percentageInt >= 70 && percentageInt < 75) {
+            drawable = drawables[2];
+        } else if (percentageInt <= 70) {
+            drawable = drawables[3];
+        }
+        return drawable;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
