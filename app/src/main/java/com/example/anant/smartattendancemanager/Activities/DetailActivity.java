@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,11 +17,8 @@ import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragme
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
@@ -35,6 +31,7 @@ public class DetailActivity extends AppCompatActivity implements
     private String UID;
     private FirebaseAuth mAuth;
     private DatabaseReference ref;
+    private DatabaseHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +46,11 @@ public class DetailActivity extends AppCompatActivity implements
         if (mAuth != null) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser == null) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                startLoginActivity();
                 return;
             }
         } else {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
+            startLoginActivity();
             return;
         }
 
@@ -78,14 +71,20 @@ public class DetailActivity extends AppCompatActivity implements
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference("/users/" + UID + "/subjects");
 
-        DatabaseHelper helper = new DatabaseHelper(UID, this);
+        helper = new DatabaseHelper(UID, this);
         helper.getSubjects();
+    }
+
+    private void startLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
 
     @Override
     public void onDialogPositiveClick(int classAttended, int totalClasses) {
-        Toast.makeText(this, Integer.toString(classAttended), Toast.LENGTH_SHORT).show();
+        helper.getSubjects();
     }
 
     @Override
