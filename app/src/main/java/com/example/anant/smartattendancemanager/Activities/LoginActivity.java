@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.anant.smartattendancemanager.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,18 +37,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
-
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
+public class LoginActivity extends AppCompatActivity implements DatabaseHelper.OnDataFetchedListener {
 
     // UI references.
     @BindView(R.id.input_email)
@@ -221,8 +219,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startApplication() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String UID = user.getUid();
+        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
+        databaseHelper.getSubjects();
+
     }
 
     private boolean isEmailValid(String email) {
@@ -244,6 +246,17 @@ public class LoginActivity extends AppCompatActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
+    }
+
+    @Override
+    public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
+        if (map != null) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }
 

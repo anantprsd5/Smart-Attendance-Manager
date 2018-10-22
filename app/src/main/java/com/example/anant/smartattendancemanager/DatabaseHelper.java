@@ -19,16 +19,14 @@ public class DatabaseHelper {
 
     private String UID;
     private OnDataFetchedListener mOnDataFetchedListener;
-    private Context mContext;
 
     public interface OnDataFetchedListener {
         void onDataFetched(Map<String, Object> map, boolean isSuccessful);
     }
 
-    public DatabaseHelper(Context context, String UID, OnDataFetchedListener onDataFetchedListener) {
+    public DatabaseHelper(String UID, OnDataFetchedListener onDataFetchedListener) {
         this.UID = UID;
         mOnDataFetchedListener = onDataFetchedListener;
-        mContext = context;
     }
 
     public void getSubjects() {
@@ -54,7 +52,7 @@ public class DatabaseHelper {
         });
     }
 
-    public void addSubjectsToSharedPreference(Map<String, Object> map) {
+    public void addSubjectsToSharedPreference(Map<String, Object> map, Context mContext) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(mContext.getString(R.string.attendance_shared_pref),
                 MODE_PRIVATE).edit();
         ArrayList<String> subjectDataset = new ArrayList<>(map.keySet());
@@ -64,7 +62,7 @@ public class DatabaseHelper {
         editor.apply();
     }
 
-    public Map<String, Object> getSubjectFromSharedPreference() {
+    public Map<String, Object> getSubjectFromSharedPreference(Context mContext) {
         SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.attendance_shared_pref),
                 MODE_PRIVATE);
         Map<String, Object> subjectsMap = new HashMap<>();

@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.DatabaseHelper;
@@ -23,6 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -40,17 +45,25 @@ public class DetailActivity extends AppCompatActivity implements
     private DatabaseHelper helper;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.days_backdrop)
+    ImageView daysImageView;
+
+    private int[] days_backdrop = {R.drawable.monday_backdrop, R.drawable.tuesday_backdrop,
+            R.drawable.wednesday_backdrop, R.drawable.thursday_backdrop,
+            R.drawable.friday_backdrop, R.drawable.saturday_backdrop, R.drawable.sunday_backdrop};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Details");
+        toolbar = findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+
+        getDayDrawable();
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth != null) {
@@ -81,12 +94,12 @@ public class DetailActivity extends AppCompatActivity implements
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference("/users/" + UID + "/subjects");
 
-        helper = new DatabaseHelper(this, UID, this);
+        helper = new DatabaseHelper(UID, this);
         if (isInternetConnected()) {
             swipeRefreshLayout.setRefreshing(true);
             helper.getSubjects();
         } else {
-            setUpAdapter(helper.getSubjectFromSharedPreference());
+            setUpAdapter(helper.getSubjectFromSharedPreference(this));
         }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -97,6 +110,35 @@ public class DetailActivity extends AppCompatActivity implements
                 else swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void getDayDrawable() {
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String day = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime());
+        switch (day.toLowerCase()) {
+            case "monday":
+                daysImageView.setBackgroundResource(days_backdrop[0]);
+                break;
+            case "tuesday":
+                daysImageView.setBackgroundResource(days_backdrop[1]);
+                break;
+            case "wednesday":
+                daysImageView.setBackgroundResource(days_backdrop[2]);
+                break;
+            case "thursday":
+                daysImageView.setBackgroundResource(days_backdrop[3]);
+                break;
+            case "friday":
+                daysImageView.setBackgroundResource(days_backdrop[4]);
+                break;
+            case "saturday":
+                daysImageView.setBackgroundResource(days_backdrop[5]);
+                break;
+            case "sunday":
+                daysImageView.setBackgroundResource(days_backdrop[6]);
+                break;
+        }
     }
 
     private void startLoginActivity() {
@@ -145,7 +187,7 @@ public class DetailActivity extends AppCompatActivity implements
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
         swipeRefreshLayout.setRefreshing(false);
         if (map != null) {
-            helper.addSubjectsToSharedPreference(map);
+            helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
         }
     }

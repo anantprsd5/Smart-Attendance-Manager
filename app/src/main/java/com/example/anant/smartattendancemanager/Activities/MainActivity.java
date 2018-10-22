@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-        DatabaseHelper databaseHelper = new DatabaseHelper(this, UID, this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
         databaseHelper.getSubjects();
     }
 
