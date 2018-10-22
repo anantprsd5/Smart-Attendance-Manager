@@ -76,7 +76,7 @@ public class GeoFencing {
         String placeId = mPlace.getId();
         double latitude = mPlace.getLatLng().latitude;
         double longitude = mPlace.getLatLng().longitude;
-        float radius = 300.0f;
+        float radius = 1000.0f;
         geofence = new Geofence.Builder()
                 .setRequestId(placeId)
                 .setCircularRegion(latitude, longitude, radius)
