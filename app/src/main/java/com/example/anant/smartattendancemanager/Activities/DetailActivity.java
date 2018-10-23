@@ -251,6 +251,7 @@ public class DetailActivity extends AppCompatActivity implements
             swipeRefreshLayout.setRefreshing(true);
             updatedAttendance = false;
             helper.getTimeTable();
+            return;
         }
         if (map != null) {
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);

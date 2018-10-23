@@ -53,12 +53,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Today's Attendance"
+                    android:text="Mark Attendance"
                     android:textStyle="bold" />
 
-                <CheckBox
+                <ImageView
+                    android:id="@+id/attendance_mark"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/attendance_unmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    app:srcCompat="@drawable/ic_close_black_24dp" />
+
             </LinearLayout>
 
 
