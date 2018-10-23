@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.example.anant.smartattendancemanager.AlarmHelper;
 import com.example.anant.smartattendancemanager.JobSchedulerHelper;
 import com.example.anant.smartattendancemanager.R;
-import com.example.anant.smartattendancemanager.Services.AlarmRingtonePlayingService;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -129,9 +128,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
             ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/location");
             mGeoDataClient = Places.getGeoDataClient(getActivity());
 
-            Intent i = new Intent(activity, AlarmRingtonePlayingService.class);
-            activity.stopService(i);
-
             addressPreference = findPreference(getString(R.string.college_address));
             addressPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -213,6 +209,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
                     Place selectedPlace = PlacePicker.getPlace(getActivity(), data);
                     savePlaceId(selectedPlace.getId());
                     addressPreference.setSummary(selectedPlace.getName());
+                    scheduleEnablingGeofence(true);
                     super.onActivityResult(requestCode, resultCode, data);
                 }
             }

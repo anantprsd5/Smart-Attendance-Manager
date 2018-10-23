@@ -64,10 +64,6 @@
             android:noHistory="true"
             android:showOnLockScreen="true" />
 
-        <service
-            android:name=".Services.AlarmRingtonePlayingService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

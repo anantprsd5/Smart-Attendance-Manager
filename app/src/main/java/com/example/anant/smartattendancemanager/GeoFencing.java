@@ -17,7 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class GeoFencing {
 
-    private static final long GEOFENCE_TIMEOUT = 39600000;
+    private static final long GEOFENCE_TIMEOUT = 18000000;
     private Context mContext;
 
     private PendingIntent mGeoFencePendingIntent;
@@ -50,33 +50,12 @@ public class GeoFencing {
         }
     }
 
-    public void removeGeoFence() {
-
-        if (mGeofencingClient != null) {
-            mGeofencingClient.removeGeofences(getGeofencePendingIntent())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Geofences removed
-                            // ...
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Failed to remove geofences
-                            // ...
-                        }
-                    });
-        }
-    }
-
     public Geofence createGeoFenceObject() {
         Geofence geofence;
         String placeId = mPlace.getId();
         double latitude = mPlace.getLatLng().latitude;
         double longitude = mPlace.getLatLng().longitude;
-        float radius = 50.0f;
+        float radius = 100.0f;
         geofence = new Geofence.Builder()
                 .setRequestId(placeId)
                 .setCircularRegion(latitude, longitude, radius)

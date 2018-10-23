@@ -10,6 +10,7 @@
             android:title="@string/title_geofencing" />
 
         <Preference
+            android:dependency="@string/enable_geofencing"
             android:enabled="false"
             android:key="@string/college_address"
             android:summary="@string/summary_college"
