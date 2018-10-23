@@ -21,10 +21,10 @@ public class AttendanceDialogFragment extends DialogFragment {
     String key;
 
     public interface NoticeDialogListener {
-        public void onDialogPositiveClick(int classAttended, int totalClasses);
+        public void onDialogPositiveClick();
     }
 
-    public void setArguments(DatabaseReference reference, String key){
+    public void setArguments(DatabaseReference reference, String key) {
         this.reference = reference;
         this.key = key;
     }
@@ -69,9 +69,9 @@ public class AttendanceDialogFragment extends DialogFragment {
                             int classAtteded = Integer.parseInt(classAttended);
                             int totalClasses = Integer.parseInt(classConducted);
                             // Send the positive button event back to the host activity
-                            mListener.onDialogPositiveClick(classAtteded, totalClasses);
+                            mListener.onDialogPositiveClick();
                             HashMap<String, Object> result = new HashMap<>();
-                            result.put(key, classAtteded+"/"+classConducted);
+                            result.put(key, classAtteded + "/" + classConducted);
                             reference.updateChildren(result);
                         }
                     }

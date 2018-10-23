@@ -48,6 +48,7 @@ public class DetailActivity extends AppCompatActivity implements
     private DatabaseReference ref;
     private DatabaseHelper helper;
     private boolean isTimeTable;
+    private boolean updatedAttendance;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.days_backdrop)
@@ -101,6 +102,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         navigationView.getMenu().getItem(0).setChecked(true);
         isTimeTable = true;
+        updatedAttendance = false;
 
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -110,6 +112,7 @@ public class DetailActivity extends AppCompatActivity implements
                         menuItem.setChecked(true);
                         switch (menuItem.getItemId()) {
                             case R.id.nav_time_table:
+                                isTimeTable = true;
                                 helper.getTimeTable();
                                 break;
                             case R.id.nav_logout:
@@ -201,10 +204,9 @@ public class DetailActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onDialogPositiveClick(int classAttended, int totalClasses) {
-        if (!isTimeTable)
-            helper.getSubjects();
-        else helper.getTimeTable();
+    public void onDialogPositiveClick() {
+        updatedAttendance = true;
+        helper.getSubjects();
         swipeRefreshLayout.setRefreshing(true);
     }
 
@@ -245,6 +247,11 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
         swipeRefreshLayout.setRefreshing(false);
+        if (updatedAttendance && isTimeTable) {
+            swipeRefreshLayout.setRefreshing(true);
+            updatedAttendance = false;
+            helper.getTimeTable();
+        }
         if (map != null) {
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);

@@ -137,4 +137,6 @@
     <string name="logout">Log out</string>
     <string name="time_table">Time Table</string>
     <string name="all_subjects">All Subjects</string>
+    <string name="stop_alarm">Stop Alarm</string>
+    <string name="attendance_today_marked">today_attendance</string>
 </resources>

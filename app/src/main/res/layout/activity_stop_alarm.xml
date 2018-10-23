@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="102dp"
-        android:text="23:54"
+        android:layout_marginTop="@dimen/time_text_margin_top"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display4"
         android:textColor="@android:color/white" />
 
@@ -22,12 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/time_text_view"
+        android:layout_marginLeft="@dimen/stop_alarm_button_margin_side"
         android:layout_marginTop="@dimen/alarm_button_margin_top"
+        android:layout_marginRight="@dimen/stop_alarm_button_margin_side"
         android:background="@drawable/round_button"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:padding="@dimen/button_padding"
-        android:text="Stop Alarm"
+        android:text="@string/stop_alarm"
         android:textColor="@color/button_text_color" />
 
 </RelativeLayout>

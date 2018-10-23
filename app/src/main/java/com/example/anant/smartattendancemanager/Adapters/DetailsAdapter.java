@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -16,7 +17,10 @@ import android.widget.TextView;
 import com.example.anant.smartattendancemanager.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
@@ -45,6 +49,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         private TextView percentageTextView;
         private TextView bunkTextView;
         private TextView attendanceTextView;
+        private CheckBox checkBox;
 
         public MyViewHolder(View view) {
             super(view);
@@ -53,7 +58,18 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             bunkTextView = view.findViewById(R.id.leave_text_view);
             percentageTextView = view.findViewById(R.id.percentage_text_view);
             detailsCardView = view.findViewById(R.id.details_card_view);
+            checkBox = view.findViewById(R.id.attendance_check_box);
             detailsCardView.setOnClickListener(this);
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    getAdapterPosition();
+                    SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.attendance_today_marked),
+                            MODE_PRIVATE).edit();
+                    editor.putBoolean(subjectDataset.get(getAdapterPosition()), isChecked);
+                    editor.apply();
+                }
+            });
 
         }
 
