@@ -113,12 +113,14 @@ public class DetailActivity extends AppCompatActivity implements
                         switch (menuItem.getItemId()) {
                             case R.id.nav_time_table:
                                 isTimeTable = true;
+                                swipeRefreshLayout.setRefreshing(true);
                                 helper.getTimeTable();
                                 break;
                             case R.id.nav_logout:
                                 startLoginActivity();
                                 break;
                             case R.id.nav_all_subjects:
+                                swipeRefreshLayout.setRefreshing(true);
                                 isTimeTable = false;
                                 helper.getSubjects();
                                 break;
@@ -274,10 +276,13 @@ public class DetailActivity extends AppCompatActivity implements
     private boolean isInternetConnected() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean isConnected;
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+        if (activeNetwork != null)
+            isConnected = true;
+        else
+            isConnected = false;
         return isConnected;
     }
 }
