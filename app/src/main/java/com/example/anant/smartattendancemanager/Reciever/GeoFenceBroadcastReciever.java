@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,12 +43,10 @@ public class GeoFenceBroadcastReciever extends BroadcastReceiver {
         timeTableRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                if (map != null) {
-                    final List<String> tableDataset = new ArrayList<>(map.keySet());
-                    for (String key : tableDataset) {
-                        mSubjects.add(map.get(key).toString().toLowerCase());
-                        Log.d("checkID", map.get(key).toString());
+                ArrayList<Object> arrayList = (ArrayList<Object>) dataSnapshot.getValue();
+                if (arrayList != null) {
+                    for (Object key : arrayList) {
+                        mSubjects.add(key.toString());
                     }
                     getSubjectsList();
                     timeTableRef.removeEventListener(this);
@@ -77,7 +74,7 @@ public class GeoFenceBroadcastReciever extends BroadcastReceiver {
                         String classes = map.get(subject).toString();
                         int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
                         int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-                        if (mSubjects.contains(subject.toLowerCase())) {
+                        if (mSubjects.contains(subject)) {
                             attended++;
                             noOfClasses++;
                         }
