@@ -3,41 +3,48 @@ package com.example.anant.smartattendancemanager.Activities;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class StopAlarmActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
+    @BindView(R.id.time_text_view)
+    TextView timeTextView;
+    @BindView(R.id.stop_alarm_button)
+    Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Window win = getWindow();
-        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.activity_stop_alarm);
 
+        setShowWhenLocked(true);
+        setTurnScreenOn(true);
 
-        /*Uri alarmTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        ringtoneAlarm = RingtoneManager.getRingtone(getApplicationContext(), alarmTone);
-        ringtoneAlarm.setStreamType(AudioManager.STREAM_ALARM);
-        ringtoneAlarm.play(); **/
+        ButterKnife.bind(this);
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        timeTextView.setText(sdf.format(cal.getTime()));
 
         setAlarmLooping();
 
-        Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

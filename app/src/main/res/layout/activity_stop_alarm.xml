@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/alarm_activity_background"
     tools:context=".Activities.StopAlarmActivity">
 
     <TextView
@@ -11,17 +12,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display4"
         android:layout_marginTop="102dp"
-        android:text="23:54" />
+        android:text="23:54"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display4"
+        android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/stop_alarm_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="186dp"
+        android:layout_below="@+id/time_text_view"
+        android:layout_marginTop="@dimen/alarm_button_margin_top"
+        android:background="@drawable/round_button"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:padding="@dimen/button_padding"
         android:text="Stop Alarm"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+        android:textColor="@color/button_text_color" />
+
 </RelativeLayout>

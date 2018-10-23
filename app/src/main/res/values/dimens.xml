@@ -23,4 +23,5 @@
     <dimen name="image_padding_right">8dp</dimen>
     <dimen name="card_layout_margin">8dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
+    <dimen name="alarm_button_margin_top">80dp</dimen>
 </resources>
