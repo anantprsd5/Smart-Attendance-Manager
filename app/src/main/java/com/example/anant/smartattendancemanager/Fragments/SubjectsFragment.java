@@ -130,4 +130,5 @@ public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataF
             mRecyclerView.setAdapter(mAdapter);
         }
     }
+
 }

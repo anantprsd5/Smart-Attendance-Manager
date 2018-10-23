@@ -135,4 +135,6 @@
     <string name="leave_class">You may leave next %d classes</string>
     <string name="attendance_shared_pref">attendance</string>
     <string name="logout">Log out</string>
+    <string name="time_table">Time Table</string>
+    <string name="all_subjects">All Subjects</string>
 </resources>

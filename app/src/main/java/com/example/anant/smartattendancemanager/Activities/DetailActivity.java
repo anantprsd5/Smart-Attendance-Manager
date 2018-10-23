@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,10 +47,15 @@ public class DetailActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private DatabaseReference ref;
     private DatabaseHelper helper;
+    private boolean isTimeTable;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.days_backdrop)
     ImageView daysImageView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     private int[] days_backdrop = {R.drawable.monday_backdrop, R.drawable.tuesday_backdrop,
             R.drawable.wednesday_backdrop, R.drawable.thursday_backdrop,
@@ -90,6 +99,42 @@ public class DetailActivity extends AppCompatActivity implements
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
 
+        navigationView.getMenu().getItem(0).setChecked(true);
+        isTimeTable = true;
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_time_table:
+                                helper.getTimeTable();
+                                break;
+                            case R.id.nav_logout:
+                                startLoginActivity();
+                                break;
+                            case R.id.nav_all_subjects:
+                                isTimeTable = false;
+                                helper.getSubjects();
+                                break;
+                        }
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference("/users/" + UID + "/subjects");
@@ -97,7 +142,9 @@ public class DetailActivity extends AppCompatActivity implements
         helper = new DatabaseHelper(UID, this);
         if (isInternetConnected()) {
             swipeRefreshLayout.setRefreshing(true);
-            helper.getSubjects();
+            if (!isTimeTable)
+                helper.getSubjects();
+            else helper.getTimeTable();
         } else {
             setUpAdapter(helper.getSubjectFromSharedPreference(this));
         }
@@ -106,7 +153,9 @@ public class DetailActivity extends AppCompatActivity implements
             @Override
             public void onRefresh() {
                 if (isInternetConnected())
-                    helper.getSubjects();
+                    if (!isTimeTable)
+                        helper.getSubjects();
+                    else helper.getTimeTable();
                 else swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -142,6 +191,9 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void startLoginActivity() {
+        FirebaseAuth.getInstance().signOut();
+        if (helper != null)
+            helper.clearSharedPreference(this);
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
@@ -150,7 +202,9 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDialogPositiveClick(int classAttended, int totalClasses) {
-        helper.getSubjects();
+        if (!isTimeTable)
+            helper.getSubjects();
+        else helper.getTimeTable();
         swipeRefreshLayout.setRefreshing(true);
     }
 
@@ -176,9 +230,14 @@ public class DetailActivity extends AppCompatActivity implements
         }
 
         if (id == R.id.logout) {
-            FirebaseAuth.getInstance().signOut();
             startLoginActivity();
             return true;
+        }
+
+        if (id == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
