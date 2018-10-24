@@ -32,4 +32,20 @@ Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="details_appbar_height">200dp</dimen>
+    <dimen name="app_bar_elevation">2dp</dimen>
+    <dimen name="recycler_view_padding">8dp</dimen>
+    <dimen name="attendance_card_view_height">160dp</dimen>
+    <dimen name="attendance_card_view_margin">8dp</dimen>
+    <dimen name="attendance_card_elevation">8dp</dimen>
+    <dimen name="subject_padding">8dp</dimen>
+    <dimen name="mark_button_margin_bottom">4dp</dimen>
+    <dimen name="unmark_button_margin_bottom">4dp</dimen>
+    <dimen name="percentage_layout_margin_left">30dp</dimen>
+    <dimen name="percentage_text_view_width">80dp</dimen>
+    <dimen name="percentage_text_view_height">80dp</dimen>
+    <dimen name="lanscape_attendance_card_height">160dp</dimen>
+    <dimen name="landscape_card_margin_side">50dp</dimen>
+    <dimen name="landscape_card_margin_top">8dp</dimen>
+    <dimen name="landscape_percentage_margin_left">200dp</dimen>
 </resources>

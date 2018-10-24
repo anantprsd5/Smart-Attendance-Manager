@@ -3,7 +3,6 @@ package com.example.anant.smartattendancemanager.Reciever;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.anant.smartattendancemanager.Activities.StopAlarmActivity;
 

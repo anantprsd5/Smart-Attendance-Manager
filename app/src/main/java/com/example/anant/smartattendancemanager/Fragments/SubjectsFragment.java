@@ -2,19 +2,13 @@ package com.example.anant.smartattendancemanager.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
@@ -23,8 +17,6 @@ import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -33,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 // In this case, the fragment displays simple text based on the page
@@ -47,8 +38,6 @@ public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataF
     private int page;
     private DatabaseReference mDatabase;
     private HashMap<String, String> subjects;
-    private DatabaseReference ref;
-    private ValueEventListener valueEventListener;
 
     public void SubjectsFragment() {
     }

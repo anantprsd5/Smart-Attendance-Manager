@@ -65,7 +65,7 @@ import static com.example.anant.smartattendancemanager.Activities.SettingsActivi
 public class SettingsActivity extends AppCompatPreferenceActivity implements TimePickerDialog.OnTimeSetListener {
     private static final String TAG = SettingsActivity.class.getSimpleName();
     private static final int PLACE_PICKER_REQUEST = 100;
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static final int MY_PERMISSIONS_REQUEST_READ_LOCATION = 1;
     private static PlacePicker.IntentBuilder builder;
     private static Context mContext;
     private static Activity activity;
@@ -298,7 +298,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
                 // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(activity,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        MY_PERMISSIONS_REQUEST_READ_LOCATION);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -314,13 +314,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+            case MY_PERMISSIONS_REQUEST_READ_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     scheduleJob();
                 } else {
-                    Toast.makeText(this, "Location access is required for it to work",
+                    Toast.makeText(this, R.string.location_access_required,
                             Toast.LENGTH_SHORT).show();
                 }
                 return;

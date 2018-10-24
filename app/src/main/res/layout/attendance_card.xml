@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/details_card_view"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:layout_margin="8dp"
-    app:cardElevation="8dp">
+    android:layout_height="@dimen/attendance_card_view_height"
+    android:layout_margin="@dimen/attendance_card_view_margin"
+    app:cardElevation="@dimen/attendance_card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,8 +21,7 @@
                 android:id="@+id/subject_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Physics"
+                android:padding="@dimen/subject_padding"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textStyle="bold" />
 
@@ -30,16 +29,14 @@
                 android:id="@+id/attendance_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Attendance : 21/30"
+                android:padding="@dimen/subject_padding"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <TextView
                 android:id="@+id/leave_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="You may leave next 5 classes"
+                android:padding="@dimen/subject_padding"
                 android:textStyle="italic|bold" />
 
             <LinearLayout
@@ -50,8 +47,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="Mark Attendance"
+                    android:padding="@dimen/subject_padding"
+                    android:text="@string/mark_attendance"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -59,8 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"
-                    android:padding="8dp"
+                    android:layout_marginBottom="@dimen/mark_button_margin_bottom"
+                    android:padding="@dimen/subject_padding"
                     app:srcCompat="@drawable/ic_check_circle_black_24dp" />
 
                 <ImageView
@@ -68,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/unmark_button_margin_bottom"
                     app:srcCompat="@drawable/ic_close_black_24dp" />
             </LinearLayout>
 
@@ -79,17 +76,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="@dimen/percentage_layout_margin_left"
             android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/percentage_text_view"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="@dimen/percentage_text_view_width"
+                android:layout_height="@dimen/percentage_text_view_height"
                 android:background="@drawable/textview_design_red"
                 android:gravity="center"
-                android:text="56"
                 android:textSize="30sp" />
 
         </RelativeLayout>

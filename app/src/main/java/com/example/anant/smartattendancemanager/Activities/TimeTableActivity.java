@@ -26,7 +26,7 @@ public class TimeTableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_time_table);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Time Table");
+        toolbar.setTitle(R.string.time_table);
         setSupportActionBar(toolbar);
 
         //Toolbar is now an action bar
