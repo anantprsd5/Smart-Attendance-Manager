@@ -139,4 +139,6 @@
     <string name="all_subjects">All Subjects</string>
     <string name="stop_alarm">Stop Alarm</string>
     <string name="attendance_today_marked">today_attendance</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

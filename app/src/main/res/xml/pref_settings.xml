@@ -25,13 +25,6 @@
             android:key="@string/alarm_attendance_low"
             android:title="@string/title_alarm" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/alarm_attendance_low"
-            android:key="@string/alarm_auto_enable"
-            android:summary="@string/enable_attendance_based"
-            android:title="@string/auto_enable_alarm" />
-
         <Preference
             android:dependency="@string/alarm_attendance_low"
             android:key="@string/college_time"

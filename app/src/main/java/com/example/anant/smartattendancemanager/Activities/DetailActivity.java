@@ -139,7 +139,6 @@ public class DetailActivity extends AppCompatActivity implements
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference("/users/" + UID + "/subjects");
@@ -268,6 +267,13 @@ public class DetailActivity extends AppCompatActivity implements
                 DialogFragment newFragment = new AttendanceDialogFragment();
                 ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
                 newFragment.show(getSupportFragmentManager(), "attendance");
+            }
+
+            @Override
+            public void onAttendanceMarked() {
+                updatedAttendance = true;
+                helper.getSubjects();
+                swipeRefreshLayout.setRefreshing(true);
             }
         });
         mRecyclerView.setAdapter(detailsAdapter);

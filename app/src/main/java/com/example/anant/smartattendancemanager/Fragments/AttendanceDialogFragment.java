@@ -21,7 +21,7 @@ public class AttendanceDialogFragment extends DialogFragment {
     String key;
 
     public interface NoticeDialogListener {
-        public void onDialogPositiveClick();
+        void onDialogPositiveClick();
     }
 
     public void setArguments(DatabaseReference reference, String key) {

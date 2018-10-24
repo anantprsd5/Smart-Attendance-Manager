@@ -1,26 +1,22 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
@@ -34,9 +30,14 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             R.drawable.textview_design_red};
     private float percentage;
     private Context context;
+    private FirebaseAuth mAuth;
+    private String UID;
+    private DatabaseReference ref;
 
     public interface OnItemClickListener {
         void onItemClick(String key);
+
+        void onAttendanceMarked();
     }
 
     // Provide a reference to the views for each data item
@@ -45,10 +46,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView subject_textView;
-        private CardView detailsCardView;
         private TextView percentageTextView;
         private TextView bunkTextView;
         private TextView attendanceTextView;
+        private ImageView attendanceMark;
+        private ImageView attendanceUnmark;
 
         public MyViewHolder(View view) {
             super(view);
@@ -56,8 +58,35 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             attendanceTextView = view.findViewById(R.id.attendance_text_view);
             bunkTextView = view.findViewById(R.id.leave_text_view);
             percentageTextView = view.findViewById(R.id.percentage_text_view);
-            detailsCardView = view.findViewById(R.id.details_card_view);
             percentageTextView.setOnClickListener(this);
+            attendanceMark = view.findViewById(R.id.attendance_mark);
+            attendanceUnmark = view.findViewById(R.id.attendance_unmark);
+            attendanceMark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String key = subjectDataset.get(getAdapterPosition());
+                    String classes = attendanceMap.get(key).toString();
+                    int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
+                    int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put(key, (++attended) + "/" + (++noOfClasses));
+                    ref.updateChildren(result);
+                    onItemClickListener.onAttendanceMarked();
+                }
+            });
+            attendanceUnmark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String key = subjectDataset.get(getAdapterPosition());
+                    String classes = attendanceMap.get(key).toString();
+                    int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
+                    int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put(key, (attended) + "/" + (++noOfClasses));
+                    ref.updateChildren(result);
+                    onItemClickListener.onAttendanceMarked();
+                }
+            });
 
         }
 
@@ -72,6 +101,16 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         this.onItemClickListener = onItemClickListener;
         attendanceMap = map;
         subjectDataset = new ArrayList<>(map.keySet());
+        getUID();
+    }
+
+    private void getUID() {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        UID = user.getUid();
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("/users/" + UID + "/subjects");
     }
 
     // Create new views (invoked by the layout manager)

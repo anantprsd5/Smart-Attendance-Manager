@@ -18,8 +18,7 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/app_name"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true"></activity>
         <activity
             android:name=".Activities.SignUpActivity"
             android:label="@string/title_activity_sign_up" />
@@ -64,6 +63,15 @@
             android:noHistory="true"
             android:showOnLockScreen="true" />
 
+        <receiver android:name=".AttendanceAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/attendance_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

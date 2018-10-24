@@ -26,4 +26,10 @@
     <dimen name="alarm_button_margin_top">80dp</dimen>
     <dimen name="time_text_margin_top">102dp</dimen>
     <dimen name="stop_alarm_button_margin_side">16dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 </resources>
