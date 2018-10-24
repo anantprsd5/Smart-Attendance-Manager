@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
             }
         }
         Map<String, Object> childUpdates = new HashMap<>();
+        if (subjects.size() == 0) {
+            Toast.makeText(this, R.string.add_least_subject, Toast.LENGTH_LONG).show();
+            return;
+        }
         childUpdates.put("/users/" + UID + "/subjects", subjects);
         mDatabase.updateChildren(childUpdates);
 
