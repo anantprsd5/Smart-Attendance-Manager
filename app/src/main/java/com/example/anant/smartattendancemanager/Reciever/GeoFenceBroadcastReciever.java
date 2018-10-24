@@ -26,10 +26,14 @@ public class GeoFenceBroadcastReciever extends BroadcastReceiver {
 
     List<String> mSubjects;
     private String UID;
-    private DatabaseReference subjectsRef;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        updateAttendane();
+    }
+
+    public void updateAttendane() {
+        mSubjects = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             UID = user.getUid();
@@ -46,7 +50,8 @@ public class GeoFenceBroadcastReciever extends BroadcastReceiver {
                 ArrayList<Object> arrayList = (ArrayList<Object>) dataSnapshot.getValue();
                 if (arrayList != null) {
                     for (Object key : arrayList) {
-                        mSubjects.add(key.toString());
+                        if (key != null)
+                            mSubjects.add(key.toString());
                     }
                     getSubjectsList();
                     timeTableRef.removeEventListener(this);
@@ -63,7 +68,7 @@ public class GeoFenceBroadcastReciever extends BroadcastReceiver {
     private void getSubjectsList() {
         final String subjectsPath = "/users/" + UID + "/subjects/";
         final HashMap<String, Object> result = new HashMap<>();
-        subjectsRef = FirebaseDatabase.getInstance().getReference(subjectsPath);
+        final DatabaseReference subjectsRef = FirebaseDatabase.getInstance().getReference(subjectsPath);
         subjectsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

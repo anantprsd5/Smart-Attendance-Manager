@@ -1,7 +1,5 @@
 package com.example.anant.smartattendancemanager.Activities;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,10 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
-import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.DatabaseHelper;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.R;
