@@ -14,6 +14,10 @@ import com.example.anant.smartattendancemanager.Activities.DetailActivity;
  */
 public class AttendanceAppWidget extends AppWidgetProvider {
 
+    private static int[] drawables = {R.drawable.textview_design_green,
+            R.drawable.textview_design_blue, R.drawable.textview_design_orange,
+            R.drawable.textview_design_red};
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -31,6 +35,7 @@ public class AttendanceAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.attendance_text_view, "Attendance : " + classAttended + "/" + classConducted);
         views.setTextViewText(R.id.percentage_text_view, Integer.toString(percentage));
         views.setTextViewText(R.id.leave_text_view, String.format(context.getString(R.string.leave_class), ((leave == 0) ? 0 : --leave)));
+        views.setInt(R.id.percentage_text_view, "setBackgroundResource", getDrawable(percentage));
 
         views.setOnClickPendingIntent(R.id.details_card_view, getPendingSelfIntent(context));
 
@@ -61,6 +66,20 @@ public class AttendanceAppWidget extends AppWidgetProvider {
     public static PendingIntent getPendingSelfIntent(Context context) {
         Intent intent = new Intent(context, DetailActivity.class);
         return PendingIntent.getActivity(context, 0, intent, 0);
+    }
+
+    private static int getDrawable(int percentageInt) {
+        int drawable = 0;
+        if (percentageInt >= 90) {
+            drawable = drawables[0];
+        } else if (percentageInt >= 75 && percentageInt < 90) {
+            drawable = drawables[1];
+        } else if (percentageInt >= 70 && percentageInt < 75) {
+            drawable = drawables[2];
+        } else if (percentageInt <= 70) {
+            drawable = drawables[3];
+        }
+        return drawable;
     }
 }
 

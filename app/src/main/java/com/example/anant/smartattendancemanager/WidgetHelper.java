@@ -52,7 +52,7 @@ public class WidgetHelper {
             if (noOfClasses != 0)
                 percentage = ((float) attended) / noOfClasses * 100;
             else percentage = 0;
-            if (percentage < lowest) {
+            if (percentage <= lowest) {
                 lowest = percentage;
                 setLowAttendancePercentage(lowest);
                 setClassAttended(attended);
