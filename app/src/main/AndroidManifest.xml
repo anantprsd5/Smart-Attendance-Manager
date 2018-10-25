@@ -21,10 +21,12 @@
             android:noHistory="true"></activity>
         <activity
             android:name=".Activities.SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
+            android:label="@string/title_activity_sign_up"
+            android:noHistory="true" />
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main"
+            android:noHistory="true"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Activities.TimeTableActivity"
@@ -49,7 +51,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCcl5LCMe55jvaQbiSRIl8Y3MVmDmMvv1c" />
+            android:value="ENTER_API_KEY" />
 
         <service
             android:name=".Services.GeoFenceJobService"

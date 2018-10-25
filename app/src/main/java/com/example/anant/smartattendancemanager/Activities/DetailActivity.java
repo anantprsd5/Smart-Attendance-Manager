@@ -261,11 +261,12 @@ public class DetailActivity extends AppCompatActivity implements
         }
         if (map != null) {
             swipeRefreshLayout.setRefreshing(false);
+            noSubTextView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
         } else {
-            noSubTextView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

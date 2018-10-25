@@ -104,15 +104,26 @@ public class LoginActivity extends AppCompatActivity implements DatabaseHelper.O
         mForgotPassView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.sendPasswordResetEmail(mEmailView.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(), R.string.password_reset_mail_sent, Toast.LENGTH_SHORT).show();
+                mProgressBar.setVisibility(View.VISIBLE);
+                mEmailSignInButton.setVisibility(View.GONE);
+                String email = mEmailView.getText().toString();
+                if (TextUtils.isEmpty(email)) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mEmailSignInButton.setVisibility(View.VISIBLE);
+                    mEmailView.setError(getString(R.string.error_field_required));
+                } else {
+                    mAuth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        mProgressBar.setVisibility(View.GONE);
+                                        mEmailSignInButton.setVisibility(View.VISIBLE);
+                                        Toast.makeText(getApplicationContext(), R.string.password_reset_mail_sent, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
 
