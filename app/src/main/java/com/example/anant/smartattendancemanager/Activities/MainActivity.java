@@ -11,10 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.anant.smartattendancemanager.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,18 +22,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements DatabaseHelper.OnDataFetchedListener {
+public class MainActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private static int editTextID = 1;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String UID;
-    @BindView(R.id.indeterminateBar)
-    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
             @Override
             public void onClick(View view) {
                 saveData();
-                Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
-                startActivity(intent);
             }
         });
         toolbar = findViewById(R.id.toolbar);
@@ -63,18 +56,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
-        databaseHelper.getSubjects();
-    }
-
-    @Override
-    public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
-        if (isSuccessful) {
-            if (map != null) {
-                Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
-                startActivity(intent);
-            } else progressBar.setVisibility(View.GONE);
-        } else progressBar.setVisibility(View.GONE);
     }
 
     private void saveData() {
@@ -93,10 +74,12 @@ public class MainActivity extends AppCompatActivity implements DatabaseHelper.On
         if (subjects.size() == 0) {
             Toast.makeText(this, R.string.add_least_subject, Toast.LENGTH_LONG).show();
             return;
+        } else {
+            childUpdates.put("/users/" + UID + "/subjects", subjects);
+            mDatabase.updateChildren(childUpdates);
+            Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
+            startActivity(intent);
         }
-        childUpdates.put("/users/" + UID + "/subjects", subjects);
-        mDatabase.updateChildren(childUpdates);
-
     }
 
     @Override

@@ -247,7 +247,6 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
-        swipeRefreshLayout.setRefreshing(false);
         if (updatedAttendance && isTimeTable) {
             swipeRefreshLayout.setRefreshing(true);
             updatedAttendance = false;
@@ -255,6 +254,7 @@ public class DetailActivity extends AppCompatActivity implements
             return;
         }
         if (map != null) {
+            swipeRefreshLayout.setRefreshing(false);
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
         }

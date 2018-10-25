@@ -103,15 +103,21 @@ public class DatabaseHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Object> arrayList = (ArrayList<Object>) dataSnapshot.getValue();
-                Map<String, Object> newMap = new HashMap<>();
-                for (Object key : arrayList.toArray()) {
-                    if (key != null) {
-                        if (mSubjectsMap.keySet().contains(key.toString())) {
-                            newMap.put(key.toString(), mSubjectsMap.get(key));
+                if (arrayList == null) {
+                    mOnDataFetchedListener.onDataFetched(null, true);
+                    timeTableRef.removeEventListener(this);
+                } else {
+                    Map<String, Object> newMap = new HashMap<>();
+                    for (Object key : arrayList.toArray()) {
+                        if (key != null) {
+                            if (mSubjectsMap.keySet().contains(key.toString())) {
+                                newMap.put(key.toString(), mSubjectsMap.get(key));
+                            }
                         }
                     }
+                    mOnDataFetchedListener.onDataFetched(newMap, true);
+                    timeTableRef.removeEventListener(this);
                 }
-                mOnDataFetchedListener.onDataFetched(newMap, true);
 
             }
 

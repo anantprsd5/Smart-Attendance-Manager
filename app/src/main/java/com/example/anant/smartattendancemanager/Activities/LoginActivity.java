@@ -223,7 +223,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseHelper.O
         FirebaseUser user = mAuth.getCurrentUser();
         String UID = user.getUid();
         DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
-        databaseHelper.getSubjects();
+        databaseHelper.getTimeTable();
 
     }
 
