@@ -29,7 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.anant.smartattendancemanager.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

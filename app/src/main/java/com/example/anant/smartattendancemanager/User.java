@@ -9,6 +9,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User {
 
+    //Defines how data is stored in the firebase real-time database
+
     public String email;
     public String name;
     public String subjects;

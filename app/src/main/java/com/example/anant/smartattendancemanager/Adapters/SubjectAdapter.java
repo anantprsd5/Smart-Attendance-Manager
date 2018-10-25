@@ -81,6 +81,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.subject_textView.setText(mDataset.get(position));
+        holder.subject_textView.setContentDescription(mDataset.get(position));
         if (sparseBooleanArray.get(position)) {
             holder.mImageView.setVisibility(View.VISIBLE);
         } else {

@@ -4,5 +4,5 @@
     android:layout_height="48dp"
     android:layout_margin="8dp"
     android:background="@drawable/edit_text_border"
-    android:hint="Enter Subject"
-    android:padding="8dp" />
+    android:hint="@string/enter_subject"
+    android:padding="@dimen/subject_padding" />

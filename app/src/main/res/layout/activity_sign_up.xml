@@ -56,9 +56,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/full_name"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPersonName"
                         android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white" />
+                        android:textColorHint="@android:color/white"
+                        android:contentDescription="@string/enter_your_name_here"/>
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -80,7 +81,8 @@
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding">
+                    android:paddingLeft="@dimen/text_input_padding"
+                    android:contentDescription="@string/login_field">
 
                     <EditText
                         android:id="@+id/input_email"
@@ -113,7 +115,8 @@
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding">
+                    android:paddingLeft="@dimen/text_input_padding"
+                    android:contentDescription="@string/login_field">
 
                     <EditText
                         android:id="@+id/input_password"
@@ -136,6 +139,7 @@
                 android:background="@drawable/round_button"
                 android:padding="@dimen/button_padding"
                 android:text="@string/sign_up"
+                android:contentDescription="@string/sign_up_button_description"
                 android:textColor="@color/button_text_color" />
 
             <ProgressBar
@@ -156,7 +160,8 @@
                 android:gravity="center"
                 android:text="@string/login_account"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size" />
+                android:textSize="@dimen/text_size"
+                android:contentDescription="@string/sign_in_description"/>
 
         </LinearLayout>
 

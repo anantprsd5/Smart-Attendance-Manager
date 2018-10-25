@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
-import com.example.anant.smartattendancemanager.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;

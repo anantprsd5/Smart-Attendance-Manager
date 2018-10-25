@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,14 +17,16 @@ import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.anant.smartattendancemanager.AlarmHelper;
-import com.example.anant.smartattendancemanager.JobSchedulerHelper;
+import com.example.anant.smartattendancemanager.Helper.AlarmHelper;
+import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Helper.JobSchedulerHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -116,6 +119,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
         // The entry points to the Places API.
         private GeoDataClient mGeoDataClient;
         public static Preference timePreference;
+        public static Preference resetPreference;
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -139,6 +143,26 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
                     } catch (GooglePlayServicesNotAvailableException e) {
                         e.printStackTrace();
                     }
+                    return false;
+                }
+            });
+
+            resetPreference = findPreference(getString(R.string.reset_subjects));
+            resetPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(R.string.reset)
+                            .setMessage(R.string.reset_all_data)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    DatabaseHelper.clearAlldata(UID);
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
                     return false;
                 }
             });
@@ -334,5 +358,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
     private static void scheduleJob() {
         JobSchedulerHelper helper = new JobSchedulerHelper(mContext);
         helper.scheduleJobNonRecurring();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
     }
 }

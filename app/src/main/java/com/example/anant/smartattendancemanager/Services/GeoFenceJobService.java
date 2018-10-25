@@ -5,7 +5,8 @@ import android.util.Log;
 
 import com.example.anant.smartattendancemanager.Constants;
 import com.example.anant.smartattendancemanager.GeoFencing;
-import com.example.anant.smartattendancemanager.JobSchedulerHelper;
+import com.example.anant.smartattendancemanager.Helper.JobSchedulerHelper;
+import com.example.anant.smartattendancemanager.R;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -70,7 +71,7 @@ public class GeoFenceJobService extends JobService {
                                     GeoFencing geoFencing = new GeoFencing(GeoFenceJobService.this, myPlace);
                                     geoFencing.registerGeofence();
                                 } else {
-                                    Log.e(TAG, "Place not found");
+                                    Log.e(TAG, getString(R.string.place_not_found));
                                 }
                             }
                         });

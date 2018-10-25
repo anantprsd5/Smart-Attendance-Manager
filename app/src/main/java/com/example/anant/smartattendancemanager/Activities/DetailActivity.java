@@ -17,10 +17,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
-import com.example.anant.smartattendancemanager.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,8 +42,6 @@ import butterknife.ButterKnife;
 public class DetailActivity extends AppCompatActivity implements
         AttendanceDialogFragment.NoticeDialogListener, DatabaseHelper.OnDataFetchedListener {
 
-    private Toolbar toolbar;
-    private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private String UID;
     private FirebaseAuth mAuth;
@@ -57,6 +57,12 @@ public class DetailActivity extends AppCompatActivity implements
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.no_subject_text_view)
+    TextView noSubTextView;
+    @BindView(R.id.recycler_view_details)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar_title)
+    Toolbar toolbar;
 
     private int[] days_backdrop = {R.drawable.monday_backdrop, R.drawable.tuesday_backdrop,
             R.drawable.wednesday_backdrop, R.drawable.thursday_backdrop,
@@ -67,11 +73,10 @@ public class DetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        toolbar = findViewById(R.id.toolbar_title);
+        ButterKnife.bind(this);
+
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
-        ButterKnife.bind(this);
 
         getDayDrawable();
 
@@ -87,7 +92,6 @@ public class DetailActivity extends AppCompatActivity implements
             return;
         }
 
-        mRecyclerView = findViewById(R.id.recycler_view_details);
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
@@ -100,7 +104,10 @@ public class DetailActivity extends AppCompatActivity implements
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
 
-        navigationView.getMenu().getItem(0).setChecked(true);
+        if (isInternetConnected())
+            navigationView.getMenu().getItem(0).setChecked(true);
+        else navigationView.getMenu().getItem(1).setChecked(true);
+
         isTimeTable = true;
         updatedAttendance = false;
 
@@ -199,7 +206,6 @@ public class DetailActivity extends AppCompatActivity implements
         if (helper != null)
             helper.clearSharedPreference(this);
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 
@@ -257,6 +263,9 @@ public class DetailActivity extends AppCompatActivity implements
             swipeRefreshLayout.setRefreshing(false);
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
+        } else {
+            noSubTextView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         }
     }
 

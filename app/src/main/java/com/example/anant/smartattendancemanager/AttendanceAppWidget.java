@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
+import com.example.anant.smartattendancemanager.Helper.WidgetHelper;
 
 /**
  * Implementation of App Widget functionality.

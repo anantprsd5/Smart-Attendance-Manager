@@ -74,4 +74,21 @@
     <string name="location_access_required" translatable="true">Location access is required for it to work</string>
     <string name="mark_attendance" translatable="true">Mark Attendance</string>
     <string name="add_least_subject">Add at least one Subject</string>
+    <string name="no_subjects_to_show">No Subjects to Show</string>
+    <string name="reset_subjects">reset_subjects</string>
+    <string name="reset_subjects_summary">Clear and Re-enter subjects</string>
+    <string name="reset_all">Reset All</string>
+    <string name="reset">Reset</string>
+    <string name="reset_all_data" translatable="true">Do you really want to reset all data?</string>
+    <string name="app_logo_description">App Logo</string>
+    <string name="login_field">Login Field</string>
+    <string name="login_password_field">Login Password Field</string>
+    <string name="login_button_description">Login Button</string>
+    <string name="create_account_description">Create account</string>
+    <string name="forgot_password_description">forgot password</string>
+    <string name="enter_your_name_here">Enter Your name here</string>
+    <string name="sign_up_button_description">Sign Up button</string>
+    <string name="sign_in_description">Sign In</string>
+    <string name="place_not_found">Place not found</string>
+    <string name="enter_subject">Enter Subject</string>
 </resources>

@@ -26,8 +26,12 @@
             android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Activities.TimeTableActivity" />
-        <activity android:name=".Activities.DetailActivity">
+        <activity
+            android:name=".Activities.TimeTableActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".Activities.DetailActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +41,7 @@
         <activity
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:noHistory="true"
             android:theme="@style/AppTheme.Settings" />
 
         <meta-data

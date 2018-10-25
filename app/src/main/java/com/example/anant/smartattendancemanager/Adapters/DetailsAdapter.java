@@ -134,6 +134,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         String subject = subjectDataset.get(position);
         holder.subject_textView.setText(subject.substring(0, 1).toUpperCase()
                 + subject.substring(1).toLowerCase());
+        holder.subject_textView.setContentDescription(subject);
         String classes = attendanceMap.get(subject).toString();
         int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
         int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
@@ -142,7 +143,9 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         else percentage = 0;
         holder.percentageTextView.setText(Integer.toString(Math.round(percentage)));
         holder.percentageTextView.setBackgroundResource(getDrawable());
+        holder.percentageTextView.setContentDescription(Integer.toString(Math.round(percentage)));
         holder.attendanceTextView.setText("Attendance: " + attended + "/" + noOfClasses);
+        holder.attendanceTextView.setContentDescription("Attendance: " + attended + "/" + noOfClasses);
         int i = 0;
         while (percentage >= 75) {
             noOfClasses++;
@@ -150,6 +153,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             i++;
         }
         holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
+        holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
     }
 
     private int getDrawable() {

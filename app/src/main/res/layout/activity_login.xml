@@ -29,7 +29,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/logo_margin_bottom"
                 android:src="@drawable/book_logo_login"
-                android:transitionName="@string/logo_transition" />
+                android:transitionName="@string/logo_transition"
+                android:contentDescription="@string/app_logo_description"/>
 
             <!-- Email Label -->
 
@@ -50,7 +51,8 @@
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding">
+                    android:paddingLeft="@dimen/text_input_padding"
+                    android:contentDescription="@string/login_field">
 
                     <EditText
                         android:id="@+id/input_email"
@@ -83,7 +85,8 @@
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding">
+                    android:paddingLeft="@dimen/text_input_padding"
+                    android:contentDescription="@string/login_password_field">
 
                     <EditText
                         android:id="@+id/input_password"
@@ -106,7 +109,8 @@
                 android:background="@drawable/round_button"
                 android:padding="@dimen/button_padding"
                 android:text="@string/login_button_text"
-                android:textColor="@color/button_text_color" />
+                android:textColor="@color/button_text_color"
+                android:contentDescription="@string/login_button_description"/>
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -126,7 +130,8 @@
                 android:gravity="center"
                 android:text="@string/sign_up_text"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size" />
+                android:textSize="@dimen/text_size"
+                android:contentDescription="@string/create_account_description"/>
 
             <TextView
                 android:id="@+id/link_forgot_password"
@@ -136,7 +141,8 @@
                 android:gravity="center"
                 android:text="@string/forgot_password"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size" />
+                android:textSize="@dimen/text_size"
+                android:contentDescription="@string/forgot_password_description"/>
 
         </LinearLayout>
 
