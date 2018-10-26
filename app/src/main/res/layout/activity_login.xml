@@ -20,7 +20,9 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/padding_left"
             android:paddingTop="@dimen/padding_top"
-            android:paddingRight="@dimen/padding_right">
+            android:paddingRight="@dimen/padding_right"
+            android:paddingEnd="@dimen/padding_right"
+            android:paddingStart="@dimen/padding_left">
 
             <ImageView
                 android:id="@+id/logo_image_view"

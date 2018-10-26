@@ -1,5 +1,7 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
+import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.R;
@@ -286,7 +289,17 @@ public class DetailActivity extends AppCompatActivity implements
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
+        updateAppWidget();
         mRecyclerView.setAdapter(detailsAdapter);
+    }
+
+    private void updateAppWidget() {
+        Intent intent = new Intent(this, AttendanceAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), AttendanceAppWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     private boolean isInternetConnected() {

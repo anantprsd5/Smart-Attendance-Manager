@@ -7,7 +7,9 @@
     android:layout_marginLeft="@dimen/landscape_card_margin_side"
     android:layout_marginTop="@dimen/landscape_card_margin_top"
     android:layout_marginRight="@dimen/landscape_card_margin_side"
-    app:cardElevation="@dimen/attendance_card_elevation">
+    app:cardElevation="@dimen/attendance_card_elevation"
+    android:layout_marginStart="@dimen/landscape_card_margin_side"
+    android:layout_marginEnd="@dimen/landscape_card_margin_side">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,7 +83,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/landscape_percentage_margin_left"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/landscape_percentage_margin_left">
 
             <TextView
                 android:id="@+id/percentage_text_view"

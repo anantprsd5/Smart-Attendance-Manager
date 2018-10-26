@@ -91,4 +91,7 @@
     <string name="sign_in_description">Sign In</string>
     <string name="place_not_found">Place not found</string>
     <string name="enter_subject">Enter Subject</string>
+    <string name="proceed">Proceed</string>
+    <string name="user">User</string>
+    <string name="add_your_subjects_here_press_add_button_to_add_more">Add your Subjects here. Press add button to add more</string>
 </resources>

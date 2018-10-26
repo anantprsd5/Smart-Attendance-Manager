@@ -20,9 +20,9 @@
                 android:id="@+id/subject_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minLines="1"
                 android:padding="@dimen/widget_text_padding"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/attendance_text_view"
@@ -44,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/widget_text_margin_left"
             android:layout_marginLeft="@dimen/widget_text_margin_left"
             android:gravity="center"
             android:orientation="vertical">

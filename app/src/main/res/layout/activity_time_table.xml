@@ -38,6 +38,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:contentDescription="@string/proceed"/>
 
 </android.support.design.widget.CoordinatorLayout>

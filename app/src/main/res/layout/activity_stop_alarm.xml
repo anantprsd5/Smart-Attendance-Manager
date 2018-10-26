@@ -27,6 +27,8 @@
         android:background="@drawable/round_button"
         android:padding="@dimen/button_padding"
         android:text="@string/stop_alarm"
-        android:textColor="@color/button_text_color" />
+        android:textColor="@color/button_text_color"
+        android:layout_marginStart="@dimen/stop_alarm_button_margin_side"
+        android:layout_marginEnd="@dimen/stop_alarm_button_margin_side" />
 
 </RelativeLayout>

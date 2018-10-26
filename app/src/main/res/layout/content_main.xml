@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp"
-            android:text="Add your Subjects here. Press add button to add more"
+            android:text="@string/add_your_subjects_here_press_add_button_to_add_more"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
     </LinearLayout>
