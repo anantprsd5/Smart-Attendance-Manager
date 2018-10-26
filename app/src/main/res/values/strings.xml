@@ -74,7 +74,7 @@
     <string name="location_access_required" translatable="true">Location access is required for it to work</string>
     <string name="mark_attendance" translatable="true">Mark Attendance</string>
     <string name="add_least_subject">Add at least one Subject</string>
-    <string name="no_subjects_to_show">No Subjects to Show</string>
+    <string name="no_subjects_to_show">No classes today. Sit back, Relax!</string>
     <string name="reset_subjects">reset_subjects</string>
     <string name="reset_subjects_summary" translatable="true">Clear and Re-enter subjects</string>
     <string name="reset_all" translatable="true">Reset All</string>

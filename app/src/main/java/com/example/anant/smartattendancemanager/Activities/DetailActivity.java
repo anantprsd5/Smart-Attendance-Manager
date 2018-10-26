@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -60,8 +62,8 @@ public class DetailActivity extends AppCompatActivity implements
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-    @BindView(R.id.no_subject_text_view)
-    TextView noSubTextView;
+    @BindView(R.id.no_subject_scroll_view)
+    NestedScrollView nestedScrollView;
     @BindView(R.id.recycler_view_details)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_title)
@@ -264,12 +266,14 @@ public class DetailActivity extends AppCompatActivity implements
         }
         if (map != null) {
             swipeRefreshLayout.setRefreshing(false);
-            noSubTextView.setVisibility(View.GONE);
+            nestedScrollView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
         } else {
             swipeRefreshLayout.setRefreshing(false);
+            nestedScrollView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         }
     }
 

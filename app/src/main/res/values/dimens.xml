@@ -60,4 +60,9 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="nav_header_height">192dp</dimen>
     <dimen name="nav_padding">16dp</dimen>
     <dimen name="nav_image_size">100dp</dimen>
+    <dimen name="no_subject_image_view_size">180dp</dimen>
+    <dimen name="no_subject_image_view_margin">120dp</dimen>
+    <dimen name="no_subject_text_view_margin">20dp</dimen>
+    <dimen name="no_sub_margin_bottom">80dp</dimen>
+    <dimen name="no_sub_text_margin_bottom">10dp</dimen>
 </resources>
