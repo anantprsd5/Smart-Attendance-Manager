@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseHelper.O
     ProgressBar mProgressBar;
 
     private FirebaseAuth mAuth;
+    private DatabaseHelper databaseHelper;
 
 
     @Override
@@ -233,8 +234,8 @@ public class LoginActivity extends AppCompatActivity implements DatabaseHelper.O
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         String UID = user.getUid();
-        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
-        databaseHelper.getTimeTable();
+        databaseHelper = new DatabaseHelper(UID, this);
+        databaseHelper.getSubjects();
 
     }
 
