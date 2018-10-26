@@ -1,6 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            // You need to specify either an absolute path or include the
+            // keystore file in the same directory as the build.gradle file.
+            storeFile file("android.jks")
+            storePassword "mataroski"
+            keyAlias "key0"
+            keyPassword "mataroski"
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.anant.smartattendancemanager"
@@ -13,6 +24,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
