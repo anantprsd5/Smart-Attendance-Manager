@@ -76,22 +76,22 @@
     <string name="add_least_subject">Add at least one Subject</string>
     <string name="no_subjects_to_show">No Subjects to Show</string>
     <string name="reset_subjects">reset_subjects</string>
-    <string name="reset_subjects_summary">Clear and Re-enter subjects</string>
-    <string name="reset_all">Reset All</string>
-    <string name="reset">Reset</string>
+    <string name="reset_subjects_summary" translatable="true">Clear and Re-enter subjects</string>
+    <string name="reset_all" translatable="true">Reset All</string>
+    <string name="reset" translatable="true">Reset</string>
     <string name="reset_all_data" translatable="true">Do you really want to reset all data?</string>
-    <string name="app_logo_description">App Logo</string>
-    <string name="login_field">Login Field</string>
-    <string name="login_password_field">Login Password Field</string>
-    <string name="login_button_description">Login Button</string>
-    <string name="create_account_description">Create account</string>
-    <string name="forgot_password_description">forgot password</string>
-    <string name="enter_your_name_here">Enter Your name here</string>
-    <string name="sign_up_button_description">Sign Up button</string>
-    <string name="sign_in_description">Sign In</string>
-    <string name="place_not_found">Place not found</string>
-    <string name="enter_subject">Enter Subject</string>
-    <string name="proceed">Proceed</string>
-    <string name="user">User</string>
-    <string name="add_your_subjects_here_press_add_button_to_add_more">Add your Subjects here. Press add button to add more</string>
+    <string name="app_logo_description" translatable="true">App Logo</string>
+    <string name="login_field" translatable="true">Login Field</string>
+    <string name="login_password_field" translatable="true">Login Password Field</string>
+    <string name="login_button_description" translatable="true">Login Button</string>
+    <string name="create_account_description" translatable="true">Create account</string>
+    <string name="forgot_password_description" translatable="true">forgot password</string>
+    <string name="enter_your_name_here" translatable="true">Enter Your name here</string>
+    <string name="sign_up_button_description" translatable="true">Sign Up button</string>
+    <string name="sign_in_description" translatable="true">Sign In</string>
+    <string name="place_not_found" translatable="true">Place not found</string>
+    <string name="enter_subject" translatable="true">Enter Subject</string>
+    <string name="proceed" translatable="true">Proceed</string>
+    <string name="user" translatable="true">User</string>
+    <string name="add_your_subjects_here_press_add_button_to_add_more" translatable="true">Add your Subjects here. Press add button to add more</string>
 </resources>
