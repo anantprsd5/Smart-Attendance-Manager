@@ -58,6 +58,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/mark_button_margin_bottom"
                     android:padding="@dimen/subject_padding"
+                    android:contentDescription="@string/attend_class"
                     app:srcCompat="@drawable/ic_check_circle_black_24dp" />
 
                 <ImageView
@@ -66,6 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/unmark_button_margin_bottom"
+                    android:contentDescription="@string/leave_class_description"
                     app:srcCompat="@drawable/ic_close_black_24dp" />
             </LinearLayout>
 

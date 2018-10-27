@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
@@ -186,24 +185,31 @@ public class DetailActivity extends AppCompatActivity implements
         switch (day.toLowerCase()) {
             case "monday":
                 daysImageView.setBackgroundResource(days_backdrop[0]);
+                daysImageView.setContentDescription(day);
                 break;
             case "tuesday":
                 daysImageView.setBackgroundResource(days_backdrop[1]);
+                daysImageView.setContentDescription(day);
                 break;
             case "wednesday":
                 daysImageView.setBackgroundResource(days_backdrop[2]);
+                daysImageView.setContentDescription(day);
                 break;
             case "thursday":
                 daysImageView.setBackgroundResource(days_backdrop[3]);
+                daysImageView.setContentDescription(day);
                 break;
             case "friday":
                 daysImageView.setBackgroundResource(days_backdrop[4]);
+                daysImageView.setContentDescription(day);
                 break;
             case "saturday":
                 daysImageView.setBackgroundResource(days_backdrop[5]);
+                daysImageView.setContentDescription(day);
                 break;
             case "sunday":
                 daysImageView.setBackgroundResource(days_backdrop[6]);
+                daysImageView.setContentDescription(day);
                 break;
         }
     }

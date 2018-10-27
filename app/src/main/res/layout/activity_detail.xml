@@ -36,7 +36,8 @@
                         android:id="@+id/days_backdrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:contentDescription="@string/day_of_week"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -92,7 +93,8 @@
                             android:layout_width="@dimen/no_subject_image_view_size"
                             android:layout_height="@dimen/no_subject_image_view_size"
                             android:layout_gravity="center"
-                            app:srcCompat="@drawable/no_subject_resting" />
+                            app:srcCompat="@drawable/no_subject_resting"
+                            android:contentDescription="@string/no_subjects_to_show_image"/>
 
                         <TextView
                             android:id="@+id/no_subject_text_view"

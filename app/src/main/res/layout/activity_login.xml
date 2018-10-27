@@ -45,6 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/email_hint"
                     app:srcCompat="@drawable/ic_email_black_24dp" />
 
                 <android.support.design.widget.TextInputLayout
@@ -79,6 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/password_hint"
                     app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
 
                 <android.support.design.widget.TextInputLayout

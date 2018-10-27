@@ -17,9 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center|start"
+            android:paddingStart="@dimen/text_padding_left_card"
             android:paddingLeft="@dimen/text_padding_left_card"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:paddingStart="@dimen/text_padding_left_card" />
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
         <View
             android:layout_width="0dp"
@@ -31,10 +31,11 @@
             android:layout_width="@dimen/tick_image_width"
             android:layout_height="@dimen/tick_image_height"
             android:layout_gravity="center|end"
+            android:contentDescription="@string/subject_added_to_time_table"
+            android:paddingEnd="@dimen/image_padding_right"
             android:paddingRight="@dimen/image_padding_right"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_check_circle_black_24dp"
-            android:paddingEnd="@dimen/image_padding_right" />
+            app:srcCompat="@drawable/ic_check_circle_black_24dp" />
 
     </LinearLayout>
 

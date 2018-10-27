@@ -10,6 +10,7 @@
     <ImageView
         android:layout_width="@dimen/nav_image_size"
         android:layout_height="@dimen/nav_image_size"
-        android:src="@drawable/book_logo_login" />
+        android:src="@drawable/book_logo_login"
+        android:contentDescription="@string/app_logo_description"/>
 
 </RelativeLayout>
