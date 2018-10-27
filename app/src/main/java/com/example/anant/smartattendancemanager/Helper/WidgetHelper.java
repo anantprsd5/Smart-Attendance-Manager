@@ -39,29 +39,31 @@ public class WidgetHelper {
         String lowAttendanceSubject;
         float lowest;
         Map<String, Object> map = getSubjectFromSharedPreference(mContext);
-        lowAttendanceSubject = map.keySet().iterator().next();
-        String classes = map.get(lowAttendanceSubject).toString();
-        attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
-        noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-        if (noOfClasses != 0) {
-            lowest = (float) attended / noOfClasses * 100;
-        } else lowest = 0;
+        if (map != null && map.size() > 0) {
+            lowAttendanceSubject = map.keySet().iterator().next();
+            String classes = map.get(lowAttendanceSubject).toString();
+            attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
+            noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+            if (noOfClasses != 0) {
+                lowest = (float) attended / noOfClasses * 100;
+            } else lowest = 0;
 
-        for (String key : map.keySet()) {
-            String percentageString = map.get(key).toString();
-            attended = Integer.parseInt(percentageString.substring(0, percentageString.indexOf("/")));
-            noOfClasses = Integer.parseInt(percentageString.substring(percentageString.indexOf("/") + 1, percentageString.length()));
-            if (noOfClasses != 0)
-                percentage = ((float) attended) / noOfClasses * 100;
-            else percentage = 0;
-            if (percentage <= lowest) {
-                lowest = percentage;
-                setLowAttendancePercentage(lowest);
-                setClassAttended(attended);
-                setClassConducted(noOfClasses);
-                lowAttendanceSubject = key;
+            for (String key : map.keySet()) {
+                String percentageString = map.get(key).toString();
+                attended = Integer.parseInt(percentageString.substring(0, percentageString.indexOf("/")));
+                noOfClasses = Integer.parseInt(percentageString.substring(percentageString.indexOf("/") + 1, percentageString.length()));
+                if (noOfClasses != 0)
+                    percentage = ((float) attended) / noOfClasses * 100;
+                else percentage = 0;
+                if (percentage <= lowest) {
+                    lowest = percentage;
+                    setLowAttendancePercentage(lowest);
+                    setClassAttended(attended);
+                    setClassConducted(noOfClasses);
+                    lowAttendanceSubject = key;
+                }
             }
-        }
+        } else lowAttendanceSubject = null;
         return lowAttendanceSubject;
     }
 

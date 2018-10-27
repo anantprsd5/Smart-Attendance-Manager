@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
@@ -27,19 +28,26 @@ public class AttendanceAppWidget extends AppWidgetProvider {
 
         WidgetHelper widgetHelper = new WidgetHelper(context);
         String subject = widgetHelper.getLowAttendanceSubject();
-        int classAttended = widgetHelper.getClassAttended();
-        int classConducted = widgetHelper.getClassConducted();
-        int percentage = widgetHelper.getLowestPercentage();
-        int leave = widgetHelper.getCanLeaveClasses();
+        if (subject != null) {
+            int classAttended = widgetHelper.getClassAttended();
+            int classConducted = widgetHelper.getClassConducted();
+            int percentage = widgetHelper.getLowestPercentage();
+            int leave = widgetHelper.getCanLeaveClasses();
 
-        views.setTextViewText(R.id.subject_text_view, subject);
-        views.setTextViewText(R.id.attendance_text_view, "Attendance : " + classAttended + "/" + classConducted);
-        views.setTextViewText(R.id.percentage_text_view, Integer.toString(percentage));
-        views.setTextViewText(R.id.leave_text_view, String.format(context.getString(R.string.leave_class), ((leave == 0) ? 0 : --leave)));
-        views.setInt(R.id.percentage_text_view, "setBackgroundResource", getDrawable(percentage));
+            views.setViewVisibility(R.id.subjects_layout, View.VISIBLE);
+            views.setViewVisibility(R.id.login_add_sub_text_view, View.GONE);
+            views.setTextViewText(R.id.subject_text_view, subject);
+            views.setTextViewText(R.id.attendance_text_view, "Attendance : " + classAttended + "/" + classConducted);
+            views.setTextViewText(R.id.percentage_text_view, Integer.toString(percentage));
+            views.setTextViewText(R.id.leave_text_view, String.format(context.getString(R.string.leave_class), ((leave == 0) ? 0 : --leave)));
+            views.setInt(R.id.percentage_text_view, "setBackgroundResource", getDrawable(percentage));
+
+        } else {
+            views.setViewVisibility(R.id.subjects_layout, View.GONE);
+            views.setViewVisibility(R.id.login_add_sub_text_view, View.VISIBLE);
+        }
 
         views.setOnClickPendingIntent(R.id.details_card_view, getPendingSelfIntent(context));
-
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

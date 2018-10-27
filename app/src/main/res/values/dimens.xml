@@ -65,4 +65,5 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="no_subject_text_view_margin">20dp</dimen>
     <dimen name="no_sub_margin_bottom">80dp</dimen>
     <dimen name="no_sub_text_margin_bottom">10dp</dimen>
+    <dimen name="widget_text_view_padding">8dp</dimen>
 </resources>

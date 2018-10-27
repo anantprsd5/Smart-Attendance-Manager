@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
@@ -158,7 +159,10 @@ public class DetailActivity extends AppCompatActivity implements
             swipeRefreshLayout.setRefreshing(true);
             if (!isTimeTable)
                 helper.getSubjects();
-            else helper.getTimeTable();
+            else {
+                helper.getTimeTable();
+                helper.addSubjectsToSharedPreference(this);
+            }
         } else {
             setUpAdapter(helper.getSubjectFromSharedPreference(this));
         }
@@ -264,9 +268,9 @@ public class DetailActivity extends AppCompatActivity implements
         }
         if (map != null) {
             swipeRefreshLayout.setRefreshing(false);
+            helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             nestedScrollView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            helper.addSubjectsToSharedPreference(map, DetailActivity.this);
             setUpAdapter(map);
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -291,6 +295,7 @@ public class DetailActivity extends AppCompatActivity implements
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
+
         updateAppWidget();
         mRecyclerView.setAdapter(detailsAdapter);
     }
