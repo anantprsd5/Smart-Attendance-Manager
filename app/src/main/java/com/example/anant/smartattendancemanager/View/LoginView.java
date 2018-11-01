@@ -12,6 +12,8 @@ public interface LoginView {
 
     void showEmailFieldRequired();
 
+    void showNameFieldRequired();
+
     void toggleProgressVisibility(boolean visible);
 
 }

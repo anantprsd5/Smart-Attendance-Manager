@@ -50,9 +50,11 @@ public class DatabaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    mSubjectsMap = map;
-                    mOnDataFetchedListener.onDataFetched(map, true);
-                    ref.removeEventListener(this);
+                    if (map != null) {
+                        mSubjectsMap = map;
+                        mOnDataFetchedListener.onDataFetched(map, true);
+                        ref.removeEventListener(this);
+                    } else mOnDataFetchedListener.onDataFetched(null, false);
                 } catch (ClassCastException e) {
                     mOnDataFetchedListener.onDataFetched(null, false);
                 }
@@ -97,6 +99,7 @@ public class DatabaseHelper {
     public void getTimeTable() {
         if (mSubjectsMap == null) {
             getSubjects();
+            return;
         }
         String timeTablePath = "/users/" + UID + "/table/";
         Calendar calendar = Calendar.getInstance();
@@ -150,9 +153,11 @@ public class DatabaseHelper {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     SharedPreferences.Editor editor = mContext.getSharedPreferences(mContext.getString(R.string.attendance_shared_pref),
                             MODE_PRIVATE).edit();
-                    ArrayList<String> subjectDataset = new ArrayList<>(map.keySet());
-                    for (String subject : subjectDataset) {
-                        editor.putString(subject, map.get(subject).toString());
+                    if (map != null) {
+                        ArrayList<String> subjectDataset = new ArrayList<>(map.keySet());
+                        for (String subject : subjectDataset) {
+                            editor.putString(subject, map.get(subject).toString());
+                        }
                     }
                     editor.apply();
                     updateAppWidget(mContext);

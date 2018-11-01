@@ -153,6 +153,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
+    public void showNameFieldRequired() {
+        //Not required for logging In
+    }
+
+    @Override
     public void toggleProgressVisibility(boolean visible) {
         if (visible) {
             mProgressBar.setVisibility(View.VISIBLE);

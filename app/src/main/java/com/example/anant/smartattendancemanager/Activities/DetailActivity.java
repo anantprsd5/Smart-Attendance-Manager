@@ -115,34 +115,31 @@ public class DetailActivity extends AppCompatActivity implements
         updatedAttendance = false;
 
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_time_table:
-                                isTimeTable = true;
-                                swipeRefreshLayout.setRefreshing(true);
-                                helper.getTimeTable();
-                                break;
-                            case R.id.nav_logout:
-                                startLoginActivity();
-                                break;
-                            case R.id.nav_all_subjects:
-                                swipeRefreshLayout.setRefreshing(true);
-                                isTimeTable = false;
-                                helper.getSubjects();
-                                break;
-                        }
-                        // close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
-                        return true;
+                menuItem -> {
+                    // set item as selected to persist highlight
+                    menuItem.setChecked(true);
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_time_table:
+                            isTimeTable = true;
+                            swipeRefreshLayout.setRefreshing(true);
+                            helper.getTimeTable();
+                            break;
+                        case R.id.nav_logout:
+                            startLoginActivity();
+                            break;
+                        case R.id.nav_all_subjects:
+                            swipeRefreshLayout.setRefreshing(true);
+                            isTimeTable = false;
+                            helper.getSubjects();
+                            break;
                     }
+                    // close drawer when item is tapped
+                    mDrawerLayout.closeDrawers();
+
+                    // Add code here to update the UI based on the item selected
+                    // For example, swap UI fragments here
+
+                    return true;
                 });
 
         ActionBar actionbar = getSupportActionBar();
@@ -166,15 +163,12 @@ public class DetailActivity extends AppCompatActivity implements
             setUpAdapter(helper.getSubjectFromSharedPreference(this));
         }
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (isInternetConnected())
-                    if (!isTimeTable)
-                        helper.getSubjects();
-                    else helper.getTimeTable();
-                else swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (isInternetConnected())
+                if (!isTimeTable)
+                    helper.getSubjects();
+                else helper.getTimeTable();
+            else swipeRefreshLayout.setRefreshing(false);
         });
     }
 
@@ -266,6 +260,11 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
+
+        if (map == null && !isSuccessful) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
         if (updatedAttendance && isTimeTable) {
             swipeRefreshLayout.setRefreshing(true);
             updatedAttendance = false;

@@ -22,9 +22,11 @@ import com.example.anant.smartattendancemanager.Activities.MainActivity;
 import com.example.anant.smartattendancemanager.Activities.SignUpActivity;
 import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
+import com.example.anant.smartattendancemanager.User;
 import com.example.anant.smartattendancemanager.View.LoginView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Map;
 
@@ -34,9 +36,10 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     private Activity mActivity;
     private String email;
     private String password;
+    private String name;
     private LoginView loginView;
     private DatabaseHelper databaseHelper;
-
+    private DatabaseReference mDatabase;
 
     public LoginPresenter(FirebaseAuth auth, Activity activity, LoginView loginView) {
         mAuth = auth;
@@ -48,14 +51,31 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
         loginView.toggleProgressVisibility(true);
         this.email = email;
         this.password = password;
-        checkValidationAndLogIn();
+        checkValidationAndLogIn(false);
     }
 
-    private void checkValidationAndLogIn() {
+    public void signUp(String email, String password, String name, DatabaseReference mDatabase) {
+        loginView.toggleProgressVisibility(true);
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.mDatabase = mDatabase;
+        checkValidationAndLogIn(true);
+    }
+
+    private void checkValidationAndLogIn(boolean isSignup) {
 
         // Check for a valid password, if the user entered one.
 
         boolean cancel = false;
+
+        if (isSignup) {
+            if (TextUtils.isEmpty(name)) {
+                loginView.showNameFieldRequired();
+                cancel = true;
+                loginView.toggleProgressVisibility(false);
+            }
+        }
 
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             loginView.showInvalidPassword();
@@ -74,20 +94,48 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
             loginView.toggleProgressVisibility(false);
         }
 
-        if (!cancel) {
+        if (!cancel && !isSignup) {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(mActivity, task -> {
-                        if (task.isSuccessful()) {
-                            loginView.OnSuccess();
-                        } else {
-                            loginView.toggleProgressVisibility(false);
-                            loginView.onFailed();
-                        }
-                    });
+            login();
+        } else if (!cancel && isSignup) {
+            signInNewUser();
         }
 
+    }
+
+    private void signInNewUser() {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(mActivity, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        writeNewUser(user.getUid(), email, name);
+                        loginView.OnSuccess();
+
+                    } else {
+                        loginView.onFailed();
+                    }
+
+                    // ...
+                });
+    }
+
+    private void login() {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(mActivity, task -> {
+                    if (task.isSuccessful()) {
+                        loginView.OnSuccess();
+                    } else {
+                        loginView.toggleProgressVisibility(false);
+                        loginView.onFailed();
+                    }
+                });
+    }
+
+    private void writeNewUser(String userId, String email, String name) {
+        User user = new User(email, name, "");
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
     private boolean isPasswordValid(String password) {
@@ -133,8 +181,9 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     }
 
     public void sendResetPasswordEmail(String email) {
+        loginView.toggleProgressVisibility(true);
         if (TextUtils.isEmpty(email)) {
-            loginView.toggleProgressVisibility(true);
+            loginView.toggleProgressVisibility(false);
             loginView.showEmailFieldRequired();
         } else {
             mAuth.sendPasswordResetEmail(email)

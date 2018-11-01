@@ -5,81 +5,53 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.Presenter.MainActivityPresenter;
 import com.example.anant.smartattendancemanager.R;
+import com.example.anant.smartattendancemanager.View.AddSubjectsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddSubjectsView {
 
     private LinearLayout linearLayout;
-    private static int editTextID = 1;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String UID;
+    private MainActivityPresenter mainActivityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData();
-            }
-        });
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        linearLayout = findViewById(R.id.subject_linear_layout);
-        createTextView();
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-    }
 
-    private void saveData() {
-        HashMap<String, String> subjects = new HashMap();
-        for (int i = 1; i <= editTextID; i++) {
-            EditText editText = findViewById(i);
-            try {
-                String subject = editText.getText().toString();
-                if (subject != null && subject.length() > 0)
-                    subjects.put(subject, "0/0");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-        Map<String, Object> childUpdates = new HashMap<>();
-        if (subjects.size() == 0) {
-            Toast.makeText(this, R.string.add_least_subject, Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            childUpdates.put("/users/" + UID + "/subjects", subjects);
-            mDatabase.updateChildren(childUpdates);
-            Intent intent = new Intent(MainActivity.this, TimeTableActivity.class);
-            startActivity(intent);
-        }
+        mainActivityPresenter = new MainActivityPresenter(this, UID, this);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> mainActivityPresenter.saveData(mDatabase));
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        linearLayout = findViewById(R.id.subject_linear_layout);
+        mainActivityPresenter.createEditTextView(linearLayout);
     }
 
     @Override
@@ -98,26 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_subjects) {
-            createTextView();
+            mainActivityPresenter.createEditTextView(linearLayout);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void createTextView() {
-        EditText editText = new EditText(this);
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-        editText.setId(editTextID);
-        editText.setBackgroundResource(R.drawable.edit_text_border);
-        editText.setHint(R.string.edit_text_hint);
-        editText.setPadding(padding, padding, padding, padding);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
-        lp.setMargins(padding, padding, padding, padding);
-        editText.setLayoutParams(lp);
-        linearLayout.addView(editText);
-        editText.requestFocus();
-        editTextID++;
+    @Override
+    public void onDataSaved() {
+        Intent intent = new Intent(this, TimeTableActivity.class);
+        startActivity(intent);
     }
 }
