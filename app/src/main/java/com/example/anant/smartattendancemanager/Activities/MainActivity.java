@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Presenter.MainActivityPresenter;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.AddSubjectsView;
@@ -42,7 +43,10 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
 
-        mainActivityPresenter = new MainActivityPresenter(this, UID, this);
+        SubjectsModel subjectsModel = new SubjectsModel(UID);
+
+        mainActivityPresenter = new MainActivityPresenter(this, UID, this,
+                subjectsModel);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> mainActivityPresenter.saveData(mDatabase));

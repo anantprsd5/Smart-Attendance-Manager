@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
-import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
-import com.example.anant.smartattendancemanager.Days;
+import com.example.anant.smartattendancemanager.Presenter.TimeTablePresenter;
 import com.example.anant.smartattendancemanager.R;
+import com.example.anant.smartattendancemanager.View.TimeTableView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 
 // In this case, the fragment displays simple text based on the page
-public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataFetchedListener {
+public class SubjectsFragment extends Fragment implements TimeTableView {
 
     private FirebaseAuth mAuth;
     private String UID;
@@ -37,6 +37,7 @@ public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataF
     private int page;
     private DatabaseReference mDatabase;
     private HashMap<String, String> subjects;
+    private TimeTablePresenter timeTablePresenter;
 
     public void SubjectsFragment() {
     }
@@ -73,50 +74,39 @@ public class SubjectsFragment extends Fragment implements DatabaseHelper.OnDataF
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        //Firebase Initializations
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            startActivity(intent);
         });
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(UID, this);
-        databaseHelper.getSubjects();
+        timeTablePresenter = new TimeTablePresenter(UID, this);
+        timeTablePresenter.listSubjects();
 
         return view;
     }
 
-    private void saveData(int position) {
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + UID + "/table" + "/" + Days.values()[position], subjects);
-        mDatabase.updateChildren(childUpdates);
-    }
-
     @Override
-    public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
+    public void onTableFetched(Map<String, Object> map) {
         if (map != null) {
             final List<String> subjectDataset = new ArrayList<>(map.keySet());
             // specify an adapter (see also next example)
-            mAdapter = new SubjectAdapter(subjectDataset, new SubjectAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position, boolean isChecked) {
-                    if (isChecked) {
-                        subjects.put(Integer.toString(position), subjectDataset.get(position));
-                        saveData(page - 1);
-                    } else {
-                        subjects.remove(Integer.toString(position));
-                        saveData(page - 1);
-                    }
+            mAdapter = new SubjectAdapter(subjectDataset, (position, isChecked) -> {
+                if (isChecked) {
+                    subjects.put(Integer.toString(position), subjectDataset.get(position));
+                    timeTablePresenter.saveData(page - 1, subjects, mDatabase);
+                } else {
+                    subjects.remove(Integer.toString(position));
+                    timeTablePresenter.saveData(page - 1, subjects, mDatabase);
                 }
             });
             mRecyclerView.setAdapter(mAdapter);
         }
     }
-
 }

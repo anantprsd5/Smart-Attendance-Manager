@@ -6,24 +6,25 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.AddSubjectsView;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivityPresenter {
 
     private int editTextID = 1;
     private Activity activity;
-    private String UID;
     private AddSubjectsView addSubjectsView;
+    private SubjectsModel subjectsModel;
 
-    public MainActivityPresenter(Activity activity, String UID, AddSubjectsView addSubjectsView) {
+    public MainActivityPresenter(Activity activity, String UID, AddSubjectsView addSubjectsView,
+                                 SubjectsModel subjectsModel) {
         this.activity = activity;
-        this.UID = UID;
         this.addSubjectsView = addSubjectsView;
+        this.subjectsModel = subjectsModel;
     }
 
     public void saveData(DatabaseReference mDatabase) {
@@ -38,13 +39,11 @@ public class MainActivityPresenter {
                 e.printStackTrace();
             }
         }
-        Map<String, Object> childUpdates = new HashMap<>();
         if (subjects.size() == 0) {
             Toast.makeText(activity, R.string.add_least_subject, Toast.LENGTH_LONG).show();
             return;
         } else {
-            childUpdates.put("/users/" + UID + "/subjects", subjects);
-            mDatabase.updateChildren(childUpdates);
+            subjectsModel.saveSubjects(subjects, mDatabase);
             addSubjectsView.onDataSaved();
         }
     }

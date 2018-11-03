@@ -45,15 +45,12 @@ public class StopAlarmActivity extends AppCompatActivity {
 
         setAlarmLooping();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopAlarmLooping();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    finishAndRemoveTask();
-                } else {
-                    finish();
-                }
+        button.setOnClickListener(view -> {
+            stopAlarmLooping();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAndRemoveTask();
+            } else {
+                finish();
             }
         });
     }
