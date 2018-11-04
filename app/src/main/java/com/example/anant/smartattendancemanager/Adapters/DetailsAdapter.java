@@ -9,30 +9,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.anant.smartattendancemanager.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
-    private final ArrayList<String> subjectDataset;
-    private Map<String, Object> attendanceMap;
+    private ArrayList<String> subjectDataset;
+    private ArrayList<Integer> classAttended;
+    private ArrayList<Integer> classConducted;
 
     private OnItemClickListener onItemClickListener;
 
     private int[] drawables = {R.drawable.textview_design_green,
             R.drawable.textview_design_blue, R.drawable.textview_design_orange,
             R.drawable.textview_design_red};
+
     private float percentage;
     private Context context;
-    private FirebaseAuth mAuth;
-    private String UID;
-    private DatabaseReference ref;
 
     public interface OnItemClickListener {
         void onItemClick(String key);
@@ -64,20 +57,20 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             attendanceMark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String key = subjectDataset.get(getAdapterPosition());
+                    /*String key = subjectDataset.get(getAdapterPosition());
                     String classes = attendanceMap.get(key).toString();
                     int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
                     int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
                     HashMap<String, Object> result = new HashMap<>();
                     result.put(key, (++attended) + "/" + (++noOfClasses));
                     ref.updateChildren(result);
-                    onItemClickListener.onAttendanceMarked();
+                    onItemClickListener.onAttendanceMarked();**/
                 }
             });
             attendanceUnmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String key = subjectDataset.get(getAdapterPosition());
+                   /* String key = subjectDataset.get(getAdapterPosition());
                     String classes = attendanceMap.get(key).toString();
                     int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
                     int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
@@ -85,6 +78,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                     result.put(key, (attended) + "/" + (++noOfClasses));
                     ref.updateChildren(result);
                     onItemClickListener.onAttendanceMarked();
+                    **/
                 }
             });
 
@@ -97,20 +91,15 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         }
     }
 
-    public DetailsAdapter(Map<String, Object> map, OnItemClickListener onItemClickListener) {
+    public DetailsAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
-        attendanceMap = map;
-        subjectDataset = new ArrayList<>(map.keySet());
-        getUID();
     }
 
-    private void getUID() {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        UID = user.getUid();
-        // Get a reference to our posts
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference("/users/" + UID + "/subjects");
+    public void setDataset(ArrayList<String> subjects, ArrayList<Integer> classAttended,
+                           ArrayList<Integer> classConducted) {
+        this.subjectDataset = subjects;
+        this.classAttended = classAttended;
+        this.classConducted = classConducted;
     }
 
     // Create new views (invoked by the layout manager)
@@ -132,20 +121,24 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         String subject = subjectDataset.get(position);
+        int attended = classAttended.get(position);
+        int noOfClasses = classConducted.get(position);
+
         holder.subject_textView.setText(subject.substring(0, 1).toUpperCase()
                 + subject.substring(1).toLowerCase());
         holder.subject_textView.setContentDescription(subject);
-        String classes = attendanceMap.get(subject).toString();
-        int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
-        int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+
+        //Calculate Percentage
         if (noOfClasses != 0)
             percentage = ((float) attended) / noOfClasses * 100;
         else percentage = 0;
+
         holder.percentageTextView.setText(Integer.toString(Math.round(percentage)));
         holder.percentageTextView.setBackgroundResource(getDrawable());
         holder.percentageTextView.setContentDescription(Integer.toString(Math.round(percentage)));
         holder.attendanceTextView.setText("Attendance: " + attended + "/" + noOfClasses);
         holder.attendanceTextView.setContentDescription("Attendance: " + attended + "/" + noOfClasses);
+
         int i = 0;
         while (percentage >= 75) {
             noOfClasses++;

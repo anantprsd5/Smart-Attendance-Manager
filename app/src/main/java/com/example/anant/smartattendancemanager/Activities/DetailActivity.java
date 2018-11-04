@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -20,38 +19,34 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
-import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Model.SubjectsModel;
+import com.example.anant.smartattendancemanager.Presenter.DetailActivityPresenter;
 import com.example.anant.smartattendancemanager.R;
+import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity implements
-        AttendanceDialogFragment.NoticeDialogListener, DatabaseHelper.OnDataFetchedListener {
+        AttendanceDialogFragment.NoticeDialogListener,
+        DetailsView, DetailsAdapter.OnItemClickListener {
 
     private LinearLayoutManager mLayoutManager;
     private String UID;
     private FirebaseAuth mAuth;
-    private DatabaseReference ref;
-    private DatabaseHelper helper;
     private boolean isTimeTable;
-    private boolean updatedAttendance;
+
+    private boolean adapterSet;
+
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.days_backdrop)
@@ -67,9 +62,8 @@ public class DetailActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar_title)
     Toolbar toolbar;
 
-    private int[] days_backdrop = {R.drawable.monday_backdrop, R.drawable.tuesday_backdrop,
-            R.drawable.wednesday_backdrop, R.drawable.thursday_backdrop,
-            R.drawable.friday_backdrop, R.drawable.saturday_backdrop, R.drawable.sunday_backdrop};
+    private DetailActivityPresenter detailActivityPresenter;
+    private DetailsAdapter detailsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +75,11 @@ public class DetailActivity extends AppCompatActivity implements
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        getDayDrawable();
-
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth != null) {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser == null) {
-                startLoginActivity();
-                return;
-            }
-        } else {
-            startLoginActivity();
-            return;
-        }
+
+        detailActivityPresenter = new DetailActivityPresenter(this);
+        detailActivityPresenter.fetchDayDrawable();
+        detailActivityPresenter.checkLoggedIn(mAuth);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -103,7 +89,9 @@ public class DetailActivity extends AppCompatActivity implements
                 LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAuth = FirebaseAuth.getInstance();
+        detailsAdapter = new DetailsAdapter(this);
+        adapterSet = false;
+
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
 
@@ -111,8 +99,7 @@ public class DetailActivity extends AppCompatActivity implements
             navigationView.getMenu().getItem(0).setChecked(true);
         else navigationView.getMenu().getItem(1).setChecked(true);
 
-        isTimeTable = true;
-        updatedAttendance = false;
+        isTimeTable = false;
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
@@ -122,7 +109,6 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_time_table:
                             isTimeTable = true;
                             swipeRefreshLayout.setRefreshing(true);
-                            helper.getTimeTable();
                             break;
                         case R.id.nav_logout:
                             startLoginActivity();
@@ -130,7 +116,6 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_all_subjects:
                             swipeRefreshLayout.setRefreshing(true);
                             isTimeTable = false;
-                            helper.getSubjects();
                             break;
                     }
                     // close drawer when item is tapped
@@ -146,81 +131,24 @@ public class DetailActivity extends AppCompatActivity implements
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        // Get a reference to our posts
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference("/users/" + UID + "/subjects");
+        SubjectsModel subjectsModel = new SubjectsModel(UID);
 
-        helper = new DatabaseHelper(UID, this);
-        if (isInternetConnected()) {
-            swipeRefreshLayout.setRefreshing(true);
-            if (!isTimeTable)
-                helper.getSubjects();
-            else {
-                helper.getTimeTable();
-                helper.addSubjectsToSharedPreference(this);
-            }
-        } else {
-            setUpAdapter(helper.getSubjectFromSharedPreference(this));
+        swipeRefreshLayout.setRefreshing(true);
+        if (!isTimeTable)
+            detailActivityPresenter.fetchSubjects(subjectsModel);
+        else {
+
         }
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (isInternetConnected())
-                if (!isTimeTable)
-                    helper.getSubjects();
-                else helper.getTimeTable();
-            else swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(true);
+            detailActivityPresenter.fetchSubjects(subjectsModel);
         });
     }
 
-    private void getDayDrawable() {
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        String day = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime());
-        switch (day.toLowerCase()) {
-            case "monday":
-                daysImageView.setBackgroundResource(days_backdrop[0]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "tuesday":
-                daysImageView.setBackgroundResource(days_backdrop[1]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "wednesday":
-                daysImageView.setBackgroundResource(days_backdrop[2]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "thursday":
-                daysImageView.setBackgroundResource(days_backdrop[3]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "friday":
-                daysImageView.setBackgroundResource(days_backdrop[4]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "saturday":
-                daysImageView.setBackgroundResource(days_backdrop[5]);
-                daysImageView.setContentDescription(day);
-                break;
-            case "sunday":
-                daysImageView.setBackgroundResource(days_backdrop[6]);
-                daysImageView.setContentDescription(day);
-                break;
-        }
-    }
-
-    private void startLoginActivity() {
-        FirebaseAuth.getInstance().signOut();
-        if (helper != null)
-            helper.clearSharedPreference(this);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-
     @Override
     public void onDialogPositiveClick() {
-        updatedAttendance = true;
-        helper.getSubjects();
+
         swipeRefreshLayout.setRefreshing(true);
     }
 
@@ -258,53 +186,6 @@ public class DetailActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
-
-        if (map == null && !isSuccessful) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        if (updatedAttendance && isTimeTable) {
-            swipeRefreshLayout.setRefreshing(true);
-            updatedAttendance = false;
-            helper.getTimeTable();
-            return;
-        }
-        if (map != null) {
-            swipeRefreshLayout.setRefreshing(false);
-            helper.addSubjectsToSharedPreference(map, DetailActivity.this);
-            nestedScrollView.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-            setUpAdapter(map);
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-            nestedScrollView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpAdapter(Map<String, Object> map) {
-        DetailsAdapter detailsAdapter = new DetailsAdapter(map, new DetailsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(String key) {
-                DialogFragment newFragment = new AttendanceDialogFragment();
-                ((AttendanceDialogFragment) newFragment).setArguments(ref, key);
-                newFragment.show(getSupportFragmentManager(), "attendance");
-            }
-
-            @Override
-            public void onAttendanceMarked() {
-                updatedAttendance = true;
-                helper.getSubjects();
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
-
-        updateAppWidget();
-        mRecyclerView.setAdapter(detailsAdapter);
-    }
-
     private void updateAppWidget() {
         Intent intent = new Intent(this, AttendanceAppWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -325,5 +206,57 @@ public class DetailActivity extends AppCompatActivity implements
         else
             isConnected = false;
         return isConnected;
+    }
+
+    @Override
+    public void onDrawableFetched(int drawable, String day) {
+        daysImageView.setBackgroundResource(drawable);
+        daysImageView.setContentDescription(day);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapterSet = false;
+    }
+
+    @Override
+    public void onLoginFailed() {
+        startLoginActivity();
+        return;
+    }
+
+    @Override
+    public void onSubjectsAttendanceFetched(ArrayList<String> subjects, ArrayList<Integer> attended, ArrayList<Integer> totalClass) {
+        detailsAdapter.setDataset(subjects, attended, totalClass);
+        if (!adapterSet) {
+            adapterSet = true;
+            mRecyclerView.setAdapter(detailsAdapter);
+        }
+        detailsAdapter.notifyDataSetChanged();
+        updateAppWidget();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void startLoginActivity() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClick(String key) {
+
+    }
+
+    @Override
+    public void onAttendanceMarked() {
+
     }
 }
