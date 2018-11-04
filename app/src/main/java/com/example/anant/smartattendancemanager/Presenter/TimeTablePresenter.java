@@ -14,12 +14,12 @@ public class TimeTablePresenter implements SubjectsFetched {
     private TimeTableView timeTableView;
 
     public TimeTablePresenter(String UID, TimeTableView timeTableView) {
-        timeTableModel = new TimeTableModel(UID, this);
+        timeTableModel = new TimeTableModel(UID);
         this.timeTableView = timeTableView;
     }
 
     public void listSubjects() {
-        timeTableModel.getSubjects();
+        timeTableModel.getSubjects(this);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.anant.smartattendancemanager.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
@@ -30,7 +31,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     public interface OnItemClickListener {
         void onItemClick(String key);
 
-        void onAttendanceMarked();
+        void onAttendanceMarked(HashMap<String, Object> result);
     }
 
     // Provide a reference to the views for each data item
@@ -54,18 +55,13 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             percentageTextView.setOnClickListener(this);
             attendanceMark = view.findViewById(R.id.attendance_mark);
             attendanceUnmark = view.findViewById(R.id.attendance_unmark);
-            attendanceMark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*String key = subjectDataset.get(getAdapterPosition());
-                    String classes = attendanceMap.get(key).toString();
-                    int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
-                    int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, (++attended) + "/" + (++noOfClasses));
-                    ref.updateChildren(result);
-                    onItemClickListener.onAttendanceMarked();**/
-                }
+            attendanceMark.setOnClickListener(v -> {
+                String key = subjectDataset.get(getAdapterPosition());
+                int attended = classAttended.get(getAdapterPosition());
+                int noOfClasses = classConducted.get(getAdapterPosition());
+                HashMap<String, Object> result = new HashMap<>();
+                result.put(key, (++attended) + "/" + (++noOfClasses));
+                onItemClickListener.onAttendanceMarked(result);
             });
             attendanceUnmark.setOnClickListener(new View.OnClickListener() {
                 @Override

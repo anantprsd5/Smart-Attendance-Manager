@@ -2,6 +2,7 @@ package com.example.anant.smartattendancemanager.Presenter;
 
 import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
+import com.example.anant.smartattendancemanager.Model.TimeTableModel;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class DetailActivityPresenter implements SubjectsFetched {
             R.drawable.friday_backdrop, R.drawable.saturday_backdrop, R.drawable.sunday_backdrop};
 
     private DetailsView detailsView;
+    private String day;
 
     public DetailActivityPresenter(DetailsView detailsView) {
         this.detailsView = detailsView;
@@ -29,7 +32,7 @@ public class DetailActivityPresenter implements SubjectsFetched {
     public void fetchDayDrawable() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
-        String day = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime());
+        day = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime());
         switch (day.toLowerCase()) {
             case "monday":
                 detailsView.onDrawableFetched(days_backdrop[0], day);
@@ -87,5 +90,13 @@ public class DetailActivityPresenter implements SubjectsFetched {
 
     public void fetchSubjects(SubjectsModel subjectsModel) {
         subjectsModel.fetchSubjects(this);
+    }
+
+    public void fetchTimeTable(TimeTableModel timeTableModel){
+        timeTableModel.fetchTimeTable(this, day);
+    }
+
+    public void updateAttendance(HashMap<String, Object> result, SubjectsModel subjectsModel){
+        subjectsModel.updateChildren(result);
     }
 }

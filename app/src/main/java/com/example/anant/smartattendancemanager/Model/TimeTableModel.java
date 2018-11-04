@@ -13,14 +13,12 @@ import java.util.Map;
 public class TimeTableModel {
 
     private String UID;
-    private SubjectsFetched subjectsFetched;
 
-    public TimeTableModel(String UID, SubjectsFetched subjectsFetched) {
+    public TimeTableModel(String UID) {
         this.UID = UID;
-        this.subjectsFetched = subjectsFetched;
     }
 
-    public void getSubjects() {
+    public void getSubjects(SubjectsFetched subjectsFetched) {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
         // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
@@ -50,5 +48,33 @@ public class TimeTableModel {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + UID + "/table" + "/" + Days.values()[position], subjects);
         mDatabase.updateChildren(childUpdates);
+    }
+
+    public void fetchTimeTable(SubjectsFetched subjectsFetched, String day) {
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("/users/" + UID + "/table" +
+                "/" + day.toUpperCase());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map != null) {
+                        subjectsFetched.OnSubjectsFetched(map);
+                    } else
+                        subjectsFetched.OnSubjectsFetched(null);
+                } catch (ClassCastException e) {
+                    subjectsFetched.OnSubjectsFetched(null);
+                }
+                ref.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                subjectsFetched.OnSubjectsFetched(null);
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 }

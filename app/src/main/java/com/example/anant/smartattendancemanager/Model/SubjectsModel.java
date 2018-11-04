@@ -12,6 +12,7 @@ import java.util.Map;
 public class SubjectsModel {
 
     String UID;
+    private DatabaseReference ref;
 
     public SubjectsModel(String UID) {
         this.UID = UID;
@@ -26,7 +27,7 @@ public class SubjectsModel {
     public void fetchSubjects(SubjectsFetched subjectsFetched) {
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("/users/" + UID + "/subjects");
+        ref = database.getReference("/users/" + UID + "/subjects");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -48,6 +49,10 @@ public class SubjectsModel {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+    }
+
+    public void updateChildren(HashMap<String, Object> result){
+        ref.updateChildren(result);
     }
 
 }

@@ -19,19 +19,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
+import com.example.anant.smartattendancemanager.Model.TimeTableModel;
 import com.example.anant.smartattendancemanager.Presenter.DetailActivityPresenter;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +68,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     private DetailActivityPresenter detailActivityPresenter;
     private DetailsAdapter detailsAdapter;
+    private SubjectsModel subjectsModel;
+    private TimeTableModel timeTableModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,8 @@ public class DetailActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -99,7 +107,10 @@ public class DetailActivity extends AppCompatActivity implements
             navigationView.getMenu().getItem(0).setChecked(true);
         else navigationView.getMenu().getItem(1).setChecked(true);
 
-        isTimeTable = false;
+        isTimeTable = true;
+
+        subjectsModel = new SubjectsModel(UID);
+        timeTableModel = new TimeTableModel(UID);
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
@@ -109,6 +120,7 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_time_table:
                             isTimeTable = true;
                             swipeRefreshLayout.setRefreshing(true);
+                            detailActivityPresenter.fetchTimeTable(timeTableModel);
                             break;
                         case R.id.nav_logout:
                             startLoginActivity();
@@ -116,6 +128,7 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_all_subjects:
                             swipeRefreshLayout.setRefreshing(true);
                             isTimeTable = false;
+                            detailActivityPresenter.fetchSubjects(subjectsModel);
                             break;
                     }
                     // close drawer when item is tapped
@@ -131,13 +144,11 @@ public class DetailActivity extends AppCompatActivity implements
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        SubjectsModel subjectsModel = new SubjectsModel(UID);
-
         swipeRefreshLayout.setRefreshing(true);
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
         else {
-
+            detailActivityPresenter.fetchTimeTable(timeTableModel);
         }
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -240,8 +251,14 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        swipeRefreshLayout.setRefreshing(false);
+        if (!isTimeTable) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            nestedScrollView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     private void startLoginActivity() {
@@ -256,7 +273,8 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAttendanceMarked() {
-
+    public void onAttendanceMarked(HashMap<String, Object> result) {
+        detailActivityPresenter.updateAttendance(result, subjectsModel);
+        detailActivityPresenter.fetchSubjects(subjectsModel);
     }
 }

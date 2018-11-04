@@ -99,10 +99,10 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
             // specify an adapter (see also next example)
             mAdapter = new SubjectAdapter(subjectDataset, (position, isChecked) -> {
                 if (isChecked) {
-                    subjects.put(Integer.toString(position), subjectDataset.get(position));
+                    subjects.put(subjectDataset.get(position), "0/0");
                     timeTablePresenter.saveData(page - 1, subjects, mDatabase);
                 } else {
-                    subjects.remove(Integer.toString(position));
+                    subjects.remove(subjectDataset.get(position));
                     timeTablePresenter.saveData(page - 1, subjects, mDatabase);
                 }
             });
