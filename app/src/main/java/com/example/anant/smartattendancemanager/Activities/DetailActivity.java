@@ -305,5 +305,6 @@ public class DetailActivity extends AppCompatActivity implements
         detailActivityPresenter.updateAttendance(result, timeTableModel);
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
+        else detailActivityPresenter.fetchDayPosition();
     }
 }
