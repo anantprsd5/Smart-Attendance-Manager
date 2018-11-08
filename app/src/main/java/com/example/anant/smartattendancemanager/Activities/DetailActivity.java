@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,10 +19,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.example.anant.smartattendancemanager.Adapters.DaysViewPagerAdapter;
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
+import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
@@ -32,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -50,8 +53,6 @@ public class DetailActivity extends AppCompatActivity implements
 
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.days_backdrop)
-    ImageView daysImageView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
@@ -62,11 +63,14 @@ public class DetailActivity extends AppCompatActivity implements
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_title)
     Toolbar toolbar;
+    @BindView(R.id.days_pager)
+    ViewPager daysViewPager;
 
     private DetailActivityPresenter detailActivityPresenter;
     private DetailsAdapter detailsAdapter;
     private SubjectsModel subjectsModel;
     private TimeTableModel timeTableModel;
+    private String[] days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +83,36 @@ public class DetailActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
+        days = getNames(Days.class);
+
+        DaysViewPagerAdapter daysViewPagerAdapter = new DaysViewPagerAdapter(this);
+        daysViewPager.setAdapter(daysViewPagerAdapter);
+
+        daysViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                try {
+                    detailActivityPresenter.fetchTimeTable(timeTableModel, days[i]);
+                    nestedScrollView.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    nestedScrollView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
         detailActivityPresenter = new DetailActivityPresenter(this);
-        detailActivityPresenter.fetchDayDrawable();
         detailActivityPresenter.checkLoggedIn(mAuth);
 
         mRecyclerView.setHasFixedSize(true);
@@ -96,12 +127,15 @@ public class DetailActivity extends AppCompatActivity implements
         adapterSet = false;
 
         FirebaseUser user = mAuth.getCurrentUser();
-        UID = user.getUid();
+        if (user != null) {
+            UID = user.getUid();
+        } else startLoginActivity();
 
         isTimeTable = true;
 
         subjectsModel = new SubjectsModel(UID);
         timeTableModel = new TimeTableModel(UID);
+        detailActivityPresenter.fetchDayPosition();
 
         //Time table view by default
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -114,7 +148,8 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_time_table:
                             isTimeTable = true;
                             swipeRefreshLayout.setRefreshing(true);
-                            detailActivityPresenter.fetchTimeTable(timeTableModel);
+                            detailActivityPresenter.fetchDayPosition();
+                            daysViewPager.setOnTouchListener(null);
                             break;
                         case R.id.nav_logout:
                             startLoginActivity();
@@ -123,6 +158,7 @@ public class DetailActivity extends AppCompatActivity implements
                             swipeRefreshLayout.setRefreshing(true);
                             isTimeTable = false;
                             detailActivityPresenter.fetchSubjects(subjectsModel);
+                            daysViewPager.setOnTouchListener((arg0, arg1) -> true);
                             break;
                     }
                     // close drawer when item is tapped
@@ -139,20 +175,16 @@ public class DetailActivity extends AppCompatActivity implements
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         swipeRefreshLayout.setRefreshing(true);
-        if (!isTimeTable)
-            detailActivityPresenter.fetchSubjects(subjectsModel);
-        else {
-            detailActivityPresenter.fetchTimeTable(timeTableModel);
-        }
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             if (!isTimeTable)
                 detailActivityPresenter.fetchSubjects(subjectsModel);
-            else {
-                detailActivityPresenter.fetchTimeTable(timeTableModel);
-            }
         });
+    }
+
+    public String[] getNames(Class<? extends Enum<?>> e) {
+        return Arrays.toString(e.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
     }
 
 
@@ -200,15 +232,19 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDrawableFetched(int drawable, String day) {
-        daysImageView.setBackgroundResource(drawable);
-        daysImageView.setContentDescription(day);
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         adapterSet = false;
+    }
+
+    @Override
+    public void onDayPositionFetched(int position) {
+        daysViewPager.setCurrentItem(position);
+        if (!isTimeTable)
+            detailActivityPresenter.fetchSubjects(subjectsModel);
+        else {
+            detailActivityPresenter.fetchTimeTable(timeTableModel, days[position]);
+        }
     }
 
     @Override
@@ -269,6 +305,5 @@ public class DetailActivity extends AppCompatActivity implements
         detailActivityPresenter.updateAttendance(result, timeTableModel);
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
-        else detailActivityPresenter.fetchTimeTable(timeTableModel);
     }
 }

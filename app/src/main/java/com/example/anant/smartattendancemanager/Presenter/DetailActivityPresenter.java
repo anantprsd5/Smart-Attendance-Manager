@@ -29,31 +29,31 @@ public class DetailActivityPresenter implements SubjectsFetched {
         this.detailsView = detailsView;
     }
 
-    public void fetchDayDrawable() {
+    public void fetchDayPosition() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         day = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime());
         switch (day.toLowerCase()) {
             case "monday":
-                detailsView.onDrawableFetched(days_backdrop[0], day);
+                detailsView.onDayPositionFetched(0);
                 break;
             case "tuesday":
-                detailsView.onDrawableFetched(days_backdrop[1], day);
+                detailsView.onDayPositionFetched(1);
                 break;
             case "wednesday":
-                detailsView.onDrawableFetched(days_backdrop[2], day);
+                detailsView.onDayPositionFetched(2);
                 break;
             case "thursday":
-                detailsView.onDrawableFetched(days_backdrop[3], day);
+                detailsView.onDayPositionFetched(3);
                 break;
             case "friday":
-                detailsView.onDrawableFetched(days_backdrop[4], day);
+                detailsView.onDayPositionFetched(4);
                 break;
             case "saturday":
-                detailsView.onDrawableFetched(days_backdrop[5], day);
+                detailsView.onDayPositionFetched(5);
                 break;
             case "sunday":
-                detailsView.onDrawableFetched(days_backdrop[6], day);
+                detailsView.onDayPositionFetched(6);
                 break;
         }
     }
@@ -92,7 +92,7 @@ public class DetailActivityPresenter implements SubjectsFetched {
         subjectsModel.fetchSubjects(this);
     }
 
-    public void fetchTimeTable(TimeTableModel timeTableModel){
+    public void fetchTimeTable(TimeTableModel timeTableModel, String day){
         timeTableModel.fetchTimeTable(this, day);
     }
 

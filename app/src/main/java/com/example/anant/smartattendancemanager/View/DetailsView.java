@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface DetailsView {
 
-    void onDrawableFetched(int drawable, String day);
+    void onDayPositionFetched(int position);
     void onLoginFailed();
     void onSubjectsAttendanceFetched(ArrayList<String> subjects, ArrayList<Integer> attended,
                                      ArrayList<Integer> totalClass);
