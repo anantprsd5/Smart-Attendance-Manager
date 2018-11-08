@@ -52,7 +52,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             attendanceTextView = view.findViewById(R.id.attendance_text_view);
             bunkTextView = view.findViewById(R.id.leave_text_view);
             percentageTextView = view.findViewById(R.id.percentage_text_view);
-            percentageTextView.setOnClickListener(this);
             attendanceMark = view.findViewById(R.id.attendance_mark);
             attendanceUnmark = view.findViewById(R.id.attendance_unmark);
             attendanceMark.setOnClickListener(v -> {
@@ -70,6 +69,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 HashMap<String, Object> result = new HashMap<>();
                 result.put(key, (attended) + "/" + (++noOfClasses));
                 onItemClickListener.onAttendanceMarked(result);
+            });
+
+            percentageTextView.setOnClickListener(v -> {
+                String key = subjectDataset.get(getAdapterPosition());
+                onItemClickListener.onItemClick(key);
             });
 
         }

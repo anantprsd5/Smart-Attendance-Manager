@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -102,6 +103,9 @@ public class DetailActivity extends AppCompatActivity implements
         subjectsModel = new SubjectsModel(UID);
         timeTableModel = new TimeTableModel(UID);
 
+        //Time table view by default
+        navigationView.getMenu().getItem(0).setChecked(true);
+
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
                     // set item as selected to persist highlight
@@ -151,11 +155,6 @@ public class DetailActivity extends AppCompatActivity implements
         });
     }
 
-    @Override
-    public void onDialogPositiveClick() {
-
-        swipeRefreshLayout.setRefreshing(true);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,11 +249,22 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(String key) {
-
+        DialogFragment newFragment = new AttendanceDialogFragment();
+        ((AttendanceDialogFragment) newFragment).setArguments(key);
+        newFragment.show(getSupportFragmentManager(), "attendance");
     }
 
     @Override
     public void onAttendanceMarked(HashMap<String, Object> result) {
+        updateAttendance(result);
+    }
+
+    @Override
+    public void onDialogPositiveClick(HashMap<String, Object> result) {
+        updateAttendance(result);
+    }
+
+    private void updateAttendance(HashMap<String, Object> result) {
         detailActivityPresenter.updateAttendance(result, subjectsModel);
         detailActivityPresenter.updateAttendance(result, timeTableModel);
         if (!isTimeTable)

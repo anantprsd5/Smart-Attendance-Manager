@@ -1,6 +1,9 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
 import android.app.Activity;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -56,6 +59,7 @@ public class MainActivityPresenter {
             //Do nothing
         }
         EditText editText = new EditText(activity);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, activity.getResources().getDisplayMetrics());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, activity.getResources().getDisplayMetrics());
         editText.setId(editTextID);
