@@ -101,4 +101,5 @@
     <string name="attend_class">Attend Class</string>
     <string name="leave_class_description">Leave Class</string>
     <string name="subject_added_to_time_table">Subject Added to time table</string>
+    <string name="set_attendance_criteria">Set Attendance Criteria</string>
 </resources>

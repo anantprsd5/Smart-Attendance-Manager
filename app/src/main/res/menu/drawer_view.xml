@@ -11,6 +11,11 @@
             android:title="@string/all_subjects" />
 
         <item
+            android:id="@+id/attendance_criteria"
+            android:icon="@drawable/ic_description_black_24dp"
+            android:title="@string/set_attendance_criteria" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout_new_black_24dp"
             android:title="@string/logout" />
