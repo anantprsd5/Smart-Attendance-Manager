@@ -77,4 +77,12 @@ public class TimeTableModel {
             }
         });
     }
+
+    public void updateChildren(HashMap<String, Object> result, String day){
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("/users/" + UID + "/table" +
+                "/" + day.toUpperCase());
+        ref.updateChildren(result);
+    }
 }

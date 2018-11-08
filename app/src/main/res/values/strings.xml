@@ -63,6 +63,7 @@
     <string name="auth_failed" translatable="true">Authentication failed, Password or email is incorrect</string>
     <string name="account_creation_error" translatable="true">Can\'t Create Account, please try again!</string>
     <string name="leave_class" translatable="true">You may leave next %d classes</string>
+    <string name="attend_class_on_track" translatable="true">Attend next %d classes to get on track</string>
     <string name="attendance_shared_pref" translatable="false">attendance</string>
     <string name="logout" translatable="true">Log out</string>
     <string name="time_table" translatable="true">Time Table</string>

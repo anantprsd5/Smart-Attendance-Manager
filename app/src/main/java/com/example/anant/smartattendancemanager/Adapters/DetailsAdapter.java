@@ -63,19 +63,13 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 result.put(key, (++attended) + "/" + (++noOfClasses));
                 onItemClickListener.onAttendanceMarked(result);
             });
-            attendanceUnmark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                   /* String key = subjectDataset.get(getAdapterPosition());
-                    String classes = attendanceMap.get(key).toString();
-                    int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
-                    int noOfClasses = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, (attended) + "/" + (++noOfClasses));
-                    ref.updateChildren(result);
-                    onItemClickListener.onAttendanceMarked();
-                    **/
-                }
+            attendanceUnmark.setOnClickListener(v -> {
+                String key = subjectDataset.get(getAdapterPosition());
+                int attended = classAttended.get(getAdapterPosition());
+                int noOfClasses = classConducted.get(getAdapterPosition());
+                HashMap<String, Object> result = new HashMap<>();
+                result.put(key, (attended) + "/" + (++noOfClasses));
+                onItemClickListener.onAttendanceMarked(result);
             });
 
         }
@@ -111,7 +105,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         return new MyViewHolder(itemView);
     }
 
-
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
@@ -136,13 +129,24 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         holder.attendanceTextView.setContentDescription("Attendance: " + attended + "/" + noOfClasses);
 
         int i = 0;
-        while (percentage >= 75) {
-            noOfClasses++;
-            percentage = ((float) attended) / noOfClasses * 100;
-            i++;
+        if (percentage >= 75) {
+            while (percentage >= 75) {
+                noOfClasses++;
+                percentage = ((float) attended) / noOfClasses * 100;
+                i++;
+            }
+            holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
+            holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
+        } else {
+            while (percentage <= 75) {
+                attended++;
+                noOfClasses++;
+                percentage = ((float) attended) / noOfClasses * 100;
+                i++;
+            }
+            holder.bunkTextView.setText(String.format(context.getString(R.string.attend_class_on_track), ((i == 0) ? 0 : --i)));
+            holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.attend_class_on_track), ((i == 0) ? 0 : --i)));
         }
-        holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
-        holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
     }
 
     private int getDrawable() {

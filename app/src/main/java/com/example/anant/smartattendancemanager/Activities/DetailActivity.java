@@ -2,10 +2,7 @@ package com.example.anant.smartattendancemanager.Activities;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +29,6 @@ import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +74,6 @@ public class DetailActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
@@ -102,10 +96,6 @@ public class DetailActivity extends AppCompatActivity implements
 
         FirebaseUser user = mAuth.getCurrentUser();
         UID = user.getUid();
-
-        if (isInternetConnected())
-            navigationView.getMenu().getItem(0).setChecked(true);
-        else navigationView.getMenu().getItem(1).setChecked(true);
 
         isTimeTable = true;
 
@@ -153,7 +143,11 @@ public class DetailActivity extends AppCompatActivity implements
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            detailActivityPresenter.fetchSubjects(subjectsModel);
+            if (!isTimeTable)
+                detailActivityPresenter.fetchSubjects(subjectsModel);
+            else {
+                detailActivityPresenter.fetchTimeTable(timeTableModel);
+            }
         });
     }
 
@@ -204,19 +198,6 @@ public class DetailActivity extends AppCompatActivity implements
                 .getAppWidgetIds(new ComponentName(getApplication(), AttendanceAppWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
-    }
-
-    private boolean isInternetConnected() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean isConnected;
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null)
-            isConnected = true;
-        else
-            isConnected = false;
-        return isConnected;
     }
 
     @Override
@@ -275,6 +256,9 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     public void onAttendanceMarked(HashMap<String, Object> result) {
         detailActivityPresenter.updateAttendance(result, subjectsModel);
-        detailActivityPresenter.fetchSubjects(subjectsModel);
+        detailActivityPresenter.updateAttendance(result, timeTableModel);
+        if (!isTimeTable)
+            detailActivityPresenter.fetchSubjects(subjectsModel);
+        else detailActivityPresenter.fetchTimeTable(timeTableModel);
     }
 }

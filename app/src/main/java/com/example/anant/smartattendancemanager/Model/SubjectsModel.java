@@ -16,6 +16,9 @@ public class SubjectsModel {
 
     public SubjectsModel(String UID) {
         this.UID = UID;
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("/users/" + UID + "/subjects");
     }
 
     public void saveSubjects(HashMap<String, String> mSubjectsMap, DatabaseReference reference) {
@@ -25,9 +28,6 @@ public class SubjectsModel {
     }
 
     public void fetchSubjects(SubjectsFetched subjectsFetched) {
-        // Get a reference to our posts
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference("/users/" + UID + "/subjects");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
