@@ -71,6 +71,7 @@ public class DetailActivity extends AppCompatActivity implements
     private SubjectsModel subjectsModel;
     private TimeTableModel timeTableModel;
     private String[] days;
+    private int pagerItemValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class DetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageSelected(int i) {
+                pagerItemValue = i;
                 try {
                     detailActivityPresenter.fetchTimeTable(timeTableModel, days[i]);
                     nestedScrollView.setVisibility(View.GONE);
@@ -239,6 +241,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDayPositionFetched(int position) {
+        pagerItemValue = position;
         daysViewPager.setCurrentItem(position);
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
@@ -302,9 +305,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void updateAttendance(HashMap<String, Object> result) {
         detailActivityPresenter.updateAttendance(result, subjectsModel);
-        detailActivityPresenter.updateAttendance(result, timeTableModel);
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
-        else detailActivityPresenter.fetchDayPosition();
+        else detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
     }
 }

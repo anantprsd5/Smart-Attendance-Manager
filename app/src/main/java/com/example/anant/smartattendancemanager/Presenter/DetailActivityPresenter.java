@@ -93,14 +93,10 @@ public class DetailActivityPresenter implements SubjectsFetched {
     }
 
     public void fetchTimeTable(TimeTableModel timeTableModel, String day){
-        timeTableModel.fetchTimeTable(this, day);
+        timeTableModel.getSubjectsForTimeTable(this, day);
     }
 
     public void updateAttendance(HashMap<String, Object> result, SubjectsModel subjectsModel){
         subjectsModel.updateChildren(result);
-    }
-
-    public void updateAttendance(HashMap<String, Object> result, TimeTableModel timeTableModel){
-        timeTableModel.updateChildren(result, day);
     }
 }

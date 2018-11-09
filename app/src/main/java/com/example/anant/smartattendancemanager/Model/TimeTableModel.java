@@ -1,5 +1,7 @@
 package com.example.anant.smartattendancemanager.Model;
 
+import android.util.Log;
+
 import com.example.anant.smartattendancemanager.Days;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,7 +9,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TimeTableModel {
@@ -50,9 +54,10 @@ public class TimeTableModel {
         mDatabase.updateChildren(childUpdates);
     }
 
-    public void fetchTimeTable(SubjectsFetched subjectsFetched, String day) {
+    public void fetchTimeTable(SubjectsFetched subjectsFetched, String day, Map<String, Object> subjects) {
         // Get a reference to our posts
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        Map<String, Object> updatedTable = new HashMap<>();
         DatabaseReference ref = database.getReference("/users/" + UID + "/table" +
                 "/" + day.toUpperCase());
         ref.addValueEventListener(new ValueEventListener() {
@@ -61,7 +66,14 @@ public class TimeTableModel {
                 try {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if (map != null) {
-                        subjectsFetched.OnSubjectsFetched(map);
+                        final List<String> subjectDataset = new ArrayList<>(map.keySet());
+                        for (String subject : subjectDataset) {
+                            if (subjects.containsKey(subject)) {
+                                updatedTable.put(subject, subjects.get(subject));
+                                Log.wtf("SubjectsList", subject);
+                            }
+                        }
+                        subjectsFetched.OnSubjectsFetched(updatedTable);
                     } else
                         subjectsFetched.OnSubjectsFetched(null);
                 } catch (ClassCastException e) {
@@ -78,11 +90,28 @@ public class TimeTableModel {
         });
     }
 
-    public void updateChildren(HashMap<String, Object> result, String day){
-        // Get a reference to our posts
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("/users/" + UID + "/table" +
-                "/" + day.toUpperCase());
-        ref.updateChildren(result);
+    public void getSubjectsForTimeTable(SubjectsFetched subjectsFetched, String day) {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map != null) {
+                        fetchTimeTable(subjectsFetched, day, map);
+                        ref.removeEventListener(this);
+                    } else subjectsFetched.OnSubjectsFetched(null);
+                } catch (ClassCastException e) {
+                    subjectsFetched.OnSubjectsFetched(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                subjectsFetched.OnSubjectsFetched(null);
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 }
