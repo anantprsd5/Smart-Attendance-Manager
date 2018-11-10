@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -22,8 +25,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.anant.smartattendancemanager.Adapters.DaysViewPagerAdapter;
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
@@ -44,6 +51,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailActivity extends AppCompatActivity implements
         AttendanceDialogFragment.NoticeDialogListener,
@@ -78,6 +86,7 @@ public class DetailActivity extends AppCompatActivity implements
     private String[] days;
     private int pagerItemValue;
     private int criteria;
+    private FirebaseUser user;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -134,7 +143,8 @@ public class DetailActivity extends AppCompatActivity implements
 
         adapterSet = false;
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
+
         if (user != null) {
             UID = user.getUid();
         } else {
@@ -203,12 +213,32 @@ public class DetailActivity extends AppCompatActivity implements
 
         swipeRefreshLayout.setRefreshing(true);
 
+        setNavigationHeader();
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             if (!isTimeTable)
                 detailActivityPresenter.fetchSubjects(subjectsModel);
             else swipeRefreshLayout.setRefreshing(false);
         });
+    }
+
+    private void setNavigationHeader() {
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.name_text_view);
+        TextView navEmail = headerView.findViewById(R.id.email_text_view);
+        CircleImageView imageView = headerView.findViewById(R.id.profile_pic);
+        navEmail.setText(user.getEmail());
+        navUsername.setText(user.getDisplayName());
+        Glide.with(this)
+                .load(user.getPhotoUrl())
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        imageView.setImageDrawable(resource);
+                    }
+                });
     }
 
     public String[] getNames(Class<? extends Enum<?>> e) {
