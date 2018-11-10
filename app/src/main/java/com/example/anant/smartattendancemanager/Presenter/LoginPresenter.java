@@ -133,7 +133,7 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
                 });
     }
 
-    private void writeNewUser(String userId, String email, String name) {
+    public void writeNewUser(String userId, String email, String name) {
         User user = new User(email, name, "");
         mDatabase.child("users").child(userId).setValue(user);
     }
