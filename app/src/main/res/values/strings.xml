@@ -105,4 +105,5 @@
     <string name="set_attendance_criteria">Set Attendance Criteria</string>
     <string name="login_failed_message">Login failed! Please try again later</string>
     <string name="change_time_table">Change Time Table</string>
+    <string name="is_details">isDetails</string>
 </resources>

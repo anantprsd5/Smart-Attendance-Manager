@@ -80,12 +80,6 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
         UID = user.getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getActivity(), AttendanceActivity.class);
-            startActivity(intent);
-        });
-
         timeTablePresenter = new TimeTablePresenter(UID, this);
         timeTablePresenter.listSubjects();
 

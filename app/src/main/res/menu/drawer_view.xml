@@ -13,7 +13,7 @@
 
     </group>
 
-    <group android:checkableBehavior="single"
+    <group android:checkableBehavior="none"
         android:id="@+id/changes_basics">
 
         <item
@@ -28,7 +28,7 @@
 
     </group>
 
-    <group android:checkableBehavior="single"
+    <group android:checkableBehavior="none"
         android:id="@+id/settings_menu">
         <item
             android:id="@+id/settings"

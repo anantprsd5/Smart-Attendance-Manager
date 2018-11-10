@@ -45,6 +45,7 @@ import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -196,6 +197,12 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.settings:
                             Intent settingsIntent = new Intent(this, SettingsActivity.class);
                             startActivity(settingsIntent);
+                            break;
+
+                        case R.id.change_time_table:
+                            Intent timeTableIntent = new Intent(this, TimeTableActivity.class);
+                            timeTableIntent.putExtra(getString(R.string.is_details), true);
+                            startActivity(timeTableIntent);
                             break;
                     }
                     // close drawer when item is tapped

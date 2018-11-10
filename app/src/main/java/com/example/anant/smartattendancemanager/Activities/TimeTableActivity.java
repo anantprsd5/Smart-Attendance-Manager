@@ -1,15 +1,21 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.SubjectsFragment;
@@ -21,7 +27,9 @@ import java.util.Arrays;
 public class TimeTableActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private boolean isDetails;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +39,17 @@ public class TimeTableActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.time_table);
         setSupportActionBar(toolbar);
 
-        Toast.makeText(this, "Time Act Started", Toast.LENGTH_SHORT).show();
+        Window window = getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         //Toolbar is now an action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        isDetails = getIntent().getBooleanExtra(getString(R.string.is_details), false);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -45,6 +59,26 @@ public class TimeTableActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setOffscreenPageLimit(7);
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(view1 -> {
+            if (!isDetails) {
+                Intent intent = new Intent(this, AttendanceActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, DetailActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (isDetails) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
