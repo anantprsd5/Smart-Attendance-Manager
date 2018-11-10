@@ -18,6 +18,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     private ArrayList<String> subjectDataset;
     private ArrayList<Integer> classAttended;
     private ArrayList<Integer> classConducted;
+    private int criteria;
 
     private OnItemClickListener onItemClickListener;
 
@@ -85,8 +86,9 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         }
     }
 
-    public DetailsAdapter(OnItemClickListener onItemClickListener) {
+    public DetailsAdapter(OnItemClickListener onItemClickListener, int criteria) {
         this.onItemClickListener = onItemClickListener;
+        this.criteria = criteria;
     }
 
     public void setDataset(ArrayList<String> subjects, ArrayList<Integer> classAttended,
@@ -133,8 +135,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         holder.attendanceTextView.setContentDescription("Attendance: " + attended + "/" + noOfClasses);
 
         int i = 0;
-        if (percentage >= 75) {
-            while (percentage >= 75) {
+        if (percentage >= criteria) {
+            while (percentage >= criteria) {
                 noOfClasses++;
                 percentage = ((float) attended) / noOfClasses * 100;
                 i++;
@@ -142,7 +144,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
             holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
         } else {
-            while (percentage <= 75) {
+            while (percentage <= criteria) {
                 attended++;
                 noOfClasses++;
                 percentage = ((float) attended) / noOfClasses * 100;

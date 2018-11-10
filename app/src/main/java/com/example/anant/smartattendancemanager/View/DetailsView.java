@@ -9,4 +9,6 @@ public interface DetailsView {
     void onSubjectsAttendanceFetched(ArrayList<String> subjects, ArrayList<Integer> attended,
                                      ArrayList<Integer> totalClass);
     void startMainActivity();
+
+    void onAttendanceFetched(int criteria);
 }

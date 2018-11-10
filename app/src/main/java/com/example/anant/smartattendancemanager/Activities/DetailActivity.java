@@ -25,6 +25,7 @@ import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
+import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
 import com.example.anant.smartattendancemanager.Presenter.DetailActivityPresenter;
@@ -72,6 +73,7 @@ public class DetailActivity extends AppCompatActivity implements
     private TimeTableModel timeTableModel;
     private String[] days;
     private int pagerItemValue;
+    private int criteria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,19 +127,23 @@ public class DetailActivity extends AppCompatActivity implements
                 LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        detailsAdapter = new DetailsAdapter(this);
         adapterSet = false;
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             UID = user.getUid();
-        } else startLoginActivity();
+        } else {
+            startLoginActivity();
+            return;
+        }
 
         isTimeTable = true;
 
         subjectsModel = new SubjectsModel(UID);
         timeTableModel = new TimeTableModel(UID);
-        detailActivityPresenter.fetchDayPosition();
+
+        AttendanceModel attendanceModel = new AttendanceModel(UID);
+        detailActivityPresenter.fetchAttendanceCriteria(attendanceModel);
 
         //Time table view by default
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -162,6 +168,15 @@ public class DetailActivity extends AppCompatActivity implements
                             detailActivityPresenter.fetchSubjects(subjectsModel);
                             daysViewPager.setOnTouchListener((arg0, arg1) -> true);
                             break;
+                        case R.id.attendance_criteria:
+                            Intent intent = new Intent(this, AttendanceActivity.class);
+                            intent.putExtra("criteria", criteria);
+                            startActivity(intent);
+                            break;
+                        case R.id.settings:
+                            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                            startActivity(settingsIntent);
+                            break;
                     }
                     // close drawer when item is tapped
                     mDrawerLayout.closeDrawers();
@@ -182,6 +197,7 @@ public class DetailActivity extends AppCompatActivity implements
             swipeRefreshLayout.setRefreshing(true);
             if (!isTimeTable)
                 detailActivityPresenter.fetchSubjects(subjectsModel);
+            else swipeRefreshLayout.setRefreshing(false);
         });
     }
 
@@ -221,6 +237,7 @@ public class DetailActivity extends AppCompatActivity implements
             return true;
 
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -265,6 +282,8 @@ public class DetailActivity extends AppCompatActivity implements
         }
         detailsAdapter.notifyDataSetChanged();
         updateAppWidget();
+        nestedScrollView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -278,6 +297,13 @@ public class DetailActivity extends AppCompatActivity implements
             nestedScrollView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onAttendanceFetched(int criteria) {
+        this.criteria = criteria;
+        detailsAdapter = new DetailsAdapter(this, criteria);
+        detailActivityPresenter.fetchDayPosition();
     }
 
     private void startLoginActivity() {

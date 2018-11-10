@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/details_card_view"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/attendance_card_view_height"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/attendance_card_view_margin"
     app:cardElevation="@dimen/attendance_card_elevation">
 

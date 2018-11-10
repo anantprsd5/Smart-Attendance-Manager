@@ -57,7 +57,7 @@ public class TimeTableActivity extends AppCompatActivity {
 
     class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        final int PAGE_COUNT = 5;
+        final int PAGE_COUNT = 7;
         private String tabTitles[] = getNames(Days.class);
 
         public String[] getNames(Class<? extends Enum<?>> e) {

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.anant.smartattendancemanager.Activities.AttendanceActivity;
-import com.example.anant.smartattendancemanager.Activities.DetailActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
 import com.example.anant.smartattendancemanager.Presenter.TimeTablePresenter;
 import com.example.anant.smartattendancemanager.R;

@@ -4,20 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
+import com.example.anant.smartattendancemanager.Model.AttendanceModel;
+import com.example.anant.smartattendancemanager.Presenter.AttendanceActivityPresenter;
 import com.example.anant.smartattendancemanager.R;
+import com.example.anant.smartattendancemanager.View.AttendanceView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ramotion.fluidslider.FluidSlider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import kotlin.Unit;
 
-public class AttendanceActivity extends AppCompatActivity {
+public class AttendanceActivity extends AppCompatActivity
+        implements AttendanceView {
 
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
     @BindView(R.id.fluidSlider)
     FluidSlider fluidSlider;
+    @BindView(R.id.close_button)
+    ImageView closeButtonView;
+    private AttendanceActivityPresenter attendanceActivityPresenter;
+    private String UID;
+    private String criteria;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,21 +40,37 @@ public class AttendanceActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        final int max = 100;
-        final int min = 0;
-        final int total = max - min;
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = mAuth.getCurrentUser();
+        UID = user.getUid();
 
-        // Java 8 lambda
-        fluidSlider.setPositionListener(pos -> {
-            final String value = String.valueOf((int) (min + total * pos));
-            fluidSlider.setBubbleText(value);
-            return Unit.INSTANCE;
+        int attendanceValue = getIntent().getIntExtra("criteria", 75);
+
+        float value = (float) attendanceValue / 100;
+
+        AttendanceModel attendanceModel = new AttendanceModel(UID);
+
+        attendanceActivityPresenter = new AttendanceActivityPresenter(this, attendanceModel);
+        attendanceActivityPresenter.setSlider(fluidSlider, value);
+
+        closeButtonView.setOnClickListener(v -> onBackPressed());
+
+        floatingActionButton.setOnClickListener(v -> {
+            attendanceActivityPresenter.setCriteria(criteria, mDatabase);
+            startActivity(new Intent(AttendanceActivity.this, DetailActivity.class));
         });
+    }
 
-        fluidSlider.setPosition(0.3f);
-        fluidSlider.setStartText(String.valueOf(min));
-        fluidSlider.setEndText(String.valueOf(max));
+    @Override
+    public void onCriteriaSelected(String value) {
+        criteria = value;
+    }
 
-        floatingActionButton.setOnClickListener(v -> startActivity(new Intent(AttendanceActivity.this, DetailActivity.class)));
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
     }
 }

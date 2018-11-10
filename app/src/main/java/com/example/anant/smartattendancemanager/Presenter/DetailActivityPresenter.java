@@ -1,9 +1,9 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
+import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
-import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,11 +16,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class DetailActivityPresenter implements SubjectsFetched {
-
-    private int[] days_backdrop = {R.drawable.monday_backdrop, R.drawable.tuesday_backdrop,
-            R.drawable.wednesday_backdrop, R.drawable.thursday_backdrop,
-            R.drawable.friday_backdrop, R.drawable.saturday_backdrop, R.drawable.sunday_backdrop};
+public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel.OnAttendanceFetched {
 
     private DetailsView detailsView;
     private String day;
@@ -84,19 +80,27 @@ public class DetailActivityPresenter implements SubjectsFetched {
             }
 
             detailsView.onSubjectsAttendanceFetched(subjects, classAttended, noOfClasses);
-        }
-        else detailsView.startMainActivity();
+        } else detailsView.startMainActivity();
     }
 
     public void fetchSubjects(SubjectsModel subjectsModel) {
         subjectsModel.fetchSubjects(this);
     }
 
-    public void fetchTimeTable(TimeTableModel timeTableModel, String day){
+    public void fetchTimeTable(TimeTableModel timeTableModel, String day) {
         timeTableModel.getSubjectsForTimeTable(this, day);
     }
 
-    public void updateAttendance(HashMap<String, Object> result, SubjectsModel subjectsModel){
+    public void updateAttendance(HashMap<String, Object> result, SubjectsModel subjectsModel) {
         subjectsModel.updateChildren(result);
+    }
+
+    public void fetchAttendanceCriteria(AttendanceModel attendanceModel) {
+        attendanceModel.getAttendanceCriteria(this);
+    }
+
+    @Override
+    public void attendanceFetched(int criteria) {
+        detailsView.onAttendanceFetched(criteria);
     }
 }

@@ -81,7 +81,8 @@
                 android:resource="@xml/attendance_app_widget_info" />
         </receiver>
 
-        <activity android:name=".Activities.AttendanceActivity"></activity>
+        <activity android:name=".Activities.AttendanceActivity"
+            android:noHistory="true"></activity>
     </application>
 
 </manifest>

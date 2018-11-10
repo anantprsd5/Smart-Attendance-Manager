@@ -6,5 +6,5 @@
         android:orderInCategory="300"
         android:title="@string/user"
         android:icon="@drawable/ic_add_white_24dp"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="ifRoom"/>
 </menu>
