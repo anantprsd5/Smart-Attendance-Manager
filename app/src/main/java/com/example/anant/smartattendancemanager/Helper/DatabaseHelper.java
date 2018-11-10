@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.R;
@@ -55,14 +54,19 @@ public class DatabaseHelper {
                         mSubjectsMap = map;
                         mOnDataFetchedListener.onDataFetched(map, true);
                         ref.removeEventListener(this);
-                    } else mOnDataFetchedListener.onDataFetched(null, false);
+                    } else {
+                        ref.removeEventListener(this);
+                        mOnDataFetchedListener.onDataFetched(null, false);
+                    }
                 } catch (ClassCastException e) {
+                    ref.removeEventListener(this);
                     mOnDataFetchedListener.onDataFetched(null, false);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                ref.removeEventListener(this);
                 mOnDataFetchedListener.onDataFetched(null, false);
                 System.out.println("The read failed: " + databaseError.getCode());
             }

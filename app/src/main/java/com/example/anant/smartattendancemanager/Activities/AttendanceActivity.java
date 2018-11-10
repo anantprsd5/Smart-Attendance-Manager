@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Presenter.AttendanceActivityPresenter;
@@ -39,6 +40,8 @@ public class AttendanceActivity extends AppCompatActivity
         setContentView(R.layout.activity_attendance);
 
         ButterKnife.bind(this);
+
+        Toast.makeText(this, "Att activity started", Toast.LENGTH_SHORT).show();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();

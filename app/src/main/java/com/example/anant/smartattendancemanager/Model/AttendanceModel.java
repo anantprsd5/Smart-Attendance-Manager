@@ -33,14 +33,19 @@ public class AttendanceModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                onAttendanceFetched.attendanceFetched(Integer.parseInt(map.get("criteria").toString()));
+                ref.removeEventListener(this);
+                if(map!=null)
+                    onAttendanceFetched.attendanceFetched(Integer.parseInt(map.get("criteria").toString()));
+                else onAttendanceFetched.attendanceFetched(75);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                ref.removeEventListener(this);
                 onAttendanceFetched.attendanceFetched(75);
             }
         });
+
     }
 
     public interface OnAttendanceFetched{

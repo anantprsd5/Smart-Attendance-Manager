@@ -61,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity implements LoginView {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        loginPresenter = new LoginPresenter(mAuth, this, this);
+        loginPresenter = new LoginPresenter(mAuth, this, this, mDatabase);
         loginPresenter.setBackgroundResource();
 
         mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity implements LoginView {
         String name = mNameView.getText().toString();
 
         if (isInternetConnected())
-            loginPresenter.signUp(email, password, name, mDatabase);
+            loginPresenter.signUp(email, password, name);
         else
             Toast.makeText(SignUpActivity.this, R.string.check_internet,
                     Toast.LENGTH_SHORT).show();

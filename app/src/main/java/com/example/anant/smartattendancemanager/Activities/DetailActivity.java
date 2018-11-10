@@ -1,5 +1,6 @@
 package com.example.anant.smartattendancemanager.Activities;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -12,13 +13,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Adapters.DaysViewPagerAdapter;
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
@@ -75,6 +79,7 @@ public class DetailActivity extends AppCompatActivity implements
     private int pagerItemValue;
     private int criteria;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +165,12 @@ public class DetailActivity extends AppCompatActivity implements
                             daysViewPager.setOnTouchListener(null);
                             break;
                         case R.id.nav_logout:
-                            startLoginActivity();
+                            new AlertDialog.Builder(this)
+                                    .setTitle(R.string.logout)
+                                    .setMessage(R.string.logout_message)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> startLoginActivity())
+                                    .setNegativeButton(android.R.string.no, null).show();
                             break;
                         case R.id.nav_all_subjects:
                             swipeRefreshLayout.setRefreshing(true);
@@ -291,6 +301,7 @@ public class DetailActivity extends AppCompatActivity implements
     public void startMainActivity() {
         swipeRefreshLayout.setRefreshing(false);
         if (!isTimeTable) {
+            Log.wtf("checkStart", "starting From DetailActivity");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else {
@@ -310,6 +321,7 @@ public class DetailActivity extends AppCompatActivity implements
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        return;
     }
 
     @Override

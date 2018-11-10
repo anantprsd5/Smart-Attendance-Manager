@@ -81,6 +81,7 @@
     <string name="reset_all" translatable="true">Reset All</string>
     <string name="reset" translatable="true">Reset</string>
     <string name="reset_all_data" translatable="true">Do you really want to reset all data?</string>
+    <string name="logout_message" translatable="true">Are you sure you want to logout?</string>
     <string name="app_logo_description" translatable="true">App Logo</string>
     <string name="login_field" translatable="true">Login Field</string>
     <string name="login_password_field" translatable="true">Login Password Field</string>
@@ -102,4 +103,6 @@
     <string name="leave_class_description">Leave Class</string>
     <string name="subject_added_to_time_table">Subject Added to time table</string>
     <string name="set_attendance_criteria">Set Attendance Criteria</string>
+    <string name="login_failed_message">Login failed! Please try again later</string>
+    <string name="change_time_table">Change Time Table</string>
 </resources>

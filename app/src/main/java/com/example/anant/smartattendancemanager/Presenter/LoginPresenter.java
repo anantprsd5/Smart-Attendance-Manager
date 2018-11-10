@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,15 +19,27 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
+import com.example.anant.smartattendancemanager.Activities.LoginActivity;
 import com.example.anant.smartattendancemanager.Activities.MainActivity;
 import com.example.anant.smartattendancemanager.Activities.SignUpActivity;
 import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.User;
 import com.example.anant.smartattendancemanager.View.LoginView;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
@@ -41,10 +54,11 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     private DatabaseHelper databaseHelper;
     private DatabaseReference mDatabase;
 
-    public LoginPresenter(FirebaseAuth auth, Activity activity, LoginView loginView) {
+    public LoginPresenter(FirebaseAuth auth, Activity activity, LoginView loginView, DatabaseReference reference) {
         mAuth = auth;
         mActivity = activity;
         this.loginView = loginView;
+        mDatabase = reference;
     }
 
     public void signIn(String email, String password) {
@@ -54,12 +68,11 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
         checkValidationAndLogIn(false);
     }
 
-    public void signUp(String email, String password, String name, DatabaseReference mDatabase) {
+    public void signUp(String email, String password, String name) {
         loginView.toggleProgressVisibility(true);
         this.email = email;
         this.password = password;
         this.name = name;
-        this.mDatabase = mDatabase;
         checkValidationAndLogIn(true);
     }
 
@@ -207,4 +220,55 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
             mActivity.startActivity(intent, options.toBundle());
         } else mActivity.startActivity(intent);
     }
+
+    public GoogleSignInOptions configueGoogleClient() {
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mActivity.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        return gso;
+    }
+
+    public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(mActivity, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        checkIfUserExists(user);
+                    } else {
+                        loginView.toggleProgressVisibility(false);
+                        Toast.makeText(mActivity, R.string.login_failed_message,
+                                Toast.LENGTH_SHORT).show();
+                        // If sign in fails, display a message to the user.
+                    }
+                });
+    }
+
+    public void checkIfUserExists(FirebaseUser user) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ref.removeEventListener(this);
+                    loginView.OnSuccess();
+                } else {
+                    writeNewUser(user.getUid(), user.getEmail(), user.getDisplayName());
+                    ref.removeEventListener(this);
+                    loginView.OnSuccess();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

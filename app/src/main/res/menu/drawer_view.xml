@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/subject_views">
         <item
             android:id="@+id/nav_time_table"
             android:icon="@drawable/ic_time_table_black_24dp"
@@ -10,11 +11,25 @@
             android:icon="@drawable/ic_library_books_black_24dp"
             android:title="@string/all_subjects" />
 
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/changes_basics">
+
         <item
             android:id="@+id/attendance_criteria"
             android:icon="@drawable/ic_description_black_24dp"
             android:title="@string/set_attendance_criteria" />
 
+        <item
+            android:id="@+id/change_time_table"
+            android:icon="@drawable/ic_autorenew_black_24dp"
+            android:title="@string/change_time_table" />
+
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/settings_menu">
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_settings_black_24dp"

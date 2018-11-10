@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.SubjectsFragment;
@@ -30,6 +31,8 @@ public class TimeTableActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.time_table);
         setSupportActionBar(toolbar);
 
+        Toast.makeText(this, "Time Act Started", Toast.LENGTH_SHORT).show();
+
         //Toolbar is now an action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -41,7 +44,7 @@ public class TimeTableActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(7);
     }
 
     @Override

@@ -14,7 +14,6 @@ public class User {
     public String email;
     public String name;
     public String subjects;
-    public String table;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -24,7 +23,6 @@ public class User {
         this.email = email;
         this.name = name;
         this.subjects = subjects;
-        this.table = "";
     }
 
 }

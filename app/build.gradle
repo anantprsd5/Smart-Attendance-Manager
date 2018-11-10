@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.ramotion.fluidslider:fluid-slider:0.3.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.shobhitpuri.custombuttons:google-signin:1.0.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
 }
 
