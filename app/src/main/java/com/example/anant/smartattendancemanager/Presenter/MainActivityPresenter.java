@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -15,6 +16,8 @@ import com.example.anant.smartattendancemanager.View.AddSubjectsView;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MainActivityPresenter {
 
@@ -82,6 +85,18 @@ public class MainActivityPresenter {
             count++;
             createEditTextView(linearLayout);
         }
+    }
+
+    public boolean checkIfFirstAppVisit() {
+        SharedPreferences prefs = activity.getSharedPreferences(activity.getString(R.string.first_visit), MODE_PRIVATE);
+        boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
+        return isFirstTime;
+    }
+
+    public void toggleFirstTimeVisit(boolean val) {
+        SharedPreferences.Editor editor = activity.getSharedPreferences(activity.getString(R.string.first_visit), MODE_PRIVATE).edit();
+        editor.putBoolean("isFirstTime", val);
+        editor.apply();
     }
 
 }

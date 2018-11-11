@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 import com.example.anant.smartattendancemanager.Presenter.LoginPresenter;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.LoginView;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -112,9 +116,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         mSignUpView.setOnClickListener(v -> loginPresenter.startSignUpActivity(mImageView));
 
-        if(loginPresenter.checkIfFirstAppVisit()){
-            loginPresenter.toggleFirstTimeVisit(false);
-        }
     }
 
     private void attemptLogin() {

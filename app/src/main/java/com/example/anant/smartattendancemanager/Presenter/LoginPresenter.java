@@ -43,7 +43,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
 
-    private static final String FIRST_TIME_PREF = "firstPref";
     private FirebaseAuth mAuth;
     private Activity mActivity;
     private String email;
@@ -277,18 +276,6 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
 
             }
         });
-    }
-
-    public boolean checkIfFirstAppVisit() {
-        SharedPreferences prefs = mActivity.getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE);
-        boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
-        return isFirstTime;
-    }
-
-    public void toggleFirstTimeVisit(boolean val) {
-        SharedPreferences.Editor editor = mActivity.getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit();
-        editor.putBoolean("isFirstTime", val);
-        editor.apply();
     }
 
 }

@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
         subjectsAdded(false);
     }
 
-    public void subjectsAdded(boolean added){
+    public void subjectsAdded(boolean added) {
         SharedPreferences.Editor editor = getSharedPreferences(SUBJECTS_ADDED_PREF, MODE_PRIVATE).edit();
         editor.putBoolean("subAdded", added);
         editor.apply();
