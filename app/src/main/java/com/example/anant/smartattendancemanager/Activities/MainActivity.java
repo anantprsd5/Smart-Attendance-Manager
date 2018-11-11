@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements AddSubjectsView {
 
+    private static final String SUBJECTS_ADDED_PREF = "subPref";
     private LinearLayout linearLayout;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -72,6 +74,18 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        subjectsAdded(false);
+    }
+
+    public void subjectsAdded(boolean added){
+        SharedPreferences.Editor editor = getSharedPreferences(SUBJECTS_ADDED_PREF, MODE_PRIVATE).edit();
+        editor.putBoolean("subAdded", added);
+        editor.apply();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_subjects_menu, menu);
@@ -96,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
 
     @Override
     public void onDataSaved() {
+        subjectsAdded(true);
         Intent intent = new Intent(this, TimeTableActivity.class);
         startActivity(intent);
     }

@@ -111,6 +111,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         });
 
         mSignUpView.setOnClickListener(v -> loginPresenter.startSignUpActivity(mImageView));
+
+        if(loginPresenter.checkIfFirstAppVisit()){
+            loginPresenter.toggleFirstTimeVisit(false);
+        }
     }
 
     private void attemptLogin() {

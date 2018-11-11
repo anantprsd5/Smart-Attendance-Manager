@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -45,7 +45,6 @@ import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,6 +87,8 @@ public class DetailActivity extends AppCompatActivity implements
     private int pagerItemValue;
     private int criteria;
     private FirebaseUser user;
+
+    private static final String SUBJECTS_ADDED_PREF = "subPref";
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -148,6 +149,8 @@ public class DetailActivity extends AppCompatActivity implements
 
         if (user != null) {
             UID = user.getUid();
+            if (!checkIfSubjectsAdded())
+                startActivity(new Intent(this, MainActivity.class));
         } else {
             startLoginActivity();
             return;
@@ -228,6 +231,12 @@ public class DetailActivity extends AppCompatActivity implements
                 detailActivityPresenter.fetchSubjects(subjectsModel);
             else swipeRefreshLayout.setRefreshing(false);
         });
+    }
+
+    private boolean checkIfSubjectsAdded() {
+        SharedPreferences prefs = getSharedPreferences(SUBJECTS_ADDED_PREF, MODE_PRIVATE);
+        boolean added = prefs.getBoolean("subAdded", true);
+        return added;
     }
 
     private void setNavigationHeader() {

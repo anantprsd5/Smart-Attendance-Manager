@@ -2,6 +2,7 @@ package com.example.anant.smartattendancemanager.Presenter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -9,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,7 +19,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.anant.smartattendancemanager.Activities.DetailActivity;
-import com.example.anant.smartattendancemanager.Activities.LoginActivity;
 import com.example.anant.smartattendancemanager.Activities.MainActivity;
 import com.example.anant.smartattendancemanager.Activities.SignUpActivity;
 import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
@@ -28,10 +27,7 @@ import com.example.anant.smartattendancemanager.User;
 import com.example.anant.smartattendancemanager.View.LoginView;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -43,8 +39,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
 
+    private static final String FIRST_TIME_PREF = "firstPref";
     private FirebaseAuth mAuth;
     private Activity mActivity;
     private String email;
@@ -53,6 +52,8 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     private LoginView loginView;
     private DatabaseHelper databaseHelper;
     private DatabaseReference mDatabase;
+
+    private static final String SUBJECTS_ADDED_PREF = "subPref";
 
     public LoginPresenter(FirebaseAuth auth, Activity activity, LoginView loginView, DatabaseReference reference) {
         mAuth = auth;
@@ -186,11 +187,18 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     public void onDataFetched(Map<String, Object> map, boolean isSuccessful) {
         loginView.toggleProgressVisibility(false);
         Intent intent;
-        if (map != null)
+        if (map != null) {
+            subjectsAdded(true);
             intent = new Intent(mActivity, DetailActivity.class);
-        else intent = new Intent(mActivity, MainActivity.class);
+        } else intent = new Intent(mActivity, MainActivity.class);
 
         mActivity.startActivity(intent);
+    }
+
+    public void subjectsAdded(boolean added) {
+        SharedPreferences.Editor editor = mActivity.getSharedPreferences(SUBJECTS_ADDED_PREF, MODE_PRIVATE).edit();
+        editor.putBoolean("subAdded", added);
+        editor.apply();
     }
 
     public void sendResetPasswordEmail(String email) {
@@ -269,6 +277,18 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
 
             }
         });
+    }
+
+    public boolean checkIfFirstAppVisit() {
+        SharedPreferences prefs = mActivity.getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE);
+        boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
+        return isFirstTime;
+    }
+
+    public void toggleFirstTimeVisit(boolean val) {
+        SharedPreferences.Editor editor = mActivity.getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit();
+        editor.putBoolean("isFirstTime", val);
+        editor.apply();
     }
 
 }

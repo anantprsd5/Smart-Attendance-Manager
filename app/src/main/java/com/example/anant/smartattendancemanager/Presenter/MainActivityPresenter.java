@@ -23,6 +23,8 @@ public class MainActivityPresenter {
     private AddSubjectsView addSubjectsView;
     private SubjectsModel subjectsModel;
 
+    private int count = 0;
+
     public MainActivityPresenter(Activity activity, String UID, AddSubjectsView addSubjectsView,
                                  SubjectsModel subjectsModel) {
         this.activity = activity;
@@ -70,12 +72,16 @@ public class MainActivityPresenter {
         lp.setMargins(padding, padding, padding, padding);
         editText.setLayoutParams(lp);
         linearLayout.addView(editText);
-        editText.requestFocus();
         editTextID++;
         activity.findViewById(editTextID - 1)
                 .setOnTouchListener((v, event) -> {
                     createEditTextView(linearLayout);
                     return false;
                 });
+        if(count<1){
+            count++;
+            createEditTextView(linearLayout);
+        }
     }
+
 }

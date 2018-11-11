@@ -78,6 +78,9 @@ public class TimeTableActivity extends AppCompatActivity {
         if (isDetails) {
             Intent intent = new Intent(this, DetailActivity.class);
             startActivity(intent);
+        } else {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
         }
     }
 
