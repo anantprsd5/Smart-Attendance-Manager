@@ -33,8 +33,7 @@
             android:name=".Activities.TimeTableActivity"
             android:noHistory="true" />
         <activity
-            android:name=".Activities.DetailActivity"
-            android:noHistory="true">
+            android:name=".Activities.DetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

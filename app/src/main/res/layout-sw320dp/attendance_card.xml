@@ -4,12 +4,8 @@
     android:id="@+id/details_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/landscape_card_margin_side"
-    android:layout_marginTop="@dimen/landscape_card_margin_top"
-    android:layout_marginRight="@dimen/landscape_card_margin_side"
-    app:cardElevation="@dimen/attendance_card_elevation"
-    android:layout_marginStart="@dimen/landscape_card_margin_side"
-    android:layout_marginEnd="@dimen/landscape_card_margin_side">
+    android:layout_margin="@dimen/attendance_card_view_margin"
+    app:cardElevation="@dimen/attendance_card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +13,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="210dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -61,8 +57,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/mark_button_margin_bottom"
-                    android:padding="@dimen/subject_padding"
                     android:contentDescription="@string/attend_class"
+                    android:padding="@dimen/subject_padding"
                     app:srcCompat="@drawable/ic_check_circle_black_24dp" />
 
                 <ImageView
@@ -73,25 +69,23 @@
                     android:layout_marginBottom="@dimen/unmark_button_margin_bottom"
                     android:contentDescription="@string/leave_class_description"
                     app:srcCompat="@drawable/ic_close_black_24dp" />
-
             </LinearLayout>
 
 
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/percent_relative"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/landscape_percentage_margin_left"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/landscape_percentage_margin_left">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/percentage_text_view"
-                android:layout_width="@dimen/percentage_text_view_width"
-                android:layout_height="@dimen/percentage_text_view_height"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:background="@drawable/textview_design_red"
                 android:gravity="center"
                 android:textSize="30sp" />
