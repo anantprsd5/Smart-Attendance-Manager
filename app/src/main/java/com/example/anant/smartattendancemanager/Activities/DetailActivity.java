@@ -25,11 +25,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -92,6 +95,8 @@ public class DetailActivity extends AppCompatActivity implements
     private int pagerItemValue;
     private int criteria;
     private FirebaseUser user;
+
+    private String addSubjectText = "";
 
     private static final String SUBJECTS_ADDED_PREF = "subPref";
 
@@ -221,6 +226,21 @@ public class DetailActivity extends AppCompatActivity implements
                             timeTableIntent.putExtra(getString(R.string.is_details), true);
                             startActivity(timeTableIntent);
                             break;
+
+                        case R.id.add_a_subject:
+                            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setTitle("Add a Subject");
+                            final EditText input = new EditText(this);
+                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                            input.setPadding(padding, padding, padding, padding);
+                            builder.setPositiveButton("Add", (dialog, which) -> {
+                                addSubjectText = input.getText().toString();
+                                showDaysDialog();
+                            });
+                            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                            builder.show();
+                            break;
                     }
                     // close drawer when item is tapped
                     mDrawerLayout.closeDrawers();
@@ -245,6 +265,40 @@ public class DetailActivity extends AppCompatActivity implements
                 detailActivityPresenter.fetchSubjects(subjectsModel);
             else swipeRefreshLayout.setRefreshing(false);
         });
+    }
+
+    private void showDaysDialog() {
+        ArrayList mSelectedItems = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle("Add subject to time table")
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(days, null,
+                        (dialog, which, isChecked) -> {
+                            if (isChecked) {
+                                mSelectedItems.add(which);
+                                // If the user checked the item, add it to the selected items
+
+
+                            } else if (mSelectedItems.contains(which)) {
+                                // Else, if the item is already in the array, remove it
+                                mSelectedItems.remove(Integer.valueOf(which));
+                            }
+                        })
+                // Set the action buttons
+                .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    // User clicked OK, so save the mSelectedItems results somewhere
+                    // or return them to the component that opened the dialog
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        builder.show();
+
     }
 
     private boolean checkIfSubjectsAdded() {
