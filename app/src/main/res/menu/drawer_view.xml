@@ -26,14 +26,14 @@
             android:icon="@drawable/ic_autorenew_black_24dp"
             android:title="@string/change_time_table" />
 
+        <item android:id="@+id/clear_all_subjects"
+            android:icon="@drawable/ic_clear_black_24dp"
+            android:title="@string/reset_all"/>
+
     </group>
 
     <group android:checkableBehavior="none"
         android:id="@+id/settings_menu">
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/settings" />
 
         <item
             android:id="@+id/nav_logout"

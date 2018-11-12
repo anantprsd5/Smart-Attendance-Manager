@@ -3,6 +3,7 @@ package com.example.anant.smartattendancemanager.Activities;
 import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -36,6 +37,7 @@ import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
+import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
@@ -197,9 +199,17 @@ public class DetailActivity extends AppCompatActivity implements
                             intent.putExtra("criteria", criteria);
                             startActivity(intent);
                             break;
-                        case R.id.settings:
-                            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                            startActivity(settingsIntent);
+                        case R.id.clear_all_subjects:
+                            new AlertDialog.Builder(this)
+                                    .setTitle(R.string.reset)
+                                    .setMessage(R.string.reset_all_data)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                                        DatabaseHelper.clearAlldata(UID);
+                                        Intent intent1 = new Intent(DetailActivity.this, MainActivity.class);
+                                        startActivity(intent1);
+                                    })
+                                    .setNegativeButton(android.R.string.no, null).show();
                             break;
 
                         case R.id.change_time_table:
@@ -261,32 +271,12 @@ public class DetailActivity extends AppCompatActivity implements
         return Arrays.toString(e.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.details_menu, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.logout) {
-            startLoginActivity();
-            return true;
-        }
 
         if (id == android.R.id.home) {
             mDrawerLayout.openDrawer(GravityCompat.START);

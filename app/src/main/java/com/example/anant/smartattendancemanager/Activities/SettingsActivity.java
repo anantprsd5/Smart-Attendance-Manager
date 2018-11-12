@@ -151,18 +151,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tim
             resetPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle(R.string.reset)
-                            .setMessage(R.string.reset_all_data)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    DatabaseHelper.clearAlldata(UID);
-                                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null).show();
+
                     return false;
                 }
             });
