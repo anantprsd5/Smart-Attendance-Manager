@@ -98,6 +98,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     private static final String SUBJECTS_ADDED_PREF = "subPref";
     private DatabaseReference mDatabase;
+    private DaysViewPagerAdapter daysViewPagerAdapter;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -114,7 +115,8 @@ public class DetailActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
         days = getNames(Days.class);
 
-        DaysViewPagerAdapter daysViewPagerAdapter = new DaysViewPagerAdapter(this);
+        daysViewPagerAdapter = new DaysViewPagerAdapter(this);
+        daysViewPagerAdapter.assignNew(true);
         daysViewPager.setAdapter(daysViewPagerAdapter);
 
         daysViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -187,6 +189,8 @@ public class DetailActivity extends AppCompatActivity implements
                         case R.id.nav_time_table:
                             isTimeTable = true;
                             swipeRefreshLayout.setRefreshing(true);
+                            daysViewPagerAdapter.assignNew(true);
+                            daysViewPagerAdapter.notifyDataSetChanged();
                             detailActivityPresenter.fetchDayPosition();
                             daysViewPager.setOnTouchListener(null);
                             break;
@@ -202,6 +206,8 @@ public class DetailActivity extends AppCompatActivity implements
                             swipeRefreshLayout.setRefreshing(true);
                             isTimeTable = false;
                             detailActivityPresenter.fetchSubjects(subjectsModel);
+                            daysViewPagerAdapter.assignNew(false);
+                            daysViewPagerAdapter.notifyDataSetChanged();
                             daysViewPager.setOnTouchListener((arg0, arg1) -> true);
                             break;
                         case R.id.attendance_criteria:
