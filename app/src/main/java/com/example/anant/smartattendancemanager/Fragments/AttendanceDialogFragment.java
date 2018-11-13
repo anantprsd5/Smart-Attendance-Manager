@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 public class AttendanceDialogFragment extends DialogFragment {
 
-    DatabaseReference reference;
     String key;
 
     public interface NoticeDialogListener {

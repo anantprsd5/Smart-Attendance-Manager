@@ -108,4 +108,5 @@
     <string name="first_visit">firstPref</string>
     <string name="reset_all">Reset All</string>
     <string name="add_a_subject">Add a subject</string>
+    <string name="subject_name">Enter Subject Name</string>
 </resources>

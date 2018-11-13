@@ -21,7 +21,7 @@ public class AttendanceActivityPresenter {
 
     public void setSlider(FluidSlider fluidSlider, float criteria) {
         final int max = 100;
-        final int min = 0;
+        final int min = 10;
         final int total = max - min;
 
         // Java 8 lambda

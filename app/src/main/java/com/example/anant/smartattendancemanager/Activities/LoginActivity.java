@@ -154,6 +154,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     public void onFailed() {
         Toast.makeText(this, R.string.error_incorrect_password,
                 Toast.LENGTH_SHORT).show();

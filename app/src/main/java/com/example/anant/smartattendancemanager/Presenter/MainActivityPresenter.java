@@ -93,10 +93,4 @@ public class MainActivityPresenter {
         return isFirstTime;
     }
 
-    public void toggleFirstTimeVisit(boolean val) {
-        SharedPreferences.Editor editor = activity.getSharedPreferences(activity.getString(R.string.first_visit), MODE_PRIVATE).edit();
-        editor.putBoolean("isFirstTime", val);
-        editor.apply();
-    }
-
 }

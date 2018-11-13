@@ -51,8 +51,12 @@ public class SubjectsModel {
         });
     }
 
-    public void updateChildren(HashMap<String, Object> result){
+    public void updateChildren(HashMap<String, Object> result) {
         ref.updateChildren(result);
+    }
+
+    public void saveSingleSubjects(String subName, DatabaseReference reference) {
+        reference.child(subName).setValue("0/0");
     }
 
 }

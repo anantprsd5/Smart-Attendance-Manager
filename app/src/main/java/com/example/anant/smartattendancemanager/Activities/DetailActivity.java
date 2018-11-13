@@ -6,8 +6,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,10 +24,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -52,6 +48,8 @@ import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +97,7 @@ public class DetailActivity extends AppCompatActivity implements
     private String addSubjectText = "";
 
     private static final String SUBJECTS_ADDED_PREF = "subPref";
+    private DatabaseReference mDatabase;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -172,6 +171,8 @@ public class DetailActivity extends AppCompatActivity implements
         subjectsModel = new SubjectsModel(UID);
         timeTableModel = new TimeTableModel(UID);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/subjects");
+
         AttendanceModel attendanceModel = new AttendanceModel(UID);
         detailActivityPresenter.fetchAttendanceCriteria(attendanceModel);
 
@@ -228,17 +229,19 @@ public class DetailActivity extends AppCompatActivity implements
                             break;
 
                         case R.id.add_a_subject:
-                            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
                             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                            builder.setTitle("Add a Subject");
-                            final EditText input = new EditText(this);
-                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-                            input.setPadding(padding, padding, padding, padding);
-                            builder.setPositiveButton("Add", (dialog, which) -> {
-                                addSubjectText = input.getText().toString();
-                                showDaysDialog();
+                            View v = getLayoutInflater().inflate(R.layout.add_subject_dialog, null);
+                            builder.setView(v);
+                            builder.setTitle("Add Subject");
+                            builder.setPositiveButton(getString(R.string.add), (dialog, which) -> {
+                                EditText editText = v.findViewById(R.id.subject_name);
+                                String subjectName = editText.getText().toString();
+                                if (subjectName.length() > 0) {
+                                    detailActivityPresenter.saveData(subjectName, mDatabase, subjectsModel);
+                                    showDaysDialog(subjectName);
+                                }
                             });
-                            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                            builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                             builder.show();
                             break;
                     }
@@ -267,7 +270,7 @@ public class DetailActivity extends AppCompatActivity implements
         });
     }
 
-    private void showDaysDialog() {
+    private void showDaysDialog(String subName) {
         ArrayList mSelectedItems = new ArrayList();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
@@ -277,8 +280,10 @@ public class DetailActivity extends AppCompatActivity implements
                 .setMultiChoiceItems(days, null,
                         (dialog, which, isChecked) -> {
                             if (isChecked) {
-                                mSelectedItems.add(which);
+                                mDatabase = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[which]);
+                                detailActivityPresenter.saveData(subName, mDatabase, subjectsModel);
                                 // If the user checked the item, add it to the selected items
+                                detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
 
 
                             } else if (mSelectedItems.contains(which)) {

@@ -1,12 +1,17 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
+import android.widget.EditText;
+import android.widget.Toast;
+
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
+import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,5 +107,13 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
     @Override
     public void attendanceFetched(int criteria) {
         detailsView.onAttendanceFetched(criteria);
+    }
+
+    public void saveData(String subjectName, DatabaseReference mDatabase, SubjectsModel subjectsModel) {
+        if (subjectName.length() == 0) {
+            return;
+        } else {
+            subjectsModel.saveSingleSubjects(subjectName, mDatabase);
+        }
     }
 }
