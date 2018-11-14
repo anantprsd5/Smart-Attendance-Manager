@@ -2,6 +2,7 @@ package com.example.anant.smartattendancemanager.Presenter;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -71,6 +72,7 @@ public class MainActivityPresenter {
         editText.setBackgroundResource(R.drawable.edit_text_border);
         editText.setHint(R.string.edit_text_hint);
         editText.setPadding(padding, padding, padding, padding);
+        editText.setTypeface(ResourcesCompat.getFont(activity, R.font.product_sans));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
         lp.setMargins(padding, padding, padding, padding);
         editText.setLayoutParams(lp);
@@ -81,7 +83,7 @@ public class MainActivityPresenter {
                     createEditTextView(linearLayout);
                     return false;
                 });
-        if(count<1){
+        if (count < 1) {
             count++;
             createEditTextView(linearLayout);
         }

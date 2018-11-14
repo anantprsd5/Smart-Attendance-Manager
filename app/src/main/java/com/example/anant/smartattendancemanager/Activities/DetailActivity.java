@@ -6,10 +6,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -23,17 +20,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.anant.smartattendancemanager.Adapters.DaysViewPagerAdapter;
 import com.example.anant.smartattendancemanager.Adapters.DetailsAdapter;
 import com.example.anant.smartattendancemanager.AttendanceAppWidget;
@@ -211,6 +206,7 @@ public class DetailActivity extends AppCompatActivity implements
                             daysViewPager.setOnTouchListener((arg0, arg1) -> true);
                             break;
                         case R.id.attendance_criteria:
+                            finish();
                             Intent intent = new Intent(this, AttendanceActivity.class);
                             intent.putExtra("criteria", criteria);
                             startActivity(intent);
@@ -229,6 +225,7 @@ public class DetailActivity extends AppCompatActivity implements
                             break;
 
                         case R.id.change_time_table:
+                            finish();
                             Intent timeTableIntent = new Intent(this, TimeTableActivity.class);
                             timeTableIntent.putExtra(getString(R.string.is_details), true);
                             startActivity(timeTableIntent);
@@ -274,6 +271,25 @@ public class DetailActivity extends AppCompatActivity implements
                 detailActivityPresenter.fetchSubjects(subjectsModel);
             else swipeRefreshLayout.setRefreshing(false);
         });
+
+        addCustomFont();
+    }
+
+    private void addCustomFont() {
+        Menu m = navigationView.getMenu();
+        for (int i = 0; i < m.size(); i++) {
+            MenuItem mi = m.getItem(i);
+            //for aapplying a font to subMenu ...
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu != null && subMenu.size() > 0) {
+                for (int j = 0; j < subMenu.size(); j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    detailActivityPresenter.applyFontToMenuItem(subMenuItem, this);
+                }
+            }
+
+            detailActivityPresenter.applyFontToMenuItem(mi, this);
+        }
     }
 
     private void showDaysDialog(String subName) {
@@ -328,12 +344,7 @@ public class DetailActivity extends AppCompatActivity implements
         navUsername.setText(user.getDisplayName());
         Glide.with(this)
                 .load(user.getPhotoUrl())
-                .into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        imageView.setImageDrawable(resource);
-                    }
-                });
+                .into(imageView);
     }
 
     public String[] getNames(Class<? extends Enum<?>> e) {
@@ -423,6 +434,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void startLoginActivity() {
+        finish();
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

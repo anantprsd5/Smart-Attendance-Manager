@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Presenter.MainActivityPresenter;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
     private FirebaseAuth mAuth;
     private String UID;
     private MainActivityPresenter mainActivityPresenter;
+
+    private int count = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -74,8 +77,12 @@ public class MainActivity extends AppCompatActivity implements AddSubjectsView {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         subjectsAdded(false);
+        if (count == 0) {
+            count++;
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            return;
+        } else finishAffinity();
     }
 
     public void subjectsAdded(boolean added) {

@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/subject_padding"
+                android:fontFamily="@font/product_sans"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textStyle="bold" />
 
@@ -30,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/subject_padding"
+                android:fontFamily="@font/product_sans"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <TextView
@@ -37,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/subject_padding"
+                android:fontFamily="@font/product_sans"
                 android:textStyle="italic|bold" />
 
             <LinearLayout
@@ -48,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/subject_padding"
+                    android:fontFamily="@font/product_sans"
                     android:text="@string/mark_attendance"
                     android:textStyle="bold" />
 
@@ -86,6 +90,7 @@
                 android:id="@+id/percentage_text_view"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:fontFamily="@font/product_sans"
                 android:background="@drawable/textview_design_red"
                 android:gravity="center"
                 android:textSize="30sp" />

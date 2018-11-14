@@ -189,7 +189,11 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
         if (map != null) {
             subjectsAdded(true);
             intent = new Intent(mActivity, DetailActivity.class);
-        } else intent = new Intent(mActivity, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            intent = new Intent(mActivity, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
 
         mActivity.startActivity(intent);
     }

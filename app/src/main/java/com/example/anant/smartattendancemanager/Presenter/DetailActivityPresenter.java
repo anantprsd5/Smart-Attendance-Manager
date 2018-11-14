@@ -1,5 +1,11 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
+import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -7,6 +13,7 @@ import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
+import com.example.anant.smartattendancemanager.NavigationTypeFace;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -115,5 +122,12 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         } else {
             subjectsModel.saveSingleSubjects(subjectName, mDatabase);
         }
+    }
+
+    public void applyFontToMenuItem(MenuItem mi, Context context) {
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.product_sans);
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new NavigationTypeFace("", typeface), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 }

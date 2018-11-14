@@ -141,7 +141,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 percentage = ((float) attended) / noOfClasses * 100;
                 i++;
             }
-            holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
+            holder.bunkTextView.setText(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)) + " ");
             holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.leave_class), ((i == 0) ? 0 : --i)));
         } else {
             while (percentage <= criteria) {
@@ -150,7 +150,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 percentage = ((float) attended) / noOfClasses * 100;
                 i++;
             }
-            holder.bunkTextView.setText(String.format(context.getString(R.string.attend_class_on_track), ((i == 0) ? 0 : --i)));
+            holder.bunkTextView.setText(String.format(context.getString(R.string.attend_class_on_track), ((i == 0) ? 0 : --i)) + " ");
             holder.bunkTextView.setContentDescription(String.format(context.getString(R.string.attend_class_on_track), ((i == 0) ? 0 : --i)));
         }
     }

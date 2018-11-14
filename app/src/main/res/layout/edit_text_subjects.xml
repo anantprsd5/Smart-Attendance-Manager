@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_margin="8dp"
     android:background="@drawable/edit_text_border"
     android:hint="@string/enter_subject"
-    android:padding="@dimen/subject_padding" />
+    android:fontFamily="@font/product_sans"
+    android:padding="@dimen/subject_padding"
+    android:autofillHints=""
+    android:inputType="" tools:targetApi="o"/>

@@ -47,7 +47,7 @@ public class AttendanceActivity extends AppCompatActivity
 
         int attendanceValue = getIntent().getIntExtra("criteria", 75);
 
-        float value = (float) attendanceValue / 100;
+        float value = (float) (attendanceValue-10) / 90;
 
         AttendanceModel attendanceModel = new AttendanceModel(UID);
 

@@ -1,9 +1,6 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.anant.smartattendancemanager.R;
 
 public class DaysViewPagerAdapter extends PagerAdapter {
@@ -50,6 +45,7 @@ public class DaysViewPagerAdapter extends PagerAdapter {
         return view == object;
     }
 
+    @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }

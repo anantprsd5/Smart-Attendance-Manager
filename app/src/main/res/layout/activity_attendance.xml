@@ -26,9 +26,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Attendance Criteria"
+                android:text="@string/set_attendance_criteria"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_gravity="center"
+                android:fontFamily="@font/product_sans"
                 android:layout_marginTop="16dp"/>
 
             <com.ramotion.fluidslider.FluidSlider
@@ -73,6 +74,7 @@
         android:layout_alignParentRight="true"
         app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
         app:fabSize="normal"
-        android:contentDescription="@string/proceed"/>
+        android:contentDescription="@string/proceed"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

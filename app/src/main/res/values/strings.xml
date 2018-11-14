@@ -94,7 +94,7 @@
     <string name="enter_subject" translatable="true">Enter Subject</string>
     <string name="proceed" translatable="true">Proceed</string>
     <string name="user" translatable="true">User</string>
-    <string name="add_your_subjects_here_press_add_button_to_add_more" translatable="true">Add your Subjects here. Press add button to add more</string>
+    <string name="add_your_subjects_here_press_add_button_to_add_more" translatable="true">Add all your Subjects here</string>
     <string name="please_log_in_and_add_subjects" translatable="true">Please Log In and Add Subjects</string>
     <string name="day_of_week">Day of Week</string>
     <string name="no_subjects_to_show_image">No Subjects to Show</string>

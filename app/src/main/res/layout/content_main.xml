@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:padding="8dp"
             android:text="@string/add_your_subjects_here_press_add_button_to_add_more"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            android:fontFamily="@font/product_sans"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
     </LinearLayout>
 

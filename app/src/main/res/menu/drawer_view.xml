@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single"
-        android:id="@+id/subject_views">
+    <group
+        android:id="@+id/subject_views"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_time_table"
             android:icon="@drawable/ic_time_table_black_24dp"
@@ -13,34 +14,43 @@
 
     </group>
 
-    <group android:checkableBehavior="none"
-        android:id="@+id/changes_basics">
+    <group
+        android:id="@+id/changes_basics"
+        android:checkableBehavior="none">
 
         <item
             android:id="@+id/attendance_criteria"
+            android:checkable="false"
             android:icon="@drawable/ic_description_black_24dp"
             android:title="@string/set_attendance_criteria" />
 
         <item
             android:id="@+id/change_time_table"
+            android:checkable="false"
             android:icon="@drawable/ic_autorenew_black_24dp"
             android:title="@string/change_time_table" />
 
-        <item android:id="@+id/add_a_subject"
+        <item
+            android:id="@+id/add_a_subject"
+            android:checkable="false"
             android:icon="@drawable/ic_library_add_black_24dp"
-            android:title="@string/add_a_subject"/>
+            android:title="@string/add_a_subject" />
 
-        <item android:id="@+id/clear_all_subjects"
+        <item
+            android:id="@+id/clear_all_subjects"
+            android:checkable="false"
             android:icon="@drawable/ic_clear_black_24dp"
-            android:title="@string/reset_all"/>
+            android:title="@string/reset_all" />
 
     </group>
 
-    <group android:checkableBehavior="none"
-        android:id="@+id/settings_menu">
+    <group
+        android:id="@+id/settings_menu"
+        android:checkableBehavior="none">
 
         <item
             android:id="@+id/nav_logout"
+            android:checkable="false"
             android:icon="@drawable/ic_logout_new_black_24dp"
             android:title="@string/logout" />
     </group>

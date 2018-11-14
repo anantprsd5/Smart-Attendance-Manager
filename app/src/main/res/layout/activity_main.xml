@@ -32,8 +32,8 @@
                         style="@style/TextAppearance.AppCompat.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_subjects"
-                        android:contentDescription="@string/add_subjects"/>
+                        android:contentDescription="@string/add_subjects"
+                        android:text="@string/add_subjects" />
 
                 </LinearLayout>
 
@@ -51,8 +51,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/proceed"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
-        android:contentDescription="@string/proceed"/>
+        app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
