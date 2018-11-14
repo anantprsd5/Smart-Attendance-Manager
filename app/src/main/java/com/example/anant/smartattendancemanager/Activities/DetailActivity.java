@@ -124,9 +124,8 @@ public class DetailActivity extends AppCompatActivity implements
             public void onPageSelected(int i) {
                 pagerItemValue = i;
                 try {
+                    if(isTimeTable)
                     detailActivityPresenter.fetchTimeTable(timeTableModel, days[i]);
-                    nestedScrollView.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     nestedScrollView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
@@ -406,6 +405,7 @@ public class DetailActivity extends AppCompatActivity implements
             adapterSet = true;
             mRecyclerView.setAdapter(detailsAdapter);
         }
+        Log.wtf("check1", subjects.toString());
         detailsAdapter.notifyDataSetChanged();
         updateAppWidget();
         nestedScrollView.setVisibility(View.GONE);
