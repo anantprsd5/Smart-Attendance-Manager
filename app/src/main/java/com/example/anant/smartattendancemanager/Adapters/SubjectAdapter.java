@@ -31,6 +31,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         public TextView subject_textView;
         public ImageView mImageView;
         public CardView cardView;
+        public TextView tapTextView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -38,6 +39,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
             mImageView = view.findViewById(R.id.tick_image_view);
             cardView = view.findViewById(R.id.subject_card_view);
             cardView.setOnClickListener(this);
+            tapTextView = view.findViewById(R.id.tap_text_view);
         }
 
         @Override
@@ -84,6 +86,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         holder.subject_textView.setContentDescription(mDataset.get(position));
         if (sparseBooleanArray.get(position)) {
             holder.mImageView.setVisibility(View.VISIBLE);
+            holder.tapTextView.setText("Added to mondays");
         } else {
             holder.mImageView.setVisibility(View.GONE);
         }
