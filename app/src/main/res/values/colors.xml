@@ -5,4 +5,5 @@
     <color name="colorAccent">#FFC107</color>
     <color name="button_text_color">#FFFFFF</color>
     <color name="alarm_activity_background">#000a12</color>
+    <color name="white">#FFFFFF</color>
 </resources>

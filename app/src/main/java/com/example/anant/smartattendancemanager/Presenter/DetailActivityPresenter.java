@@ -6,7 +6,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
@@ -83,15 +82,18 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
             ArrayList<String> subjects = new ArrayList<>(map.keySet());
             ArrayList<Integer> classAttended = new ArrayList<>();
             ArrayList<Integer> noOfClasses = new ArrayList<>();
-            for (String subject : subjects) {
-                String classes = map.get(subject).toString();
-                int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
-                int noOfClass = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
-                classAttended.add(attended);
-                noOfClasses.add(noOfClass);
+            try {
+                for (String subject : subjects) {
+                    String classes = map.get(subject).toString();
+                    int attended = Integer.parseInt(classes.substring(0, classes.indexOf("/")));
+                    int noOfClass = Integer.parseInt(classes.substring(classes.indexOf("/") + 1, classes.length()));
+                    classAttended.add(attended);
+                    noOfClasses.add(noOfClass);
+                    detailsView.onSubjectsAttendanceFetched(subjects, classAttended, noOfClasses);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-
-            detailsView.onSubjectsAttendanceFetched(subjects, classAttended, noOfClasses);
         } else detailsView.startMainActivity();
     }
 

@@ -12,8 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
+import com.example.anant.smartattendancemanager.OnboardingHelper;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.AddSubjectsView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -87,12 +89,6 @@ public class MainActivityPresenter {
             count++;
             createEditTextView(linearLayout);
         }
-    }
-
-    public boolean checkIfFirstAppVisit() {
-        SharedPreferences prefs = activity.getSharedPreferences(activity.getString(R.string.first_visit), MODE_PRIVATE);
-        boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
-        return isFirstTime;
     }
 
 }

@@ -89,8 +89,6 @@ public class DetailActivity extends AppCompatActivity implements
     private int criteria;
     private FirebaseUser user;
 
-    private String addSubjectText = "";
-
     private static final String SUBJECTS_ADDED_PREF = "subPref";
     private DatabaseReference mDatabase;
     private DaysViewPagerAdapter daysViewPagerAdapter;
@@ -124,8 +122,8 @@ public class DetailActivity extends AppCompatActivity implements
             public void onPageSelected(int i) {
                 pagerItemValue = i;
                 try {
-                    if(isTimeTable)
-                    detailActivityPresenter.fetchTimeTable(timeTableModel, days[i]);
+                    if (isTimeTable)
+                        detailActivityPresenter.fetchTimeTable(timeTableModel, days[i]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     nestedScrollView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
@@ -180,6 +178,7 @@ public class DetailActivity extends AppCompatActivity implements
                     // set item as selected to persist highlight
                     menuItem.setChecked(true);
                     switch (menuItem.getItemId()) {
+
                         case R.id.nav_time_table:
                             isTimeTable = true;
                             swipeRefreshLayout.setRefreshing(true);
@@ -188,6 +187,7 @@ public class DetailActivity extends AppCompatActivity implements
                             detailActivityPresenter.fetchDayPosition();
                             daysViewPager.setOnTouchListener(null);
                             break;
+
                         case R.id.nav_logout:
                             new AlertDialog.Builder(this)
                                     .setTitle(R.string.logout)
@@ -196,6 +196,7 @@ public class DetailActivity extends AppCompatActivity implements
                                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> startLoginActivity())
                                     .setNegativeButton(android.R.string.no, null).show();
                             break;
+
                         case R.id.nav_all_subjects:
                             swipeRefreshLayout.setRefreshing(true);
                             isTimeTable = false;
@@ -204,12 +205,14 @@ public class DetailActivity extends AppCompatActivity implements
                             daysViewPagerAdapter.notifyDataSetChanged();
                             daysViewPager.setOnTouchListener((arg0, arg1) -> true);
                             break;
+
                         case R.id.attendance_criteria:
                             finish();
                             Intent intent = new Intent(this, AttendanceActivity.class);
                             intent.putExtra("criteria", criteria);
                             startActivity(intent);
                             break;
+
                         case R.id.clear_all_subjects:
                             new AlertDialog.Builder(this)
                                     .setTitle(R.string.reset)
@@ -247,9 +250,9 @@ public class DetailActivity extends AppCompatActivity implements
                             builder.show();
                             break;
                     }
+
                     // close drawer when item is tapped
                     mDrawerLayout.closeDrawers();
-
                     // Add code here to update the UI based on the item selected
                     // For example, swap UI fragments here
 

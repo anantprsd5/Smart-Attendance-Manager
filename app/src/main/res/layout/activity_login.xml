@@ -17,13 +17,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             android:orientation="vertical"
+            android:paddingStart="@dimen/padding_left"
             android:paddingLeft="@dimen/padding_left"
             android:paddingTop="@dimen/padding_top"
-            android:paddingRight="@dimen/padding_right"
             android:paddingEnd="@dimen/padding_right"
-            android:paddingStart="@dimen/padding_left"
-            android:focusableInTouchMode="true">
+            android:paddingRight="@dimen/padding_right">
 
             <ImageView
                 android:id="@+id/logo_image_view"
@@ -31,9 +31,9 @@
                 android:layout_height="@dimen/logo_image_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/logo_margin_bottom"
+                android:contentDescription="@string/app_logo_description"
                 android:src="@drawable/book_logo_login"
-                android:transitionName="@string/logo_transition"
-                android:contentDescription="@string/app_logo_description"/>
+                android:transitionName="@string/logo_transition" />
 
             <!-- Email Label -->
 
@@ -54,14 +54,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
+                    android:contentDescription="@string/login_field"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding"
-                    android:contentDescription="@string/login_field">
+                    android:paddingLeft="@dimen/text_input_padding">
 
                     <EditText
                         android:id="@+id/input_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/product_sans"
                         android:hint="@string/email_hint"
                         android:inputType="textEmailAddress"
                         android:textColor="@android:color/white"
@@ -89,14 +90,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_input_margin_top"
                     android:layout_marginBottom="@dimen/text_input_margin_bottom"
+                    android:contentDescription="@string/login_password_field"
                     android:paddingStart="@dimen/text_input_padding"
-                    android:paddingLeft="@dimen/text_input_padding"
-                    android:contentDescription="@string/login_password_field">
+                    android:paddingLeft="@dimen/text_input_padding">
 
                     <EditText
                         android:id="@+id/input_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/product_sans"
                         android:hint="@string/password_hint"
                         android:inputType="textPassword"
                         android:textColor="@android:color/white"
@@ -112,19 +114,19 @@
                 android:layout_marginTop="@dimen/button_layout_margin"
                 android:layout_marginBottom="@dimen/button_layout_margin"
                 android:background="@drawable/round_button"
+                android:contentDescription="@string/login_button_description"
                 android:padding="@dimen/button_padding"
                 android:text="@string/login_button_text"
-                android:textColor="@color/button_text_color"
-                android:contentDescription="@string/login_button_description"/>
+                android:textColor="@color/button_text_color" />
 
             <ProgressBar
                 android:id="@+id/progress"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
+                android:layout_gravity="center"
                 android:elevation="@dimen/progress_bar_elevation"
+                android:indeterminate="true"
                 android:visibility="gone" />
 
             <TextView
@@ -132,31 +134,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/text_view_margin_bottom"
+                android:contentDescription="@string/create_account_description"
+                android:fontFamily="@font/product_sans"
                 android:gravity="center"
                 android:text="@string/sign_up_text"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size"
-                android:contentDescription="@string/create_account_description"/>
+                android:textSize="@dimen/text_size" />
 
             <TextView
                 android:id="@+id/link_forgot_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/text_view_margin_bottom"
+                android:contentDescription="@string/forgot_password_description"
+                android:fontFamily="@font/product_sans"
                 android:gravity="center"
                 android:text="@string/forgot_password"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size"
-                android:contentDescription="@string/forgot_password_description"/>
+                android:textSize="@dimen/text_size" />
 
             <com.shobhitpuri.custombuttons.GoogleSignInButton
                 android:id="@+id/google_sign_in"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/google_sign_up"
-                app:isDarkTheme="true"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:fontFamily="@font/product_sans"
+                android:text="@string/google_sign_in"
+                app:isDarkTheme="true" />
 
         </LinearLayout>
 

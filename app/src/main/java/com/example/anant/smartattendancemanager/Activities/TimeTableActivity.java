@@ -3,6 +3,7 @@ package com.example.anant.smartattendancemanager.Activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -14,11 +15,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.SubjectsFragment;
+import com.example.anant.smartattendancemanager.OnboardingHelper;
 import com.example.anant.smartattendancemanager.R;
 
 import java.util.Arrays;
@@ -28,6 +32,7 @@ public class TimeTableActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private boolean isDetails;
+    public static boolean isOnce = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

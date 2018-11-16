@@ -2,16 +2,20 @@ package com.example.anant.smartattendancemanager.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.example.anant.smartattendancemanager.Activities.AttendanceActivity;
 import com.example.anant.smartattendancemanager.Adapters.SubjectAdapter;
+import com.example.anant.smartattendancemanager.OnboardingHelper;
 import com.example.anant.smartattendancemanager.Presenter.TimeTablePresenter;
 import com.example.anant.smartattendancemanager.R;
 import com.example.anant.smartattendancemanager.View.TimeTableView;
@@ -39,10 +43,14 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
     private HashMap<String, String> subjects;
     private TimeTablePresenter timeTablePresenter;
 
+    private static boolean ifOnce = true;
+
     public void SubjectsFragment() {
     }
 
     public static final String ARG_PAGE = "ARG_PAGE";
+
+    private View firstRecyclerViewItem;
 
     public static SubjectsFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -64,7 +72,7 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_subjects, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        mRecyclerView = view.findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -101,6 +109,14 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
                 }
             });
             mRecyclerView.setAdapter(mAdapter);
+            final int pos = 0;
+            new Handler().postDelayed(() -> {
+                if (ifOnce) {
+                    ifOnce = false;
+                    OnboardingHelper onboardingHelper = new OnboardingHelper(getActivity());
+                    onboardingHelper.showFullscreenRectPrompt(getString(R.string.time_table), "Tap to add subject to Monday's time table, Swipe to change day", mRecyclerView.findViewHolderForAdapterPosition(pos).itemView);
+                }
+            }, 1);
         }
     }
 }
