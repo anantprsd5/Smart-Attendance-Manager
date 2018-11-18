@@ -1,12 +1,23 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
@@ -31,6 +42,7 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
 
     private DetailsView detailsView;
     private String day;
+    private Paint p = new Paint();
 
     public DetailActivityPresenter(DetailsView detailsView) {
         this.detailsView = detailsView;

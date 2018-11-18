@@ -7,16 +7,20 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.anant.smartattendancemanager.R;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AttendanceDialogFragment extends DialogFragment {
 
     String key;
+    private EditText attendedEditText;
+    private EditText conductedEditText;
 
     public interface NoticeDialogListener {
         void onDialogPositiveClick(HashMap<String, Object> result);
@@ -49,23 +53,15 @@ public class AttendanceDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_attendance, null);
-        final EditText attendedEditText = v.findViewById(R.id.class_attended);
-        final EditText conductedEditText = v.findViewById(R.id.class_conducted);
+        attendedEditText = v.findViewById(R.id.class_attended);
+        conductedEditText = v.findViewById(R.id.class_conducted);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(v)
                 // Add action buttons
                 .setPositiveButton(R.string.add, (dialog, id) -> {
-                    String classAttended = attendedEditText.getText().toString();
-                    String classConducted = conductedEditText.getText().toString();
-                    if (classAttended.length() > 0
-                            && classConducted.length() > 0) {
-                        HashMap<String, Object> result = new HashMap<>();
-                        result.put(key, (classAttended) + "/" + (classConducted));
-                        // Send the positive button event back to the host activity
-                        mListener.onDialogPositiveClick(result);
-                    }
+                    //Do nothing as we override it later
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
                     //Close the Dialog and do nothing
@@ -73,5 +69,43 @@ public class AttendanceDialogFragment extends DialogFragment {
                 });
         return builder.create();
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
+        AlertDialog d = (AlertDialog) getDialog();
+        AtomicBoolean wantToCloseDialog = new AtomicBoolean(false);
+        if (d != null) {
+            Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(v -> {
+
+                String classAttended = attendedEditText.getText().toString();
+                String classConducted = conductedEditText.getText().toString();
+                if (classAttended.length() > 0
+                        && classConducted.length() > 0) {
+                    if (Integer.parseInt(classAttended) > Integer.parseInt(classConducted)) {
+                        Toast.makeText(getContext(), R.string.classes_greater,
+                                Toast.LENGTH_SHORT).show();
+                        wantToCloseDialog.set(false);
+                    } else {
+
+                        HashMap<String, Object> result = new HashMap<>();
+                        result.put(key, (classAttended) + "/" + (classConducted));
+                        // Send the positive button event back to the host activity
+                        mListener.onDialogPositiveClick(result);
+                        wantToCloseDialog.set(true);
+
+                    }
+                } else {
+                    wantToCloseDialog.set(false);
+                    Toast.makeText(getContext(), R.string.class_empty, Toast.LENGTH_SHORT).show();
+                }
+                //Do stuff, possibly set wantToCloseDialog to true then...
+                if (wantToCloseDialog.get())
+                    dismiss();
+                //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+            });
+        }
     }
 }

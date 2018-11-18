@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.anant.smartattendancemanager.Model.SubjectsFetched;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.OnboardingHelper;
 import com.example.anant.smartattendancemanager.R;
@@ -19,10 +20,11 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class MainActivityPresenter {
+public class MainActivityPresenter implements SubjectsModel.OnDataSaved {
 
     private int editTextID = 1;
     private Activity activity;
@@ -54,8 +56,7 @@ public class MainActivityPresenter {
             Toast.makeText(activity, R.string.add_least_subject, Toast.LENGTH_LONG).show();
             return;
         } else {
-            subjectsModel.saveSubjects(subjects, mDatabase);
-            addSubjectsView.onDataSaved();
+            subjectsModel.saveSubjectsMain(this::onSaved, subjects, mDatabase);
         }
     }
 
@@ -91,4 +92,12 @@ public class MainActivityPresenter {
         }
     }
 
+    @Override
+    public void onSaved(boolean isSaved) {
+        if (isSaved) {
+            addSubjectsView.onDataSaved();
+        } else
+            Toast.makeText(activity, "Subjects name must not contain '/', '.', '#', '$', '[', or ']'",
+                    Toast.LENGTH_SHORT).show();
+    }
 }

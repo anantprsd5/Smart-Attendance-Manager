@@ -107,16 +107,8 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
                     subjects.remove(subjectDataset.get(position));
                     timeTablePresenter.saveData(page - 1, subjects, mDatabase);
                 }
-            });
+            }, page-1);
             mRecyclerView.setAdapter(mAdapter);
-            final int pos = 0;
-            new Handler().postDelayed(() -> {
-                if (ifOnce) {
-                    ifOnce = false;
-                    OnboardingHelper onboardingHelper = new OnboardingHelper(getActivity());
-                    onboardingHelper.showFullscreenRectPrompt(getString(R.string.time_table), "Tap to add subject to Monday's time table, Swipe to change day", mRecyclerView.findViewHolderForAdapterPosition(pos).itemView);
-                }
-            }, 1);
         }
     }
 }

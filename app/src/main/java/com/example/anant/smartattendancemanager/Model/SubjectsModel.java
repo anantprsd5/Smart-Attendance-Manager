@@ -1,7 +1,11 @@
 package com.example.anant.smartattendancemanager.Model;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -14,6 +18,10 @@ public class SubjectsModel {
     String UID;
     private DatabaseReference ref;
 
+    public interface OnDataSaved {
+        void onSaved(boolean isSaved);
+    }
+
     public SubjectsModel(String UID) {
         this.UID = UID;
         // Get a reference to our posts
@@ -22,9 +30,24 @@ public class SubjectsModel {
     }
 
     public void saveSubjects(HashMap<String, String> mSubjectsMap, DatabaseReference reference) {
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + UID + "/subjects", mSubjectsMap);
-        reference.updateChildren(childUpdates);
+        try {
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("/users/" + UID + "/subjects", mSubjectsMap);
+            reference.updateChildren(childUpdates);
+        } catch (DatabaseException e) {
+
+        }
+    }
+
+    public void saveSubjectsMain(OnDataSaved onDataSaved, HashMap<String, String> mSubjectsMap, DatabaseReference reference) {
+        try {
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("/users/" + UID + "/subjects", mSubjectsMap);
+            reference.updateChildren(childUpdates);
+            onDataSaved.onSaved(true);
+        } catch (DatabaseException e) {
+            onDataSaved.onSaved(false);
+        }
     }
 
     public void fetchSubjects(SubjectsFetched subjectsFetched) {

@@ -109,4 +109,10 @@
     <string name="reset_all">Reset All</string>
     <string name="add_a_subject">Add a subject</string>
     <string name="subject_name">Enter Subject Name</string>
+    <string name="added_day">Added to %s time table</string>
+    <string name="tap_to_added_day">Tap to add subject to %s time table</string>
+    <string name="classes_greater">Class Attended cannot be greater than classes conducted</string>
+    <string name="class_empty">Cannot be empty</string>
+    <string name="class_greater_limit">Cannot be greater than %d</string>
+    <string name="add_to_time_table">Add subject to time table</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.R;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
     private List<String> mDataset;
     private final OnItemClickListener listener;
     SparseBooleanArray sparseBooleanArray;
+    private int daysPagerPosition;
+    private Context context;
 
     public interface OnItemClickListener {
         void onItemClick(int position, boolean isChecked);
@@ -60,9 +64,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         }
     }
 
-    public SubjectAdapter(List<String> myDataset, OnItemClickListener listener) {
+    public SubjectAdapter(List<String> myDataset, OnItemClickListener listener, int position) {
         mDataset = myDataset;
         this.listener = listener;
+        daysPagerPosition = position;
         sparseBooleanArray = new SparseBooleanArray();
     }
 
@@ -74,6 +79,8 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.subjects_list, parent, false);
 
+        context = parent.getContext();
+
         return new MyViewHolder(itemView);
     }
 
@@ -84,11 +91,17 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         // - replace the contents of the view with that element
         holder.subject_textView.setText(mDataset.get(position));
         holder.subject_textView.setContentDescription(mDataset.get(position));
+        String day = Days.values()[daysPagerPosition].toString();
+        String newDay = day.substring(0, 1).toUpperCase() + day.substring(1).toLowerCase();
         if (sparseBooleanArray.get(position)) {
             holder.mImageView.setVisibility(View.VISIBLE);
-            holder.tapTextView.setText("Added to mondays");
+            holder.tapTextView.setText(String.format(context.getString(R.string.added_day),
+                    newDay+"'s"));
         } else {
             holder.mImageView.setVisibility(View.GONE);
+            holder.tapTextView.setText(String.format(context.getString(R.string.tap_to_added_day),
+                    newDay+"'s"
+            ));
         }
     }
 

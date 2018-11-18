@@ -298,7 +298,7 @@ public class DetailActivity extends AppCompatActivity implements
         ArrayList mSelectedItems = new ArrayList();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
-        builder.setTitle("Add subject to time table")
+        builder.setTitle(R.string.add_to_time_table)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
                 .setMultiChoiceItems(days, null,
@@ -307,7 +307,9 @@ public class DetailActivity extends AppCompatActivity implements
                                 mDatabase = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[which]);
                                 detailActivityPresenter.saveData(subName, mDatabase, subjectsModel);
                                 // If the user checked the item, add it to the selected items
-                                detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
+                                if (isTimeTable)
+                                    detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
+                                else detailActivityPresenter.fetchSubjects(subjectsModel);
 
 
                             } else if (mSelectedItems.contains(which)) {
@@ -458,7 +460,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDialogPositiveClick(HashMap<String, Object> result) {
-        updateAttendance(result);
+        if (result != null)
+            updateAttendance(result);
     }
 
     private void updateAttendance(HashMap<String, Object> result) {

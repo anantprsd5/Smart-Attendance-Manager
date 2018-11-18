@@ -14,6 +14,7 @@
         android:layout_marginRight="@dimen/dialog_margin_rest"
         android:layout_marginBottom="@dimen/dialog_margin_rest"
         android:hint="@string/classAttended"
+        android:maxLength="4"
         android:layout_marginStart="@dimen/dialog_margin_rest"
         android:layout_marginEnd="@dimen/dialog_margin_rest" />
     <EditText
@@ -27,6 +28,7 @@
         android:layout_marginBottom="@dimen/dialog_margin_bottom"
         android:fontFamily="@font/product_sans"
         android:hint="@string/numberOfClasses"
+        android:maxLength="4"
         android:layout_marginStart="@dimen/dialog_margin_rest"
         android:layout_marginEnd="@dimen/dialog_margin_rest" />
 </LinearLayout>
