@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -83,8 +84,13 @@ public class SignUpActivity extends AppCompatActivity implements LoginView {
         });
 
         mSingInTextView.setOnClickListener(v -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
-    }
 
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            loginPresenter.hideSoftKeyboard(SignUpActivity.this);
+            //Do something after 100ms
+        }, 100);
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.

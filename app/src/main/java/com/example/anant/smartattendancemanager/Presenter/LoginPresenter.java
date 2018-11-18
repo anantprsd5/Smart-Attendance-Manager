@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
@@ -280,6 +283,20 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
 
             }
         });
+    }
+
+    public void hideSoftKeyboard(Activity activity) {
+        if (null == activity) {
+            return;
+        }
+
+        View view = activity.getCurrentFocus();
+        if (null == view) {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
