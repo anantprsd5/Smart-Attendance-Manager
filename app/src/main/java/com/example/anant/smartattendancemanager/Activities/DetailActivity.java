@@ -373,9 +373,6 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void setAttendanceView() {
 
-        detailActivityPresenter.toggleFirstVisit(this, false);
-        isFirstTime = false;
-
         CardView card = (CardView) mLayoutManager.findViewByPosition(0);
         if (card != null) {
             DetailsAdapter.MyViewHolder viewHolder = (DetailsAdapter.MyViewHolder) mRecyclerView.getChildViewHolder(card);
@@ -395,8 +392,10 @@ public class DetailActivity extends AppCompatActivity implements
                 .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
                     @Override
                     public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                        if (!(state == MaterialTapTargetPrompt.STATE_REVEALED)) {
                             // User has pressed the prompt target
+                            isFirstTime = false;
+                            detailActivityPresenter.toggleFirstVisit(DetailActivity.this, false);
                         }
                     }
                 })
