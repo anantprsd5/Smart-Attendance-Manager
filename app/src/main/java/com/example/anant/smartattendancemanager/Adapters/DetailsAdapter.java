@@ -41,7 +41,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView subject_textView;
-        private TextView percentageTextView;
+        public TextView percentageTextView;
         private TextView bunkTextView;
         private TextView attendanceTextView;
         private ImageView attendanceMark;

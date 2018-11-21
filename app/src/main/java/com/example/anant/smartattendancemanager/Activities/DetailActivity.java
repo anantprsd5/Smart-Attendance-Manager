@@ -6,20 +6,27 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +60,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class DetailActivity extends AppCompatActivity implements
         AttendanceDialogFragment.NoticeDialogListener,
@@ -92,6 +100,7 @@ public class DetailActivity extends AppCompatActivity implements
     private static final String SUBJECTS_ADDED_PREF = "subPref";
     private DatabaseReference mDatabase;
     private DaysViewPagerAdapter daysViewPagerAdapter;
+    private boolean isFirstTime;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -138,6 +147,8 @@ public class DetailActivity extends AppCompatActivity implements
 
         detailActivityPresenter = new DetailActivityPresenter(this);
         detailActivityPresenter.checkLoggedIn(mAuth);
+
+        isFirstTime = detailActivityPresenter.isFirstVisit(this);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -262,6 +273,9 @@ public class DetailActivity extends AppCompatActivity implements
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        if (isFirstTime) {
+            showSideNavigationPrompt(getToolbarNavigationIcon(toolbar));
+        }
 
         swipeRefreshLayout.setRefreshing(true);
 
@@ -275,6 +289,25 @@ public class DetailActivity extends AppCompatActivity implements
         });
 
         addCustomFont();
+    }
+
+    public static View getToolbarNavigationIcon(Toolbar toolbar) {
+        //check if contentDescription previously was set
+        boolean hadContentDescription = TextUtils.isEmpty(toolbar.getNavigationContentDescription());
+        CharSequence contentDescription = !hadContentDescription ? toolbar.getNavigationContentDescription() : "navigationIcon";
+        toolbar.setNavigationContentDescription(contentDescription);
+        ArrayList<View> potentialViews = new ArrayList<View>();
+        //find the view based on it's content description, set programatically or with android:contentDescription
+        toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+        //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
+        View navIcon = null;
+        if (potentialViews.size() > 0) {
+            navIcon = potentialViews.get(0); //navigation icon is ImageButton
+        }
+        //Clear content description if not previously present
+        if (hadContentDescription)
+            toolbar.setNavigationContentDescription(null);
+        return navIcon;
     }
 
     private void addCustomFont() {
@@ -338,6 +371,38 @@ public class DetailActivity extends AppCompatActivity implements
         return added;
     }
 
+    private void setAttendanceView() {
+
+        detailActivityPresenter.toggleFirstVisit(this, false);
+        isFirstTime = false;
+
+        CardView card = (CardView) mLayoutManager.findViewByPosition(0);
+        if (card != null) {
+            DetailsAdapter.MyViewHolder viewHolder = (DetailsAdapter.MyViewHolder) mRecyclerView.getChildViewHolder(card);
+            showFabPromptFor(viewHolder.percentageTextView);
+        }
+
+    }
+
+    public void showFabPromptFor(View view) {
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.product_sans);
+        new MaterialTapTargetPrompt.Builder(this)
+                .setTarget(view)
+                .setPrimaryText("Add Previous Attendance")
+                .setSecondaryText("Tap to add previous attendance details")
+                .setPrimaryTextTypeface(typeface)
+                .setSecondaryTextTypeface(typeface)
+                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                    @Override
+                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                            // User has pressed the prompt target
+                        }
+                    }
+                })
+                .show();
+    }
+
     private void setNavigationHeader() {
 
         View headerView = navigationView.getHeaderView(0);
@@ -349,6 +414,36 @@ public class DetailActivity extends AppCompatActivity implements
         Glide.with(this)
                 .load(user.getPhotoUrl())
                 .into(imageView);
+    }
+
+    public void showSideNavigationPrompt(View view) {
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.product_sans);
+        final MaterialTapTargetPrompt.Builder tapTargetPromptBuilder = new MaterialTapTargetPrompt.Builder(this)
+                .setPrimaryText("Navigation Drawer")
+                .setSecondaryText(R.string.check_other_options)
+                .setPrimaryTextTypeface(typeface)
+                .setSecondaryTextTypeface(typeface)
+                .setFocalPadding(R.dimen.dp40)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setMaxTextWidth(R.dimen.tap_target_menu_max_width)
+                .setIcon(R.drawable.ic_menu)
+                .setCaptureTouchEventOutsidePrompt(true);
+
+        tapTargetPromptBuilder.setTarget(view);
+
+        tapTargetPromptBuilder.setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+            @Override
+            public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
+                if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        setAttendanceView();
+                        //Do something after 100ms
+                    }, 200);
+                }
+            }
+        });
+        tapTargetPromptBuilder.show();
     }
 
     public String[] getNames(Class<? extends Enum<?>> e) {
@@ -363,7 +458,8 @@ public class DetailActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
+            if (!isFirstTime)
+                mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
 
         }
@@ -409,6 +505,7 @@ public class DetailActivity extends AppCompatActivity implements
         if (!adapterSet) {
             adapterSet = true;
             mRecyclerView.setAdapter(detailsAdapter);
+
         }
         Log.wtf("check1", subjects.toString());
         detailsAdapter.notifyDataSetChanged();

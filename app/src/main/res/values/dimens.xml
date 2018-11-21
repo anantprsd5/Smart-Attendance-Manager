@@ -66,4 +66,6 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="no_sub_margin_bottom">80dp</dimen>
     <dimen name="no_sub_text_margin_bottom">10dp</dimen>
     <dimen name="widget_text_view_padding">8dp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="tap_target_menu_max_width">200dp</dimen>
 </resources>

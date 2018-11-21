@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager.Presenter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -37,6 +38,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel.OnAttendanceFetched {
 
@@ -125,6 +128,10 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         attendanceModel.getAttendanceCriteria(this);
     }
 
+    public void fetchName() {
+
+    }
+
     @Override
     public void attendanceFetched(int criteria) {
         detailsView.onAttendanceFetched(criteria);
@@ -143,5 +150,17 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
         mNewTitle.setSpan(new NavigationTypeFace("", typeface), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);
+    }
+
+    public void toggleFirstVisit(Context context, boolean bool) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.first_visit), MODE_PRIVATE).edit();
+        editor.putBoolean("isFirst", bool);
+        editor.apply();
+    }
+
+    public boolean isFirstVisit(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.first_visit), MODE_PRIVATE);
+        boolean value = prefs.getBoolean("isFirst", true);
+        return value;
     }
 }

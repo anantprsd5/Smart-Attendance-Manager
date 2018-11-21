@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         handler.postDelayed(() -> {
             loginPresenter.hideSoftKeyboard(LoginActivity.this);
             //Do something after 100ms
-        }, 100);
+        }, 200);
 
     }
 
