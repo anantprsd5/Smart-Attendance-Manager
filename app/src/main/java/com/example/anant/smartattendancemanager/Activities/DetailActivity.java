@@ -434,7 +434,7 @@ public class DetailActivity extends AppCompatActivity implements
         tapTargetPromptBuilder.setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
             @Override
             public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
-                if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                if (!(state == MaterialTapTargetPrompt.STATE_REVEALED)) {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> {
                         setAttendanceView();
