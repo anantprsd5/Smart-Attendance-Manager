@@ -32,7 +32,6 @@ public class TimeTableActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private boolean isDetails;
-    public static boolean isOnce = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

@@ -128,10 +128,6 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         attendanceModel.getAttendanceCriteria(this);
     }
 
-    public void fetchName() {
-
-    }
-
     @Override
     public void attendanceFetched(int criteria) {
         detailsView.onAttendanceFetched(criteria);
@@ -162,5 +158,17 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.first_visit), MODE_PRIVATE);
         boolean value = prefs.getBoolean("isFirst", true);
         return value;
+    }
+
+    public boolean isFirstAttendanceView(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.first_visit), MODE_PRIVATE);
+        boolean value = prefs.getBoolean(context.getString(R.string.first_visit_attendance), true);
+        return value;
+    }
+
+    public void toggleFirstVisitAttendance(Context context, boolean bool) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.first_visit), MODE_PRIVATE).edit();
+        editor.putBoolean(context.getString(R.string.first_visit_attendance), bool);
+        editor.apply();
     }
 }

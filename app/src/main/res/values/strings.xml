@@ -116,4 +116,7 @@
     <string name="class_greater_limit">Cannot be greater than %d</string>
     <string name="add_to_time_table">Add subject to time table</string>
     <string name="check_other_options">Tap to manage subject details</string>
+    <string name="no_sub_added">No subjects Added</string>
+    <string name="promt_add_subject">Would you like to add subjects?</string>
+    <string name="first_visit_attendance">first_visit_attendance</string>
 </resources>

@@ -3,13 +3,11 @@ package com.example.anant.smartattendancemanager.Activities;
 import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -27,13 +25,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.anant.smartattendancemanager.Adapters.DaysViewPagerAdapter;
@@ -100,7 +98,7 @@ public class DetailActivity extends AppCompatActivity implements
     private static final String SUBJECTS_ADDED_PREF = "subPref";
     private DatabaseReference mDatabase;
     private DaysViewPagerAdapter daysViewPagerAdapter;
-    private boolean isFirstTime;
+    private boolean isFirstTime, isFirstTimeAttendanceView;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -149,6 +147,7 @@ public class DetailActivity extends AppCompatActivity implements
         detailActivityPresenter.checkLoggedIn(mAuth);
 
         isFirstTime = detailActivityPresenter.isFirstVisit(this);
+        isFirstTimeAttendanceView = detailActivityPresenter.isFirstAttendanceView(this);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -273,6 +272,7 @@ public class DetailActivity extends AppCompatActivity implements
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
         if (isFirstTime) {
             showSideNavigationPrompt(getToolbarNavigationIcon(toolbar));
         }
@@ -355,10 +355,7 @@ public class DetailActivity extends AppCompatActivity implements
                     // User clicked OK, so save the mSelectedItems results somewhere
                     // or return them to the component that opened the dialog
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
                 });
 
         builder.show();
@@ -373,11 +370,15 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void setAttendanceView() {
 
-        CardView card = (CardView) mLayoutManager.findViewByPosition(0);
-        if (card != null) {
-            DetailsAdapter.MyViewHolder viewHolder = (DetailsAdapter.MyViewHolder) mRecyclerView.getChildViewHolder(card);
-            showFabPromptFor(viewHolder.percentageTextView);
-        }
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            CardView card = (CardView) mLayoutManager.findViewByPosition(0);
+            if (card != null) {
+                DetailsAdapter.MyViewHolder viewHolder = (DetailsAdapter.MyViewHolder) mRecyclerView.getChildViewHolder(card);
+                showFabPromptFor(viewHolder.percentageTextView);
+            }
+            //Do something after 100ms
+        }, 200);
 
     }
 
@@ -389,14 +390,10 @@ public class DetailActivity extends AppCompatActivity implements
                 .setSecondaryText("Tap to add previous attendance details")
                 .setPrimaryTextTypeface(typeface)
                 .setSecondaryTextTypeface(typeface)
-                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                    @Override
-                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (!(state == MaterialTapTargetPrompt.STATE_REVEALED)) {
-                            // User has pressed the prompt target
-                            isFirstTime = false;
-                            detailActivityPresenter.toggleFirstVisit(DetailActivity.this, false);
-                        }
+                .setPromptStateChangeListener((prompt, state) -> {
+                    if (!(state == MaterialTapTargetPrompt.STATE_REVEALED)) {
+                        isFirstTimeAttendanceView = false;
+                        detailActivityPresenter.toggleFirstVisitAttendance(DetailActivity.this, false);
                     }
                 })
                 .show();
@@ -430,16 +427,16 @@ public class DetailActivity extends AppCompatActivity implements
 
         tapTargetPromptBuilder.setTarget(view);
 
-        tapTargetPromptBuilder.setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-            @Override
-            public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
-                if (!(state == MaterialTapTargetPrompt.STATE_REVEALED)) {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(() -> {
+        tapTargetPromptBuilder.setPromptStateChangeListener((prompt, state) -> {
+            if (!(state == MaterialTapTargetPrompt.STATE_REVEALED || state == MaterialTapTargetPrompt.STATE_REVEALING)) {
+                isFirstTime = false;
+                detailActivityPresenter.toggleFirstVisit(DetailActivity.this, false);
+                final Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    if(nestedScrollView.getVisibility()!= View.VISIBLE)
                         setAttendanceView();
-                        //Do something after 100ms
-                    }, 200);
-                }
+                    //Do something after 100ms
+                }, 200);
             }
         });
         tapTargetPromptBuilder.show();
@@ -506,21 +503,29 @@ public class DetailActivity extends AppCompatActivity implements
             mRecyclerView.setAdapter(detailsAdapter);
 
         }
-        Log.wtf("check1", subjects.toString());
         detailsAdapter.notifyDataSetChanged();
         updateAppWidget();
         nestedScrollView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(false);
+        if(isFirstTimeAttendanceView && !isFirstTime)
+            setAttendanceView();
     }
 
     @Override
     public void startMainActivity() {
         swipeRefreshLayout.setRefreshing(false);
         if (!isTimeTable) {
-            Log.wtf("checkStart", "starting From DetailActivity");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_sub_added)
+                    .setMessage(R.string.promt_add_subject)
+                    .setIcon(android.R.drawable.ic_input_add)
+                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                        DatabaseHelper.clearAlldata(UID);
+                        Intent intent1 = new Intent(DetailActivity.this, MainActivity.class);
+                        startActivity(intent1);
+                    })
+                    .setNegativeButton(android.R.string.no, null).show();
         } else {
             nestedScrollView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);

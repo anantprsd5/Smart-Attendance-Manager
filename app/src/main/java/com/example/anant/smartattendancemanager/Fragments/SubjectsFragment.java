@@ -43,14 +43,11 @@ public class SubjectsFragment extends Fragment implements TimeTableView {
     private HashMap<String, String> subjects;
     private TimeTablePresenter timeTablePresenter;
 
-    private static boolean ifOnce = true;
 
     public void SubjectsFragment() {
     }
 
     public static final String ARG_PAGE = "ARG_PAGE";
-
-    private View firstRecyclerViewItem;
 
     public static SubjectsFragment newInstance(int page) {
         Bundle args = new Bundle();
