@@ -82,4 +82,8 @@ public class SubjectsModel {
         reference.child(subName).setValue("0/0");
     }
 
+    public void deleteSingleSubject(String subName, DatabaseReference reference) {
+reference.child(subName).removeValue();
+    }
+
 }

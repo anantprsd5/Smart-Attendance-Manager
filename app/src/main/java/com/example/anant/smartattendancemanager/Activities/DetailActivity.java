@@ -330,6 +330,7 @@ public class DetailActivity extends AppCompatActivity implements
     private void showDaysDialog(String subName) {
         ArrayList mSelectedItems = new ArrayList();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final DatabaseReference[] mDatabaseTimeTable = new DatabaseReference[1];
         // Set the dialog title
         builder.setTitle(R.string.add_to_time_table)
                 // Specify the list array, the items to be selected by default (null for none),
@@ -337,17 +338,18 @@ public class DetailActivity extends AppCompatActivity implements
                 .setMultiChoiceItems(days, null,
                         (dialog, which, isChecked) -> {
                             if (isChecked) {
-                                mDatabase = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[which]);
-                                detailActivityPresenter.saveData(subName, mDatabase, subjectsModel);
+                                mDatabaseTimeTable[0] = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[which]);
+                                detailActivityPresenter.saveData(subName, mDatabaseTimeTable[0], subjectsModel);
                                 // If the user checked the item, add it to the selected items
                                 if (isTimeTable)
                                     detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
                                 else detailActivityPresenter.fetchSubjects(subjectsModel);
 
 
-                            } else if (mSelectedItems.contains(which)) {
+                            } else {
                                 // Else, if the item is already in the array, remove it
-                                mSelectedItems.remove(Integer.valueOf(which));
+                                mDatabaseTimeTable[0] = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[which]);
+                                detailActivityPresenter.removeData(subName, mDatabaseTimeTable[0], subjectsModel);
                             }
                         })
                 // Set the action buttons

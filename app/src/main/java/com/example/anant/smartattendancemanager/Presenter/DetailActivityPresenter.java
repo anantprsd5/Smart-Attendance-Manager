@@ -171,4 +171,8 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
         editor.putBoolean(context.getString(R.string.first_visit_attendance), bool);
         editor.apply();
     }
+
+    public void removeData(String subName, DatabaseReference reference, SubjectsModel subjectsModel) {
+        subjectsModel.deleteSingleSubject(subName, reference);
+    }
 }
