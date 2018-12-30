@@ -99,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements
     private DatabaseReference mDatabase;
     private DaysViewPagerAdapter daysViewPagerAdapter;
     private boolean isFirstTime, isFirstTimeAttendanceView;
+    private TextView navUsername;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -404,14 +405,28 @@ public class DetailActivity extends AppCompatActivity implements
     private void setNavigationHeader() {
 
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.name_text_view);
+        navUsername = (TextView) headerView.findViewById(R.id.name_text_view);
         TextView navEmail = headerView.findViewById(R.id.email_text_view);
         CircleImageView imageView = headerView.findViewById(R.id.profile_pic);
         navEmail.setText(user.getEmail());
-        navUsername.setText(user.getDisplayName());
+        String displayName = user.getDisplayName();
+        if(displayName == null || displayName.length()==0){
+            fetchDisplayName();
+        }
+        else navUsername.setText(displayName);
         Glide.with(this)
                 .load(user.getPhotoUrl())
                 .into(imageView);
+    }
+
+    private void fetchDisplayName() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/name");
+        detailActivityPresenter.fetchName(reference, subjectsModel);
+    }
+
+    @Override
+    public void onNameFetched(String name) {
+        navUsername.setText(name);
     }
 
     public void showSideNavigationPrompt(View view) {

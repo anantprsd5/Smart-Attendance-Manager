@@ -11,4 +11,6 @@ public interface DetailsView {
     void startMainActivity();
 
     void onAttendanceFetched(int criteria);
+
+    void onNameFetched(String name);
 }

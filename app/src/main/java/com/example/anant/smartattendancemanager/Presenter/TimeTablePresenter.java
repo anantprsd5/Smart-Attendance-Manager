@@ -27,6 +27,11 @@ public class TimeTablePresenter implements SubjectsFetched {
         timeTableView.onTableFetched(map);
     }
 
+    @Override
+    public void OnNameFetched(String name) {
+        //Not Required
+    }
+
     public void saveData(int position, HashMap<String, String> subjects,
                          DatabaseReference mDatabase) {
         timeTableModel.saveData(position, subjects, mDatabase);

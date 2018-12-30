@@ -1,6 +1,8 @@
 package com.example.anant.smartattendancemanager.Model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -83,7 +85,22 @@ public class SubjectsModel {
     }
 
     public void deleteSingleSubject(String subName, DatabaseReference reference) {
-reference.child(subName).removeValue();
+        reference.child(subName).removeValue();
+    }
+
+    public void getName(DatabaseReference reference, SubjectsFetched subjectsFetched){
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                subjectsFetched.OnNameFetched(dataSnapshot.getValue().toString());
+                reference.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                reference.removeEventListener(this);
+            }
+        });
     }
 
 }

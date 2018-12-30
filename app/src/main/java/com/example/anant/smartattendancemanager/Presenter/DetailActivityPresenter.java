@@ -30,6 +30,7 @@ import com.example.anant.smartattendancemanager.View.DetailsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -174,5 +175,14 @@ public class DetailActivityPresenter implements SubjectsFetched, AttendanceModel
 
     public void removeData(String subName, DatabaseReference reference, SubjectsModel subjectsModel) {
         subjectsModel.deleteSingleSubject(subName, reference);
+    }
+
+    public void fetchName(DatabaseReference reference, SubjectsModel subjectsModel){
+        subjectsModel.getName(reference, this);
+    }
+
+    @Override
+    public void OnNameFetched(String name) {
+        detailsView.onNameFetched(name);
     }
 }
