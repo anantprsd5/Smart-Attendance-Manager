@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -387,7 +388,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            CardView card = (CardView) mLayoutManager.findViewByPosition(0);
+            FrameLayout card = (FrameLayout) mLayoutManager.findViewByPosition(0);
             if (card != null) {
                 DetailsAdapter.MyViewHolder viewHolder = (DetailsAdapter.MyViewHolder) mRecyclerView.getChildViewHolder(card);
                 showFabPromptFor(viewHolder.percentageTextView);
