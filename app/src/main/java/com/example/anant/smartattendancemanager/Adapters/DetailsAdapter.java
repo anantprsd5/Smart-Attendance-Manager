@@ -1,6 +1,7 @@
 package com.example.anant.smartattendancemanager.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,13 @@ import com.example.anant.smartattendancemanager.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
-    private ArrayList<String> subjectDataset;
-    private ArrayList<Integer> classAttended;
-    private ArrayList<Integer> classConducted;
+    private List<String> subjectDataset;
+    private List<Integer> classAttended;
+    private List<Integer> classConducted;
     private int criteria;
 
     private OnItemClickListener onItemClickListener;
@@ -33,12 +35,14 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         void onItemClick(String key);
 
         void onAttendanceMarked(HashMap<String, Object> result);
+
+        void onLongTapped(String key);
     }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder{
 
         public TextView subject_textView;
         public TextView percentageTextView;
@@ -46,9 +50,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         private TextView attendanceTextView;
         private ImageView attendanceMark;
         private ImageView attendanceUnmark;
+        public CardView detailsCardView;
 
         public MyViewHolder(View view) {
             super(view);
+            detailsCardView = view.findViewById(R.id.details_card_view);
             subject_textView = view.findViewById(R.id.subject_text_view);
             attendanceTextView = view.findViewById(R.id.attendance_text_view);
             bunkTextView = view.findViewById(R.id.leave_text_view);
@@ -77,12 +83,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 onItemClickListener.onItemClick(key);
             });
 
-        }
-
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            onItemClickListener.onItemClick(subjectDataset.get(position));
         }
     }
 
@@ -174,6 +174,20 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return subjectDataset.size();
+    }
+
+    public void removeItem(int position) {
+        subjectDataset.remove(position);
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(String item, int position) {
+        subjectDataset.add(position, item);
+        // notify item added by position
+        notifyItemInserted(position);
     }
 }
 

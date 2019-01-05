@@ -1,104 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/details_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/attendance_card_view_margin"
-    app:cardElevation="@dimen/attendance_card_elevation">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/view_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:background="#FF0266"
+        android:layout_margin="@dimen/attendance_card_view_margin">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="@dimen/ic_delete"
+            android:layout_height="@dimen/ic_delete"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"
+            app:srcCompat="@drawable/ic_delete_white_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"
+            android:layout_toLeftOf="@id/delete_icon"
+            android:text="@string/delete"
+            android:textColor="#fff"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/details_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/attendance_card_view_margin"
+        app:cardElevation="@dimen/attendance_card_elevation">
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/subject_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/subject_padding"
-                tools:text="Chemistry"
-                android:fontFamily="@font/product_sans"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/attendance_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/subject_padding"
-                android:fontFamily="@font/product_sans"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/leave_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/subject_padding"
-                android:fontFamily="@font/product_sans"
-                android:textStyle="italic|bold" />
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/subject_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/subject_padding"
                     android:fontFamily="@font/product_sans"
-                    android:text="@string/mark_attendance"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/attendance_mark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/mark_button_margin_bottom"
                     android:padding="@dimen/subject_padding"
-                    android:contentDescription="@string/attend_class"
-                    app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+                    tools:text="Chemistry" />
 
-                <ImageView
-                    android:id="@+id/attendance_unmark"
+                <TextView
+                    android:id="@+id/attendance_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/product_sans"
+                    android:padding="@dimen/subject_padding"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:id="@+id/leave_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/unmark_button_margin_bottom"
-                    android:contentDescription="@string/leave_class_description"
-                    app:srcCompat="@drawable/ic_close_black_24dp" />
+                    android:fontFamily="@font/product_sans"
+                    android:padding="@dimen/subject_padding"
+                    android:textStyle="italic|bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/product_sans"
+                        android:padding="@dimen/subject_padding"
+                        android:text="@string/mark_attendance"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/attendance_mark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/mark_button_margin_bottom"
+                        android:contentDescription="@string/attend_class"
+                        android:padding="@dimen/subject_padding"
+                        app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+
+                    <ImageView
+                        android:id="@+id/attendance_unmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/unmark_button_margin_bottom"
+                        android:contentDescription="@string/leave_class_description"
+                        app:srcCompat="@drawable/ic_close_black_24dp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/percent_relative"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/percentage_text_view"
+                    android:layout_width="@dimen/percentage_text_view_width"
+                    android:layout_height="@dimen/percentage_text_view_height"
+                    android:background="@drawable/textview_design_red"
+                    android:fontFamily="@font/product_sans"
+                    android:gravity="center"
+                    android:textSize="30sp" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/percent_relative"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/percentage_text_view"
-                android:layout_width="@dimen/percentage_text_view_width"
-                android:layout_height="@dimen/percentage_text_view_height"
-                android:fontFamily="@font/product_sans"
-                android:background="@drawable/textview_design_red"
-                android:gravity="center"
-                android:textSize="30sp" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

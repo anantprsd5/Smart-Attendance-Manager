@@ -5,10 +5,13 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +27,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +44,7 @@ import com.example.anant.smartattendancemanager.AttendanceAppWidget;
 import com.example.anant.smartattendancemanager.Days;
 import com.example.anant.smartattendancemanager.Fragments.AttendanceDialogFragment;
 import com.example.anant.smartattendancemanager.Helper.DatabaseHelper;
+import com.example.anant.smartattendancemanager.Helper.RecyclerItemTouchHelper;
 import com.example.anant.smartattendancemanager.Model.AttendanceModel;
 import com.example.anant.smartattendancemanager.Model.SubjectsModel;
 import com.example.anant.smartattendancemanager.Model.TimeTableModel;
@@ -54,6 +59,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +68,8 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class DetailActivity extends AppCompatActivity implements
         AttendanceDialogFragment.NoticeDialogListener,
-        DetailsView, DetailsAdapter.OnItemClickListener {
+        DetailsView, DetailsAdapter.OnItemClickListener,
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private LinearLayoutManager mLayoutManager;
     private String UID;
@@ -85,6 +92,8 @@ public class DetailActivity extends AppCompatActivity implements
     Toolbar toolbar;
     @BindView(R.id.days_pager)
     ViewPager daysViewPager;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     private DetailActivityPresenter detailActivityPresenter;
     private DetailsAdapter detailsAdapter;
@@ -290,6 +299,9 @@ public class DetailActivity extends AppCompatActivity implements
         });
 
         addCustomFont();
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
     }
 
     public static View getToolbarNavigationIcon(Toolbar toolbar) {
@@ -410,10 +422,9 @@ public class DetailActivity extends AppCompatActivity implements
         CircleImageView imageView = headerView.findViewById(R.id.profile_pic);
         navEmail.setText(user.getEmail());
         String displayName = user.getDisplayName();
-        if(displayName == null || displayName.length()==0){
+        if (displayName == null || displayName.length() == 0) {
             fetchDisplayName();
-        }
-        else navUsername.setText(displayName);
+        } else navUsername.setText(displayName);
         Glide.with(this)
                 .load(user.getPhotoUrl())
                 .into(imageView);
@@ -450,7 +461,7 @@ public class DetailActivity extends AppCompatActivity implements
                 detailActivityPresenter.toggleFirstVisit(DetailActivity.this, false);
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    if(nestedScrollView.getVisibility()!= View.VISIBLE)
+                    if (nestedScrollView.getVisibility() != View.VISIBLE)
                         setAttendanceView();
                     //Do something after 100ms
                 }, 200);
@@ -525,7 +536,7 @@ public class DetailActivity extends AppCompatActivity implements
         nestedScrollView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(false);
-        if(isFirstTimeAttendanceView && !isFirstTime)
+        if (isFirstTimeAttendanceView && !isFirstTime)
             setAttendanceView();
     }
 
@@ -577,6 +588,11 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onLongTapped(String key) {
+        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onDialogPositiveClick(HashMap<String, Object> result) {
         if (result != null)
             updateAttendance(result);
@@ -587,5 +603,58 @@ public class DetailActivity extends AppCompatActivity implements
         if (!isTimeTable)
             detailActivityPresenter.fetchSubjects(subjectsModel);
         else detailActivityPresenter.fetchTimeTable(timeTableModel, days[pagerItemValue]);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof DetailsAdapter.MyViewHolder) {
+            // get the removed item name to display it in snack bar
+            String name = (String) ((DetailsAdapter.MyViewHolder) viewHolder).subject_textView.getText();
+            // remove the item from recycler view
+            int itemPosition = viewHolder.getAdapterPosition();
+            detailsAdapter.removeItem(itemPosition);
+            Snackbar snackbar;
+            AtomicBoolean undoSelected = new AtomicBoolean(false);
+            // showing snack bar with Undo option
+            if (isTimeTable) {
+                snackbar = Snackbar
+                        .make(coordinatorLayout, name + " removed from Time Table!", Snackbar.LENGTH_LONG);
+            } else {
+                snackbar = Snackbar
+                        .make(coordinatorLayout, name + " removed from Subjects list!", Snackbar.LENGTH_LONG);
+            }
+
+            snackbar.setAction("UNDO", view -> {
+                undoSelected.set(true);
+                detailsAdapter.restoreItem(name, itemPosition);
+            });
+
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    if(!undoSelected.get()){
+                        if(!isTimeTable) {
+                            detailActivityPresenter.removeData(name, mDatabase, subjectsModel);
+                            for(int i = 0; i<7; i++) {
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[i]);
+                                detailActivityPresenter.removeData(name, databaseReference, subjectsModel);
+                            }
+                        }
+                        else {
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/users/" + UID + "/table/" + days[pagerItemValue]);
+                            detailActivityPresenter.removeData(name, databaseReference, subjectsModel);
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onShown(Snackbar snackbar) {
+
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }
