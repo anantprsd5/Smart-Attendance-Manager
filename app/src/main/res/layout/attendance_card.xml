@@ -9,7 +9,8 @@
         android:id="@+id/view_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:layout_margin="@dimen/attendance_card_view_margin">
 
         <ImageView
             android:id="@+id/delete_icon"

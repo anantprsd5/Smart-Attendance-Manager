@@ -120,4 +120,5 @@
     <string name="promt_add_subject">Would you like to add subjects?</string>
     <string name="first_visit_attendance">first_visit_attendance</string>
     <string name="delete">Delete</string>
+    <string name="undo">UNDO</string>
 </resources>

@@ -6,4 +6,5 @@
     <color name="button_text_color">#FFFFFF</color>
     <color name="alarm_activity_background">#000a12</color>
     <color name="white">#FFFFFF</color>
+    <color name="delete_color">#FF0266</color>
 </resources>

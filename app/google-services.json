@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:412557877883:android:5764a9066ddf60fd",
+        "android_client_info": {
+          "package_name": "com.application.anant.smartattendancemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412557877883-ipaf22o8mrc8ibdvt3m3qc1ai48noebt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.application.anant.smartattendancemanager",
+            "certificate_hash": "70413eefbea47115be33f7481058ef2f487b6c00"
+          }
+        },
+        {
+          "client_id": "412557877883-mp00mh80frk447ldpp3lifkar7q12j34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABhR7bg97avlrVzhruxIUvyLfv53u6dDs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412557877883-p3e57si6db38hphf3muh59s1mujue22f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:412557877883:android:654a391440a6f76c",
         "android_client_info": {
           "package_name": "com.example.anant.smartattendancemanager"
@@ -48,7 +92,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "412557877883-mp00mh80frk447ldpp3lifkar7q12j34.apps.googleusercontent.com",
+              "client_id": "412557877883-p3e57si6db38hphf3muh59s1mujue22f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

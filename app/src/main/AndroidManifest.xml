@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.anant.smartattendancemanager">
+    package="com.application.anant.smartattendancemanager">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.application.anant.smartattendancemanager.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
@@ -17,22 +17,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.LoginActivity"
             android:label="@string/app_name"
             android:noHistory="true" />
         <activity
-            android:name=".Activities.SignUpActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:noHistory="true" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Activities.TimeTableActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.TimeTableActivity"
             android:noHistory="true" />
         <activity
-            android:name=".Activities.DetailActivity">
+            android:name="com.application.anant.smartattendancemanager.Activities.DetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.SettingsActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:noHistory="true"
             android:theme="@style/AppTheme.Settings" />
@@ -53,23 +53,23 @@
             android:value="AIzaSyCcl5LCMe55jvaQbiSRIl8Y3MVmDmMvv1c" />
 
         <service
-            android:name=".Services.GeoFenceJobService"
+            android:name="com.application.anant.smartattendancemanager.Services.GeoFenceJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".Reciever.GeoFenceBroadcastReciever" />
-        <receiver android:name=".Reciever.AlarmReceiver" />
+        <receiver android:name="com.application.anant.smartattendancemanager.Reciever.GeoFenceBroadcastReciever" />
+        <receiver android:name="com.application.anant.smartattendancemanager.Reciever.AlarmReceiver" />
 
         <activity
-            android:name=".Activities.StopAlarmActivity"
+            android:name="com.application.anant.smartattendancemanager.Activities.StopAlarmActivity"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:showOnLockScreen="true" />
 
-        <receiver android:name=".AttendanceAppWidget">
+        <receiver android:name="com.application.anant.smartattendancemanager.AttendanceAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -79,7 +79,7 @@
                 android:resource="@xml/attendance_app_widget_info" />
         </receiver>
 
-        <activity android:name=".Activities.AttendanceActivity"
+        <activity android:name="com.application.anant.smartattendancemanager.Activities.AttendanceActivity"
             android:noHistory="true"></activity>
     </application>
 
