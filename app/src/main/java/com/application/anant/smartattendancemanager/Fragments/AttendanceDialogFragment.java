@@ -88,6 +88,10 @@ public class AttendanceDialogFragment extends DialogFragment {
                         Toast.makeText(getContext(), R.string.classes_greater,
                                 Toast.LENGTH_SHORT).show();
                         wantToCloseDialog.set(false);
+                    } else if(Integer.parseInt(classAttended)<0 || Integer.parseInt(classConducted)<0){
+                        Toast.makeText(getContext(), R.string.negative_classes,
+                                Toast.LENGTH_SHORT).show();
+                        wantToCloseDialog.set(false);
                     } else {
 
                         HashMap<String, Object> result = new HashMap<>();
