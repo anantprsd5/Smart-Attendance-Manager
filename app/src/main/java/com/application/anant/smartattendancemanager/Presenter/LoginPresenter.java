@@ -25,7 +25,6 @@ import com.application.anant.smartattendancemanager.Activities.MainActivity;
 import com.application.anant.smartattendancemanager.Activities.SignUpActivity;
 import com.application.anant.smartattendancemanager.Helper.DatabaseHelper;
 import com.application.anant.smartattendancemanager.R;
-import com.application.anant.smartattendancemanager.User;
 import com.application.anant.smartattendancemanager.View.LoginView;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -39,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -150,8 +150,12 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
     }
 
     public void writeNewUser(String userId, String email, String name) {
-        User user = new User(email, name, "");
-        mDatabase.child("users").child(userId).setValue(user);
+        Map<String, Object> childUpdates = new HashMap<>();
+        HashMap<String, String> value = new HashMap<>();
+        value.put("name", name);
+        value.put("email", email);
+        childUpdates.put("/users/" + userId, value);
+        mDatabase.updateChildren(childUpdates);
     }
 
     private boolean isPasswordValid(String password) {
@@ -182,7 +186,6 @@ public class LoginPresenter implements DatabaseHelper.OnDataFetchedListener {
         String UID = user.getUid();
         databaseHelper = new DatabaseHelper(UID, this);
         databaseHelper.getSubjects();
-
     }
 
     @Override

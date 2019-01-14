@@ -367,7 +367,7 @@ public class DetailActivity extends AppCompatActivity implements
                         })
                 // Set the action buttons
                 .setPositiveButton(R.string.ok, (dialog, id) -> {
-                    // User clicked OK, so save the mSelectedItems results somewhere
+                    // Users clicked OK, so save the mSelectedItems results somewhere
                     // or return them to the component that opened the dialog
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "412557877883-t24h879oii9f22qvib0nre8bmnhsjrep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.application.anant.smartattendancemanager",
+            "certificate_hash": "714f413ca0f1e335fae272e55eb2475da453fd41"
+          }
+        },
+        {
           "client_id": "412557877883-mp00mh80frk447ldpp3lifkar7q12j34.apps.googleusercontent.com",
           "client_type": 3
         }
