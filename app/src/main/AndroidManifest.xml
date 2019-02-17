@@ -50,7 +50,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCcl5LCMe55jvaQbiSRIl8Y3MVmDmMvv1c" />
+            android:value="VALUE HERE" />
 
         <service
             android:name="com.application.anant.smartattendancemanager.Services.GeoFenceJobService"
